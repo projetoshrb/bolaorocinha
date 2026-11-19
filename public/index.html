@@ -1,35 +1,42 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BOLAO ROCINHA</title><meta name="theme-color" content="#173d2b">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎱%3C/text%3E%3C/svg%3E">
-<script>try{if(window.sessionStorage.getItem('bolao_s'))document.documentElement.className='sess'}catch(e){}</script>
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BOLAO ROCINHA</title><meta name="theme-color" content="#a4161a">
+<link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="icon-180.png"><link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="BOLAO ROCINHA"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>try{window.__ST=((matchMedia('(display-mode: standalone)').matches||navigator.standalone===true)?window.localStorage:window.sessionStorage);if(window.__ST.getItem('bolao_s'))document.documentElement.className='sess'}catch(e){window.__ST=null}</script>
 <style>html.sess #login{display:none!important}
-:root{--dk:#173d2b;--gr:#0b6b43;--cr:#f4efdd;--al:#efe8d6;--tx:#1d2330}
+:root{--dk:#7f1a14;--vm:#a4161a;--ouro:#f2b01e;--gr:#1b7a3e;--cr:#fbefc8;--al:#f3e2a9;--tx:#2b1a10;--borda:#ecd9a0}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,Arial,sans-serif;background:var(--cr);color:var(--tx)}
-header{background:var(--dk);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+header{background:linear-gradient(var(--vm),var(--dk));color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:4px solid var(--ouro)}
 header h1{font-size:18px;margin:0}.chip{background:#ffffff22;padding:5px 12px;border-radius:20px;font-size:13px;margin-right:6px}
-nav{position:sticky;top:0;z-index:5;background:#fff;box-shadow:0 2px 6px #0002;display:flex;overflow-x:auto}
+nav{position:sticky;top:0;z-index:5;background:#fff8e1;box-shadow:0 2px 6px #0003;display:flex;overflow-x:auto;border-bottom:2px solid var(--borda)}
 nav button{flex:1;min-width:92px;border:0;background:none;padding:12px 8px;font-size:14px;cursor:pointer;color:#555;border-bottom:3px solid transparent}
-nav button.on{color:var(--gr);border-color:var(--gr);font-weight:700}
-main{max-width:1000px;margin:auto;padding:12px}.card{background:#fff;border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 1px 4px #0001}
-h2{margin:0 0 8px;font-size:18px;color:var(--dk)}.mut{color:#777;font-size:13px;margin:4px 0 10px}
-input,select{border:1.5px solid #cfc8b0;border-radius:8px;padding:9px;font-size:15px;background:#fff;color:var(--tx)}input:focus{outline:2px solid var(--gr)}
+nav button.on{color:var(--vm);border-color:var(--vm);font-weight:700;background:#fff0bd}
+main{max-width:1000px;margin:auto;padding:12px}.card{background:#fffdf5;border:2px solid var(--borda);border-radius:14px;padding:16px;margin:12px 0;box-shadow:3px 3px 0 var(--borda)}
+h2{margin:0 0 8px;font-size:18px;color:var(--vm);font-family:Rockwell,'Roboto Slab',Georgia,serif}.mut{color:#777;font-size:13px;margin:4px 0 10px}
+input,select{border:1.5px solid #d9c58a;border-radius:8px;padding:9px;font-size:15px;background:#fff;color:var(--tx)}input:focus{outline:2px solid var(--gr)}
 .b{background:var(--al);color:var(--tx);border:0;padding:10px 14px;border-radius:9px;cursor:pointer;font-size:14px;font-weight:600;margin:2px}
 .b.p{background:var(--gr);color:#fff}.b.x{background:#fee2e2;color:#b91c1c}.b.s{padding:5px 9px;font-size:12px}
 .d{width:44px;text-align:center;font-size:18px;font-weight:700;margin:2px;padding:8px 0}.rw{display:flex;align-items:center;flex-wrap:wrap;margin:6px 0}.rw small{width:52px;color:#777;font-weight:700}
-.k{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}.k div{background:var(--dk);color:#fff;border-radius:14px;padding:14px;text-align:center;font-size:13px}.k b{display:block;font-size:34px;color:#fcd34d}
+.k{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}.k div{background:linear-gradient(var(--vm),var(--dk));color:#fff;border-radius:14px;padding:14px;text-align:center;font-size:13px;border:2px solid var(--ouro)}.k b{display:block;font-size:34px;color:#ffd54a}
 .win{background:linear-gradient(135deg,#fef3c7,#fde68a);border:2px solid #d97706}
-table{width:100%;border-collapse:collapse;font-size:14px}th{text-align:left;color:#777;font-size:12px}td,th{padding:8px 6px;border-bottom:1px solid #eee}.sc{overflow-x:auto}
-.n{display:inline-block;min-width:28px;text-align:center;padding:3px 5px;margin:1px;border-radius:7px;background:#eee;font-weight:600;font-size:13px}.n.h{background:var(--gr);color:#fff}
-.grid{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;max-width:520px}.grid span{text-align:center;padding:7px 0;border-radius:6px;background:#eee;font-size:13px}.grid .h{background:var(--gr);color:#fff;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:14px}th{text-align:left;color:var(--dk);font-size:12px;background:#fff0bd}td,th{padding:8px 6px;border-bottom:1px solid #f0e4bd}.sc{overflow-x:auto}
+.n{display:inline-block;min-width:28px;text-align:center;padding:3px 5px;margin:1px;border-radius:7px;background:#f1e7c6;font-weight:600;font-size:13px}.n.h{background:var(--gr);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;max-width:560px}.grid span{text-align:center;padding:4px 0 3px;border-radius:6px;background:#f1e7c6;font-size:13px;line-height:1.15}.grid i{display:block;font-style:normal;font-size:15px;filter:grayscale(1);opacity:.55}.grid .h i{filter:none;opacity:1}.grid .h{background:var(--gr);color:#fff;font-weight:700;box-shadow:0 0 0 2px var(--ouro)}
 .hide{display:none!important}#login{max-width:340px;margin:12vh auto;text-align:center}#login input{width:100%;margin:6px 0}
-#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--dk);color:#fff;padding:12px 20px;border-radius:10px;z-index:9}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);border:2px solid var(--ouro);background:var(--dk);color:#fff;padding:12px 20px;border-radius:10px;z-index:9}
+header h1{font-family:Rockwell,'Roboto Slab',Georgia,serif;letter-spacing:1px;text-transform:uppercase;color:#ffe08a;text-shadow:1px 2px 0 #00000055}
+.faixa{overflow:hidden;background:#fff0bd;border-bottom:2px solid var(--borda);height:38px}.trilho{display:flex;width:max-content;animation:rola 70s linear infinite;font-size:24px;line-height:38px}.trilho span{padding:0 9px}
+@keyframes rola{to{transform:translateX(-50%)}}@media(prefers-reduced-motion:reduce){.trilho{animation:none}}
+#lbichos{font-size:30px;letter-spacing:6px;margin:0 0 6px;white-space:nowrap;overflow:hidden}#login h2{color:var(--vm);font-size:26px;text-transform:uppercase;letter-spacing:1px}
+#login{border:3px solid var(--ouro);box-shadow:5px 5px 0 var(--vm)}
 </style></head><body>
-<div id="login" class="card"><h2 style="font-size:24px">🎱 BOLAO ROCINHA</h2><p class="mut">Entre com seu usuário e senha</p>
+<div id="login" class="card"><div id="lbichos" aria-hidden="true"></div><h2>BOLAO ROCINHA</h2><p class="mut">Entre com seu usuário e senha</p><p class="mut" id="inst" style="font-size:13px"></p>
 <input id="lu" placeholder="Usuário" autocapitalize="none"><input id="lp" type="password" placeholder="Senha">
 <button class="b p" style="width:100%" onclick="entrar()">Entrar</button><p id="le" style="color:#b91c1c"></p></div>
 <div id="app" class="hide"><div id="pw" class="hide" style="position:fixed;inset:0;background:#0007;z-index:20;display:flex;align-items:center;justify-content:center"><div class="card" style="width:min(340px,92vw)"><h2>🔑 Trocar minha senha</h2>
 <input id="pa" type="password" placeholder="Senha atual" style="width:100%;margin-bottom:8px" autocomplete="current-password"><input id="pn" type="password" placeholder="Senha nova (mín. 4)" style="width:100%;margin-bottom:8px" autocomplete="new-password"><input id="pc" type="password" placeholder="Repita a senha nova" style="width:100%;margin-bottom:8px" autocomplete="new-password" onkeydown="if(event.key=='Enter')senhaSalvar()">
 <button class="b p" onclick="senhaSalvar()">Salvar</button><button class="b" onclick="$('pw').classList.add('hide')">Cancelar</button></div></div>
-<header><h1>🎱 BOLAO ROCINHA</h1><div><span class="chip" id="who"></span><button class="b" onclick="senhaAbrir()">🔑 Senha</button><button class="b" onclick="sair()">Sair</button></div></header>
+<header><h1>🦁 BOLAO ROCINHA</h1><div><span class="chip" id="who"></span><button class="b hide" id="binst" onclick="instalar()">📲 Instalar</button><button class="b" onclick="senhaAbrir()">🔑 Senha</button><button class="b" onclick="sair()">Sair</button></div></header>
+<div class="faixa" aria-hidden="true"><div class="trilho" id="trilho"></div></div>
 <nav><button data-t="cad" class="on">📝 Cadastrar</button><button data-t="dash" id="tdash" class="hide">🏆 Dashboard</button><button data-t="sor" id="tsor" class="hide">🎯 Sorteios</button><button data-t="jog">📋 Jogos</button><button data-t="hist" id="thist" class="hide">🕘 Histórico</button><button data-t="adm" id="tadm" class="hide">⚙️ Admin</button></nav>
 <main>
 <section id="cad"><div class="card hide" id="cadmsg" style="border-left:6px solid #b3261e"><b>⛔ Cadastro encerrado</b><p class="mut">O cadastro abre na segunda às 06:00 e fecha na quinta às 13:00.</p></div><div class="card"><h2>1. Número da cartela</h2><input id="cn" style="width:160px;font-size:20px" inputmode="numeric" placeholder="Ex: 1000" onkeydown="if(event.key=='Enter'){event.preventDefault();rows.firstChild.querySelector('.d').focus()}">
@@ -72,7 +79,7 @@ async function tgReenviar(){if(!confirm('Reenviar o resumo do último sorteio ao
 </main></div><div id="toast" class="hide"></div>
 <script>
 let T='',ME={},DASH=[],SOR={},SET=new Set(),JL=[],WIN=[],VIT=null;const $=i=>document.getElementById(i),p2=n=>String(n).padStart(2,'0');
-let QUIET=false,ABA='cad';const SS=(()=>{try{return window.sessionStorage}catch(e){return null}})();
+let QUIET=false,ABA='cad';const SS=window.__ST||null;   // navegador: guarda só nesta aba; app instalado: guarda no aparelho (o servidor ainda vence a sessão em 6 h)
 const salvarSessao=()=>{try{SS&&SS.setItem('bolao_s',JSON.stringify({t:T,me:ME,tab:ABA}))}catch(e){}},semSessao=()=>{try{SS&&SS.removeItem('bolao_s')}catch(e){}};
 // Endereço do app da Web do Apps Script (termina em /exec). É o único valor que precisa ser trocado neste arquivo.
 const API_URL='https://script.google.com/macros/s/AKfycbwG9KV6jFjAQESyzAVpB1iPSoJ5e57tnuDygUS3YiXTMfZ7AVf-6AydifiXCr7CTjoT/exec';
@@ -160,7 +167,7 @@ function shareJogo(g){if(g.ac>=10)return enviar([imgVenc(g)],'vencedor-'+g.c);
 enviar([imgLista('RESULTADO — '+g.ac+(g.ac==1?' ACERTO':' ACERTOS'),'Jogo '+g.j,[g],1)],'cartela-'+g.c+'-jogo-'+g.j)}
 async function sorteios(){const x=await call('sorteios');if(x.erro)return toast(x.erro);SOR=x;
 $('sl').innerHTML='<table><tr><th>Data</th><th>Horário</th><th>Dezenas</th>'+(ME.adm?'<th></th>':'')+'</tr>'+x.sorteios.map(s=>'<tr><td>'+s.data+'</td><td>'+s.horario+'</td><td>'+s.dezenas.map(n=>'<span class="n h">'+n+'</span>').join('')+'</td>'+(ME.adm?'<td><button class="b x s" data-d="'+s.data+'" data-h="'+s.horario+'">🗑</button></td>':'')+'</tr>').join('')+'</table>';
-const set=new Set(x.acumulado);$('ac').innerHTML=Array.from({length:100},(_,i)=>'<span class="'+(set.has(i)?'h':'')+'">'+p2(i)+'</span>').join('')}
+const set=new Set(x.acumulado);$('ac').innerHTML=Array.from({length:100},(_,i)=>'<span class="'+(set.has(i)?'h':'')+'" title="'+bicho(i)[0]+'">'+p2(i)+'<i>'+bicho(i)[1]+'</i></span>').join('')}
 $('sl').onclick=async e=>{const b=e.target.closest('button[data-d]');if(!b||!confirm('Excluir o sorteio '+b.dataset.d+' '+b.dataset.h+'?'))return;
 const x=await call('excluirSorteio',{data:b.dataset.d,horario:b.dataset.h});toast(x.erro||'Sorteio excluído');sorteios()};
 async function atual(){const x=await call('atualizar');toast(x.erro||x.msg||'Gravados: '+(x.gravados.join(', ')||'nenhum novo'));sorteios()}
@@ -216,7 +223,7 @@ $('hdest').innerHTML=x.cont[10]?'<div class="card win"><h2>🏆 CARTELA VENCEDOR
 :(x.vit?'<div class="card"><p class="mut">🏆 Houve ganhador neste ciclo, no sorteio de '+x.vit.data+' • '+x.vit.nome+'.</p></div>':'');
 $('hl').innerHTML=x.lista.length?'<table><tr><th>Cartela</th><th>Jogo</th><th>Nome</th><th>Dezenas</th><th>Acertos</th><th></th></tr>'+x.lista.map((g,i)=>'<tr><td><b>'+g.c+'</b></td><td>'+g.j+'</td><td>'+esc(nm(g))+'</td><td>'+g.d.map(n=>'<span class="n '+(s.has(n)?'h':'')+'">'+p2(n)+'</span>').join('')+'</td><td><b>'+g.ac+'/10</b></td><td style="white-space:nowrap"><button class="b s" data-a="p" data-i="'+i+'" title="Imprimir este jogo">🖨</button><button class="b s" data-a="s" data-i="'+i+'" title="Compartilhar este jogo">📤</button>'+(ME.adm?'<button class="b x s" data-a="x" data-i="'+i+'" title="Excluir do histórico">🗑</button>':'')+'</td></tr>').join('')+'</table>':'<p class="mut">Nenhuma cartela encontrada.</p>';
 $('hs').innerHTML='<table><tr><th>Data</th><th>Horário</th><th>Dezenas</th>'+(ME.adm?'<th></th>':'')+'</tr>'+x.sorteios.map(r=>'<tr><td>'+r.data+'</td><td>'+r.horario+'</td><td>'+r.dezenas.map(n=>'<span class="n h">'+n+'</span>').join('')+'</td>'+(ME.adm?'<td style="white-space:nowrap"><button class="b s" data-a="e" data-d="'+r.data+'" data-h="'+r.horario+'" title="Corrigir dezenas">✏</button><button class="b x s" data-a="x" data-d="'+r.data+'" data-h="'+r.horario+'" title="Excluir">🗑</button></td>':'')+'</tr>').join('')+'</table>';
-const ac=new Set(x.acumulado);$('hac').innerHTML=Array.from({length:100},(_,i)=>'<span class="'+(ac.has(i)?'h':'')+'">'+p2(i)+'</span>').join('')}
+const ac=new Set(x.acumulado);$('hac').innerHTML=Array.from({length:100},(_,i)=>'<span class="'+(ac.has(i)?'h':'')+'" title="'+bicho(i)[0]+'">'+p2(i)+'<i>'+bicho(i)[1]+'</i></span>').join('')}
 function histCtx(){SET=HSET;VIT=HVIT}   // imgLista e ticketVenc leem estas variáveis
 $('hl').onclick=async e=>{const b=e.target.closest('button[data-i]');if(!b)return;const g=HD[b.dataset.i];if(!g)return;histCtx();
 if(b.dataset.a=='p')imprimir(ticket(g.c,nm(g),[{j:g.j,d:g.d}],false,g.dt));
@@ -232,6 +239,10 @@ function hshareList(){if(!HD.some(g=>g.ac<10))return toast('Nada para compartilh
 const o=DASH;DASH=HD;histCtx();try{enviar(pagsDash(),'historico')}finally{DASH=o}}
 function hshareWin(){histCtx();enviar(HWIN.map(imgVenc),'vencedor')}
 function hprintWin(){histCtx();imprimir(HWIN.map(ticketVenc).join(''))}
+// ===== Tema jogo do bicho: os 25 grupos (4 dezenas por animal; 97, 98, 99 e 00 são a vaca) =====
+const BICHOS=[['Avestruz','🦤'],['Águia','🦅'],['Burro','🐴'],['Borboleta','🦋'],['Cachorro','🐕'],['Cabra','🐐'],['Carneiro','🐏'],['Camelo','🐪'],['Cobra','🐍'],['Coelho','🐇'],['Cavalo','🐎'],['Elefante','🐘'],['Galo','🐓'],['Gato','🐈'],['Jacaré','🐊'],['Leão','🦁'],['Macaco','🐒'],['Porco','🐖'],['Pavão','🦚'],['Peru','🦃'],['Touro','🐂'],['Tigre','🐅'],['Urso','🐻'],['Veado','🦌'],['Vaca','🐄']];
+const bicho=n=>BICHOS[(n==0?25:Math.ceil(n/4))-1];
+(()=>{const f=BICHOS.map(b=>'<span>'+b[1]+'</span>').join('');$('trilho').innerHTML=f+f;$('lbichos').textContent=['🦁','🐘','🦅','🐅','🐍'].join(' ')})();
 const esc=x=>String(x==null?'':x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),nm=g=>g.n||g.u;
 function sair(){semSessao();location.reload()}
 // F5 não desloga: o login fica guardado só nesta aba (some ao fechar a aba) e é conferido no servidor ao reabrir.
@@ -256,4 +267,15 @@ function shareSor(){const[c,g]=mk(900,140+SOR.sorteios.length*34+110);g.fillStyl
 SOR.sorteios.forEach((s,i)=>tx(g,s.data+'  '+s.horario+':  '+s.dezenas.join(' • '),40,135+i*34,'22px',C.tx));
 tx(g,'Acumulado: '+(SOR.acumulado||[]).map(p2).join(' '),40,170+SOR.sorteios.length*34,'20px',C.gr);enviar([c],'sorteios')}
 restaurar();
+
+// ===== App instalável (PWA) =====
+let PROMPT=null;const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+function dicaInst(){const el=$('inst');if(!el)return;if(standalone()){el.textContent='';return}
+el.innerHTML=PROMPT?'<button class="b" onclick="instalar()">📲 Instalar app no celular</button>':(/iphone|ipad|ipod/i.test(navigator.userAgent)?'📲 Para instalar no iPhone: toque em Compartilhar e depois em "Adicionar à Tela de Início".':'')}
+async function instalar(){if(!PROMPT)return;PROMPT.prompt();await PROMPT.userChoice;PROMPT=null;$('binst').classList.add('hide');dicaInst()}
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();PROMPT=e;if(!standalone())$('binst').classList.remove('hide');dicaInst()});
+addEventListener('appinstalled',()=>{PROMPT=null;$('binst').classList.add('hide');dicaInst()});
+addEventListener('offline',()=>toast('Sem internet'));addEventListener('online',()=>toast('Conexão restabelecida'));
+dicaInst();
 </script></body></html>
