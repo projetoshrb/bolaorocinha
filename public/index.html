@@ -1,6 +1,7 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BOLAO ROCINHA</title><meta name="theme-color" content="#173d2b">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎱%3C/text%3E%3C/svg%3E">
-<style>
+<script>try{if(window.sessionStorage.getItem('bolao_s'))document.documentElement.className='sess'}catch(e){}</script>
+<style>html.sess #login{display:none!important}
 :root{--dk:#173d2b;--gr:#0b6b43;--cr:#f4efdd;--al:#efe8d6;--tx:#1d2330}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,Arial,sans-serif;background:var(--cr);color:var(--tx)}
 header{background:var(--dk);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
@@ -82,7 +83,7 @@ function toast(m){const t=$('toast');t.textContent=m;t.classList.remove('hide');
 async function entrar(){const x=await call('login',{u:$('lu').value,p:$('lp').value});if(x.erro){$('le').textContent=x.erro;return}
 T=x.token;ME=x;salvarSessao();iniciar(x)}
 function iniciar(x){$('login').classList.add('hide');$('app').classList.remove('hide');$('who').textContent='👤 '+(x.n||x.u)+(x.adm?' • admin':'');
-if(x.adm){['tadm','tdash','tsor','thist','at','ju','hu','jps'].forEach(i=>$(i).classList.remove('hide'));loadNomes()}addRow();jogos();call('cadStatus').then(r=>{if(r&&r.aberto===false)$('cadmsg').classList.remove('hide')})}
+if(x.adm){['tadm','tdash','tsor','thist','at','ju','hu','jps'].forEach(i=>$(i).classList.remove('hide'));loadNomes()}addRow();jogos();call('cadStatus').then(r=>{QUIET=false;if(r&&r.aberto===false)$('cadmsg').classList.remove('hide')})}
 $('lp').onkeydown=e=>{if(e.key=='Enter')entrar()};
 const TABS=['cad','dash','sor','jog','hist','adm'];
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{ABA=b.dataset.t;salvarSessao();document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x==b));
@@ -234,8 +235,8 @@ function hprintWin(){histCtx();imprimir(HWIN.map(ticketVenc).join(''))}
 const esc=x=>String(x==null?'':x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),nm=g=>g.n||g.u;
 function sair(){semSessao();location.reload()}
 // F5 não desloga: o login fica guardado só nesta aba (some ao fechar a aba) e é conferido no servidor ao reabrir.
-async function restaurar(){let s=null;try{s=SS&&JSON.parse(SS.getItem('bolao_s')||'null')}catch(e){}
-if(!s||!s.t)return;T=s.t;ME=s.me||{};QUIET=true;const r=await call('cadStatus');QUIET=false;if(!r||r.erro){semSessao();return}
+function restaurar(){let s=null;try{s=SS&&JSON.parse(SS.getItem('bolao_s')||'null')}catch(e){}
+if(!s||!s.t){document.documentElement.className='';return}T=s.t;ME=s.me||{};QUIET=true;   // QUIET: se o token venceu, volta ao login sem aviso
 iniciar(ME);if(s.tab&&s.tab!='cad'){const b=document.querySelector('nav button[data-t="'+s.tab+'"]');if(b&&!b.classList.contains('hide'))b.click()}}
 function senhaAbrir(){['pa','pn','pc'].forEach(i=>$(i).value='');$('pw').classList.remove('hide');$('pa').focus()}
 async function senhaSalvar(){const a=$('pa').value,n=$('pn').value,c=$('pc').value;if(!a||!n)return toast('Preencha a senha atual e a nova');
