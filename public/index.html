@@ -28,7 +28,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th{text-align:left;colo
 <div id="app" class="hide"><div id="pw" class="hide" style="position:fixed;inset:0;background:#0007;z-index:20;display:flex;align-items:center;justify-content:center"><div class="card" style="width:min(340px,92vw)"><h2>🔑 Trocar minha senha</h2>
 <input id="pa" type="password" placeholder="Senha atual" style="width:100%;margin-bottom:8px" autocomplete="current-password"><input id="pn" type="password" placeholder="Senha nova (mín. 4)" style="width:100%;margin-bottom:8px" autocomplete="new-password"><input id="pc" type="password" placeholder="Repita a senha nova" style="width:100%;margin-bottom:8px" autocomplete="new-password" onkeydown="if(event.key=='Enter')senhaSalvar()">
 <button class="b p" onclick="senhaSalvar()">Salvar</button><button class="b" onclick="$('pw').classList.add('hide')">Cancelar</button></div></div>
-<header><h1>🎱 BOLAO ROCINHA</h1><div><span class="chip" id="who"></span><button class="b" onclick="senhaAbrir()">🔑 Senha</button><button class="b" onclick="location.reload()">Sair</button></div></header>
+<header><h1>🎱 BOLAO ROCINHA</h1><div><span class="chip" id="who"></span><button class="b" onclick="senhaAbrir()">🔑 Senha</button><button class="b" onclick="sair()">Sair</button></div></header>
 <nav><button data-t="cad" class="on">📝 Cadastrar</button><button data-t="dash" id="tdash" class="hide">🏆 Dashboard</button><button data-t="sor" id="tsor" class="hide">🎯 Sorteios</button><button data-t="jog">📋 Jogos</button><button data-t="hist" id="thist" class="hide">🕘 Histórico</button><button data-t="adm" id="tadm" class="hide">⚙️ Admin</button></nav>
 <main>
 <section id="cad"><div class="card hide" id="cadmsg" style="border-left:6px solid #b3261e"><b>⛔ Cadastro encerrado</b><p class="mut">O cadastro abre na segunda às 06:00 e fecha na quinta às 13:00.</p></div><div class="card"><h2>1. Número da cartela</h2><input id="cn" style="width:160px;font-size:20px" inputmode="numeric" placeholder="Ex: 1000" onkeydown="if(event.key=='Enter'){event.preventDefault();rows.firstChild.querySelector('.d').focus()}">
@@ -71,18 +71,21 @@ async function tgReenviar(){if(!confirm('Reenviar o resumo do último sorteio ao
 </main></div><div id="toast" class="hide"></div>
 <script>
 let T='',ME={},DASH=[],SOR={},SET=new Set(),JL=[],WIN=[],VIT=null;const $=i=>document.getElementById(i),p2=n=>String(n).padStart(2,'0');
+let QUIET=false,ABA='cad';const SS=(()=>{try{return window.sessionStorage}catch(e){return null}})();
+const salvarSessao=()=>{try{SS&&SS.setItem('bolao_s',JSON.stringify({t:T,me:ME,tab:ABA}))}catch(e){}},semSessao=()=>{try{SS&&SS.removeItem('bolao_s')}catch(e){}};
 // Endereço do app da Web do Apps Script (termina em /exec). É o único valor que precisa ser trocado neste arquivo.
 const API_URL='https://script.google.com/macros/s/AKfycbwG9KV6jFjAQESyzAVpB1iPSoJ5e57tnuDygUS3YiXTMfZ7AVf-6AydifiXCr7CTjoT/exec';
 const call=async(a,d)=>{if(API_URL.indexOf('COLE_')===0)return{erro:'Falta colocar a URL do Apps Script no arquivo index.html (API_URL).'};
 try{const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({t:T,a:a,d:d||{}})});
-const x=await r.json();if(x&&x.sessao){alert(x.erro);location.reload()}return x||{}}catch(e){return{erro:'Sem conexão com o servidor. Tente de novo.'}}};
+const x=await r.json();if(x&&x.sessao){semSessao();if(!QUIET)alert(x.erro);location.reload()}return x||{}}catch(e){return{erro:'Sem conexão com o servidor. Tente de novo.'}}};
 function toast(m){const t=$('toast');t.textContent=m;t.classList.remove('hide');setTimeout(()=>t.classList.add('hide'),2600)}
 async function entrar(){const x=await call('login',{u:$('lu').value,p:$('lp').value});if(x.erro){$('le').textContent=x.erro;return}
-T=x.token;ME=x;$('login').classList.add('hide');$('app').classList.remove('hide');$('who').textContent='👤 '+(x.n||x.u)+(x.adm?' • admin':'');
+T=x.token;ME=x;salvarSessao();iniciar(x)}
+function iniciar(x){$('login').classList.add('hide');$('app').classList.remove('hide');$('who').textContent='👤 '+(x.n||x.u)+(x.adm?' • admin':'');
 if(x.adm){['tadm','tdash','tsor','thist','at','ju','hu','jps'].forEach(i=>$(i).classList.remove('hide'));loadNomes()}addRow();jogos();call('cadStatus').then(r=>{if(r&&r.aberto===false)$('cadmsg').classList.remove('hide')})}
 $('lp').onkeydown=e=>{if(e.key=='Enter')entrar()};
 const TABS=['cad','dash','sor','jog','hist','adm'];
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x==b));
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{ABA=b.dataset.t;salvarSessao();document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x==b));
 TABS.forEach(s=>$(s).classList.toggle('hide',s!=b.dataset.t));const t=b.dataset.t;({jog:jogos,dash:dash,sor:sorteios,hist:histTab,adm:admin}[t]||(()=>0))()});
 const rows=$('rows');
 function renum(){[...rows.children].forEach((r,i)=>r.querySelector('small').textContent='Jogo '+(i+1))}
@@ -229,6 +232,11 @@ const o=DASH;DASH=HD;histCtx();try{enviar(pagsDash(),'historico')}finally{DASH=o
 function hshareWin(){histCtx();enviar(HWIN.map(imgVenc),'vencedor')}
 function hprintWin(){histCtx();imprimir(HWIN.map(ticketVenc).join(''))}
 const esc=x=>String(x==null?'':x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),nm=g=>g.n||g.u;
+function sair(){semSessao();location.reload()}
+// F5 não desloga: o login fica guardado só nesta aba (some ao fechar a aba) e é conferido no servidor ao reabrir.
+async function restaurar(){let s=null;try{s=SS&&JSON.parse(SS.getItem('bolao_s')||'null')}catch(e){}
+if(!s||!s.t)return;T=s.t;ME=s.me||{};QUIET=true;const r=await call('cadStatus');QUIET=false;if(!r||r.erro){semSessao();return}
+iniciar(ME);if(s.tab&&s.tab!='cad'){const b=document.querySelector('nav button[data-t="'+s.tab+'"]');if(b&&!b.classList.contains('hide'))b.click()}}
 function senhaAbrir(){['pa','pn','pc'].forEach(i=>$(i).value='');$('pw').classList.remove('hide');$('pa').focus()}
 async function senhaSalvar(){const a=$('pa').value,n=$('pn').value,c=$('pc').value;if(!a||!n)return toast('Preencha a senha atual e a nova');
 if(n!==c)return toast('A confirmação não confere');if(n.trim().length<4)return toast('Senha nova muito curta (mínimo 4)');
@@ -246,4 +254,5 @@ function printWin(){if(!WIN.length)return toast('Nenhuma cartela vencedora');imp
 function shareSor(){const[c,g]=mk(900,140+SOR.sorteios.length*34+110);g.fillStyle=C.dk;g.fillRect(0,0,900,90);tx(g,'DEZENAS SORTEADAS',450,58,'bold 36px','#fff','center');
 SOR.sorteios.forEach((s,i)=>tx(g,s.data+'  '+s.horario+':  '+s.dezenas.join(' • '),40,135+i*34,'22px',C.tx));
 tx(g,'Acumulado: '+(SOR.acumulado||[]).map(p2).join(' '),40,170+SOR.sorteios.length*34,'20px',C.gr);enviar([c],'sorteios')}
+restaurar();
 </script></body></html>
