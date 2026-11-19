@@ -1,1 +1,249 @@
-<!DOCTYPE html><meta charset="utf-8"><title>Imagens do Bolão</title><p>Serviço de imagens do Bolão 10 Dezenas V2.</p>
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BOLAO ROCINHA</title><meta name="theme-color" content="#173d2b">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎱%3C/text%3E%3C/svg%3E">
+<style>
+:root{--dk:#173d2b;--gr:#0b6b43;--cr:#f4efdd;--al:#efe8d6;--tx:#1d2330}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,Arial,sans-serif;background:var(--cr);color:var(--tx)}
+header{background:var(--dk);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+header h1{font-size:18px;margin:0}.chip{background:#ffffff22;padding:5px 12px;border-radius:20px;font-size:13px;margin-right:6px}
+nav{position:sticky;top:0;z-index:5;background:#fff;box-shadow:0 2px 6px #0002;display:flex;overflow-x:auto}
+nav button{flex:1;min-width:92px;border:0;background:none;padding:12px 8px;font-size:14px;cursor:pointer;color:#555;border-bottom:3px solid transparent}
+nav button.on{color:var(--gr);border-color:var(--gr);font-weight:700}
+main{max-width:1000px;margin:auto;padding:12px}.card{background:#fff;border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 1px 4px #0001}
+h2{margin:0 0 8px;font-size:18px;color:var(--dk)}.mut{color:#777;font-size:13px;margin:4px 0 10px}
+input,select{border:1.5px solid #cfc8b0;border-radius:8px;padding:9px;font-size:15px;background:#fff;color:var(--tx)}input:focus{outline:2px solid var(--gr)}
+.b{background:var(--al);color:var(--tx);border:0;padding:10px 14px;border-radius:9px;cursor:pointer;font-size:14px;font-weight:600;margin:2px}
+.b.p{background:var(--gr);color:#fff}.b.x{background:#fee2e2;color:#b91c1c}.b.s{padding:5px 9px;font-size:12px}
+.d{width:44px;text-align:center;font-size:18px;font-weight:700;margin:2px;padding:8px 0}.rw{display:flex;align-items:center;flex-wrap:wrap;margin:6px 0}.rw small{width:52px;color:#777;font-weight:700}
+.k{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}.k div{background:var(--dk);color:#fff;border-radius:14px;padding:14px;text-align:center;font-size:13px}.k b{display:block;font-size:34px;color:#fcd34d}
+.win{background:linear-gradient(135deg,#fef3c7,#fde68a);border:2px solid #d97706}
+table{width:100%;border-collapse:collapse;font-size:14px}th{text-align:left;color:#777;font-size:12px}td,th{padding:8px 6px;border-bottom:1px solid #eee}.sc{overflow-x:auto}
+.n{display:inline-block;min-width:28px;text-align:center;padding:3px 5px;margin:1px;border-radius:7px;background:#eee;font-weight:600;font-size:13px}.n.h{background:var(--gr);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;max-width:520px}.grid span{text-align:center;padding:7px 0;border-radius:6px;background:#eee;font-size:13px}.grid .h{background:var(--gr);color:#fff;font-weight:700}
+.hide{display:none!important}#login{max-width:340px;margin:12vh auto;text-align:center}#login input{width:100%;margin:6px 0}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--dk);color:#fff;padding:12px 20px;border-radius:10px;z-index:9}
+</style></head><body>
+<div id="login" class="card"><h2 style="font-size:24px">🎱 BOLAO ROCINHA</h2><p class="mut">Entre com seu usuário e senha</p>
+<input id="lu" placeholder="Usuário" autocapitalize="none"><input id="lp" type="password" placeholder="Senha">
+<button class="b p" style="width:100%" onclick="entrar()">Entrar</button><p id="le" style="color:#b91c1c"></p></div>
+<div id="app" class="hide"><div id="pw" class="hide" style="position:fixed;inset:0;background:#0007;z-index:20;display:flex;align-items:center;justify-content:center"><div class="card" style="width:min(340px,92vw)"><h2>🔑 Trocar minha senha</h2>
+<input id="pa" type="password" placeholder="Senha atual" style="width:100%;margin-bottom:8px" autocomplete="current-password"><input id="pn" type="password" placeholder="Senha nova (mín. 4)" style="width:100%;margin-bottom:8px" autocomplete="new-password"><input id="pc" type="password" placeholder="Repita a senha nova" style="width:100%;margin-bottom:8px" autocomplete="new-password" onkeydown="if(event.key=='Enter')senhaSalvar()">
+<button class="b p" onclick="senhaSalvar()">Salvar</button><button class="b" onclick="$('pw').classList.add('hide')">Cancelar</button></div></div>
+<header><h1>🎱 BOLAO ROCINHA</h1><div><span class="chip" id="who"></span><button class="b" onclick="senhaAbrir()">🔑 Senha</button><button class="b" onclick="location.reload()">Sair</button></div></header>
+<nav><button data-t="cad" class="on">📝 Cadastrar</button><button data-t="dash" id="tdash" class="hide">🏆 Dashboard</button><button data-t="sor" id="tsor" class="hide">🎯 Sorteios</button><button data-t="jog">📋 Jogos</button><button data-t="hist" id="thist" class="hide">🕘 Histórico</button><button data-t="adm" id="tadm" class="hide">⚙️ Admin</button></nav>
+<main>
+<section id="cad"><div class="card hide" id="cadmsg" style="border-left:6px solid #b3261e"><b>⛔ Cadastro encerrado</b><p class="mut">O cadastro abre na segunda às 06:00 e fecha na quinta às 13:00.</p></div><div class="card"><h2>1. Número da cartela</h2><input id="cn" style="width:160px;font-size:20px" inputmode="numeric" placeholder="Ex: 1000" onkeydown="if(event.key=='Enter'){event.preventDefault();rows.firstChild.querySelector('.d').focus()}">
+<h2 style="margin-top:16px">2. Jogos (10 dezenas cada)</h2><p class="mut">Digite 2 números e o cursor pula sozinho. Ao terminar um jogo, abre outro para a mesma cartela.</p>
+<div id="rows"></div><button class="b" onclick="addRow(1)">➕ Outro jogo</button> <button class="b p" onclick="revisar()">Revisar e enviar ➜</button></div>
+<div id="rev" class="card hide"></div></section>
+<section id="jog" class="hide"><div class="card"><h2>Jogos cadastrados</h2><select id="ju" class="hide" onchange="jogos()"><option value="">Todos os usuários</option></select> <input id="jq" placeholder="🔍 Cartela ou nome" oninput="drawJ()">
+<button class="b p" onclick="jogos()">Atualizar</button><button class="b" onclick="imprJ()">🖨 Imprimir lista</button><button class="b p hide" id="jps" onclick="imprSel()">🖨 Imprimir selecionados (<span id="jsn">0</span>)</button><button class="b" onclick="csv()">⬇ Baixar CSV</button>
+<p class="mut" id="jc"></p><div class="sc" id="jl"></div></div></section>
+<section id="dash" class="hide"><div class="k" id="kp"></div><div id="dest"></div>
+<div class="card"><h2>Pesquisar jogos</h2><select id="fa"><option value="">Todos (7 a 10)</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
+<select id="fu"><option value="">Todos os usuários</option></select> <input id="fc" placeholder="Nº da cartela" style="width:130px">
+<button class="b p" onclick="dash()">Pesquisar</button><button class="b" onclick="shareDash()">📤 Compartilhar PNG</button><div class="sc" id="dl"></div></div></section>
+<section id="sor" class="hide"><div class="card"><h2>Resultados por dia e horário</h2><button class="b p hide" id="at" onclick="atual()">🔄 Buscar resultados agora</button><button class="b" onclick="shareSor()">📤 PNG</button><div class="sc" id="sl"></div></div>
+<div class="card"><h2>Acumulado das dezenas</h2><p class="mut">Em verde, as que já saíram.</p><div class="grid" id="ac"></div></div></section>
+<section id="hist" class="hide"><div class="card"><h2>🕘 Histórico de ciclos</h2><p class="mut">Semanas já encerradas. Escolha o ciclo para ver a apuração como ela ficou.</p>
+<select id="hc" onchange="hist()"></select> <select id="hu" class="hide" onchange="hist()"><option value="">Todos os usuários</option></select>
+<select id="ha" onchange="hist()"><option value="">Todos (7 a 10)</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
+<input id="hq" placeholder="Nº da cartela" style="width:130px" onkeydown="if(event.key=='Enter')hist()">
+<button class="b p" onclick="hist()">Pesquisar</button><button class="b" onclick="hshareList()">📤 Compartilhar PNG</button><p class="mut" id="hinfo"></p></div>
+<div class="k" id="hk"></div><div id="hdest"></div>
+<div class="card"><h2>Cartelas do ciclo</h2><div class="sc" id="hl"></div></div>
+<div class="card"><h2>Sorteios do ciclo</h2><div class="sc" id="hs"></div></div>
+<div class="card"><h2>Acumulado das dezenas</h2><p class="mut">Em verde, as que saíram no ciclo.</p><div class="grid" id="hac"></div></div></section>
+<section id="adm" class="hide"><div class="card"><h2>Usuários</h2><button class="b p" onclick="novoU()">➕ Novo usuário</button><div class="sc" id="ul"></div><p class="mut">Excluir um usuário remove só o acesso; os cadastros dele continuam na planilha.</p></div>
+<div class="card"><h2>Lançar sorteio manualmente</h2><p class="mut">Use se o resultado automático falhar. Se já existir, será substituído.</p>
+<input id="md" style="width:120px" placeholder="dd/mm/aaaa"> <select id="mh"><option>14h</option><option>16h</option><option>18h</option><option>21h</option></select>
+<div id="mz" style="margin:8px 0"></div><button class="b p" onclick="manual()">Lançar</button></div>
+<div class="card"><h2>Telegram</h2>
+<p class="mut">O bot envia o resumo sozinho a cada sorteio novo, com as cartelas em imagem. Use os botões para testar.</p>
+<button class="b" onclick="tgTeste()">✈️ Mensagem de teste</button><button class="b" onclick="tgImagemTeste()">🖼 Imagem de teste</button><button class="b" onclick="tgReenviar()">🔁 Reenviar último sorteio</button></div>
+<script>
+async function tgTeste(){const x=await call('telegramTeste');toast(x.erro||'Mensagem de teste enviada')}
+async function tgImagemTeste(){toast('Gerando imagem…');const x=await call('telegramImagemTeste');toast(x.erro||'Imagem de teste enviada')}
+async function tgReenviar(){if(!confirm('Reenviar o resumo do último sorteio ao Telegram?'))return;toast('Enviando…');const x=await call('telegramReenviar');toast(x.erro||'Resumo reenviado')}
+</script>
+<div class="card"><h2>Ciclo semanal</h2><p class="mut">Toda quarta, entre 01:00 e 02:00, o sistema arquiva os dados da semana e começa um novo ciclo. Use o botão só se precisar virar o ciclo antes disso.</p>
+<button class="b x" onclick="encerrar()">🔄 Encerrar ciclo agora</button></div>
+<p class="mut">Cada correção é registrada na aba <b>Log</b> da planilha.</p></section>
+</main></div><div id="toast" class="hide"></div>
+<script>
+let T='',ME={},DASH=[],SOR={},SET=new Set(),JL=[],WIN=[],VIT=null;const $=i=>document.getElementById(i),p2=n=>String(n).padStart(2,'0');
+// Endereço do app da Web do Apps Script (termina em /exec). É o único valor que precisa ser trocado neste arquivo.
+const API_URL='https://script.google.com/macros/s/AKfycbwG9KV6jFjAQESyzAVpB1iPSoJ5e57tnuDygUS3YiXTMfZ7AVf-6AydifiXCr7CTjoT/exec';
+const call=async(a,d)=>{if(API_URL.indexOf('COLE_')===0)return{erro:'Falta colocar a URL do Apps Script no arquivo index.html (API_URL).'};
+try{const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({t:T,a:a,d:d||{}})});
+const x=await r.json();if(x&&x.sessao){alert(x.erro);location.reload()}return x||{}}catch(e){return{erro:'Sem conexão com o servidor. Tente de novo.'}}};
+function toast(m){const t=$('toast');t.textContent=m;t.classList.remove('hide');setTimeout(()=>t.classList.add('hide'),2600)}
+async function entrar(){const x=await call('login',{u:$('lu').value,p:$('lp').value});if(x.erro){$('le').textContent=x.erro;return}
+T=x.token;ME=x;$('login').classList.add('hide');$('app').classList.remove('hide');$('who').textContent='👤 '+(x.n||x.u)+(x.adm?' • admin':'');
+if(x.adm){['tadm','tdash','tsor','thist','at','ju','hu','jps'].forEach(i=>$(i).classList.remove('hide'));loadNomes()}addRow();jogos();call('cadStatus').then(r=>{if(r&&r.aberto===false)$('cadmsg').classList.remove('hide')})}
+$('lp').onkeydown=e=>{if(e.key=='Enter')entrar()};
+const TABS=['cad','dash','sor','jog','hist','adm'];
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x==b));
+TABS.forEach(s=>$(s).classList.toggle('hide',s!=b.dataset.t));const t=b.dataset.t;({jog:jogos,dash:dash,sor:sorteios,hist:histTab,adm:admin}[t]||(()=>0))()});
+const rows=$('rows');
+function renum(){[...rows.children].forEach((r,i)=>r.querySelector('small').textContent='Jogo '+(i+1))}
+function addRow(f){const r=document.createElement('div');r.className='rw';r.innerHTML='<small></small>';
+for(let i=0;i<10;i++){const e=document.createElement('input');e.className='d';e.maxLength=2;e.inputMode='numeric';
+e.oninput=()=>{e.value=e.value.replace(/\D/g,'');if(e.value.length==2){let n=e.nextElementSibling;if(n&&n.classList.contains('d'))n.focus();else if(r==rows.lastChild)addRow(1)}};
+e.onkeydown=ev=>{if(ev.key=='Backspace'&&!e.value&&e.previousElementSibling&&e.previousElementSibling.classList.contains('d'))e.previousElementSibling.focus()};r.appendChild(e)}
+const x=document.createElement('button');x.className='b x s';x.textContent='✕';x.onclick=()=>{if(rows.children.length>1)r.remove();else r.querySelectorAll('.d').forEach(i=>i.value='');renum()};r.appendChild(x);
+rows.appendChild(r);renum();if(f)r.querySelector('.d').focus()}
+function revisar(){const c=$('cn').value.trim();if(!c)return toast('Informe o número da cartela');const js=[];
+for(const r of rows.children){const v=[...r.querySelectorAll('.d')].map(e=>e.value);if(!v.some(x=>x))continue;
+if(v.some(x=>x.length<1))return toast('Há jogo incompleto');const n=v.map(Number);if(new Set(n).size!=10)return toast('Dezena repetida: '+n.map(p2).join(' '));js.push(n)}
+if(!js.length)return toast('Nenhum jogo preenchido');
+$('rev').classList.remove('hide');$('rev').innerHTML='<h2>Confirme: cartela '+c+' — '+js.length+' jogo(s)</h2>'+js.map((j,i)=>'<p><b>Jogo '+(i+1)+':</b> '+j.map(n=>'<span class="n">'+p2(n)+'</span>').join('')+'</p>').join('')+
+'<button class="b p" id="ok">✅ Confirmar envio</button><button class="b" id="pr">🖨 Imprimir</button><button class="b" onclick="$(\'rev\').classList.add(\'hide\')">Voltar e editar</button>';
+$('rev').scrollIntoView({behavior:'smooth'});
+$('pr').onclick=()=>imprimir(ticket(c,ME.n||ME.u,js.map((d,i)=>({j:i+1,d})),true,agora()));
+$('ok').onclick=async()=>{$('ok').disabled=true;const x=await call('salvar',{cartela:c,jogos:js});if(x.erro){$('ok').disabled=false;return toast(x.erro)}
+toast('✅ '+x.qtd+' jogo(s) salvo(s)!');rows.innerHTML='';addRow();$('cn').value='';
+$('rev').innerHTML='<h2>✅ Cartela '+c+' enviada!</h2><p class="mut">'+x.qtd+' jogo(s) registrado(s).</p><button class="b p" id="pc">🖨 Imprimir comprovante</button><button class="b" onclick="$(\'rev\').classList.add(\'hide\');window.scrollTo(0,0);$(\'cn\').focus()">Novo cadastro</button>';
+$('pc').onclick=()=>imprimir(ticket(c,ME.n||ME.u,js.map((d,i)=>({j:x.ini+i,d})),false,x.dt||agora()))}}
+// Impressão térmica 78mm: só preto e branco, alto contraste, dezenas em caixas (5 por linha).
+const PCSS='@page{size:78mm auto;margin:0}*{box-sizing:border-box}body{margin:0;width:78mm;padding:3mm 3mm 8mm;font-family:Arial,Helvetica,sans-serif;color:#000;background:#fff}'+
+'.t{text-align:center}.h1{font-size:20px;font-weight:900;letter-spacing:1px}.sub{font-size:11px;font-weight:700;letter-spacing:2px;margin-top:3px}'+
+'.box{border:3px double #000;border-radius:8px;padding:7px;margin-bottom:8px}.lb{font-size:12px;font-weight:700;letter-spacing:3px}.num{font-size:38px;font-weight:900;line-height:1.1;letter-spacing:1px}'+
+'.inf{font-size:12px;display:flex;justify-content:space-between;margin-top:3px}.dz{border-top:2px dashed #000;margin:8px 0}.jg{page-break-inside:avoid;margin:7px 0}'+
+'.jt{font-size:12px;font-weight:900;letter-spacing:1px;margin-bottom:3px}.g{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}'+
+'.g b{border:2px solid #000;border-radius:5px;text-align:center;font-size:20px;font-weight:900;padding:4px 0}.ft{font-size:11px;text-align:center;margin-top:6px;line-height:1.5}.pg{page-break-after:always}.pg:last-child{page-break-after:auto}';
+const FUSO='America/Sao_Paulo',DIAS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+// Data e hora atuais no fuso do sistema, no mesmo formato gravado na planilha (dd/MM/yyyy HH:mm)
+const agora=()=>{const p={};new Intl.DateTimeFormat('pt-BR',{timeZone:FUSO,day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date()).forEach(x=>p[x.type]=x.value);return p.day+'/'+p.month+'/'+p.year+' '+p.hour+':'+p.minute};
+// Ciclo semanal: cadastro de segunda 06:00 a quinta 13:00; sorteios de quinta a domingo; reset na segunda de madrugada.
+// Recebe 'dd/MM/yyyy HH:mm' e devolve as datas do ciclo a que esse horário pertence.
+function cicloDe(dt){const m=/(\d+)\/(\d+)\/(\d+)\s+(\d+)/.exec(dt||'');if(!m)return null;
+const dia=Date.UTC(+m[3],+m[2]-1,+m[1]),volta=(new Date(dia).getUTCDay()+6)%7;let seg=dia-volta*864e5;if(volta===0&&+m[4]<6)seg-=7*864e5;
+const f=t=>{const e=new Date(t);return DIAS[e.getUTCDay()]+' '+String(e.getUTCDate()).padStart(2,'0')+'/'+String(e.getUTCMonth()+1).padStart(2,'0')+'/'+e.getUTCFullYear()};
+return{cadIni:f(seg),cadFim:f(seg+3*864e5),ini:f(seg+3*864e5),fim:f(seg+6*864e5)}}
+const cicloTxt=dt=>{const c=cicloDe(dt);return c?'<div class="dz"></div><div class="t lb">SEMANA DOS SORTEIOS</div><div class="t" style="font-size:13px;margin-top:3px"><b>'+c.ini+' a '+c.fim+'</b></div><div class="ft" style="margin-top:4px">Cartela válida somente neste período.</div>':''}
+function ticket(c,u,js,conf,dt){return '<div class="pg"><div class="box t"><div class="h1">BOLAO ROCINHA</div><div class="sub">'+(conf?'CONFERÊNCIA — NÃO ENVIADO':'COMPROVANTE DE CARTELA')+'</div></div>'+
+'<div class="t lb">CARTELA</div><div class="t num">'+c+'</div><div class="inf"><span>Nome: <b>'+esc(u)+'</b></span><span><b>'+js.length+'</b> jogo(s)</span></div><div class="inf"><span>Registrada em</span><b>'+dt+'</b></div>'+cicloTxt(dt)+'<div class="dz"></div>'+
+js.map(j=>'<div class="jg"><div class="jt">JOGO '+j.j+'</div><div class="g">'+j.d.map(n=>'<b>'+p2(n)+'</b>').join('')+'</div></div>').join('')+
+'<div class="dz"></div><div class="ft">Confira os resultados no sistema<br><b>★ BOA SORTE! ★</b></div></div>'}
+function imprimir(h){const w=open('');w.document.write('<!DOCTYPE html><meta charset="utf-8"><title>Impressão</title><style>'+PCSS+'</style><body>'+h);w.document.close();w.focus();setTimeout(()=>w.print(),300)}
+async function jogos(){const x=await call('jogos',{usuario:$('ju').value});if(x.erro)return toast(x.erro);JL=x.jogos;JSEL=new Set([...JSEL].filter(k=>JL.some(g=>kj(g)==k)));drawJ()}
+async function loadNomes(){const x=await call('nomes');if(x.erro)return;
+['ju','fu','hu'].forEach(id=>{const s=$(id),v=s.value;s.innerHTML='<option value="">Todos os usuários</option>'+x.nomes.map(n=>'<option value="'+esc(n.u)+'">'+esc(n.n)+'</option>').join('');s.value=v})}
+let JSEL=new Set();const kj=g=>g.u+'|'+g.c+'|'+g.j,jvis=()=>{const q=$('jq').value.trim().toLowerCase();return JL.filter(g=>!q||String(g.c).includes(q)||nm(g).toLowerCase().includes(q))};
+function updSel(){const n=$('jsn');if(n)n.textContent=JSEL.size;const a=$('jsel');if(a){const v=jvis();a.checked=v.length>0&&v.every(g=>JSEL.has(kj(g)))}}
+function drawJ(){const l=jvis();$('jc').textContent=l.length+' jogo(s)';
+$('jl').innerHTML='<table><tr>'+(ME.adm?'<th><input type="checkbox" id="jsel" title="Marcar todos os jogos da lista"></th>':'')+'<th>Nome</th><th>Cartela</th><th>Jogo</th><th>Dezenas</th>'+(ME.adm?'<th>Corrigir</th>':'')+'</tr>'+l.map(g=>'<tr>'+(ME.adm?'<td><input type="checkbox" class="sj" data-k="'+kj(g)+'"'+(JSEL.has(kj(g))?' checked':'')+'></td>':'')+'<td>'+esc(nm(g))+'</td><td><b>'+g.c+'</b></td><td>'+g.j+'</td><td>'+g.d.map(n=>'<span class="n">'+p2(n)+'</span>').join('')+'</td>'+
+(ME.adm?'<td><button class="b x s" data-a="j" data-u="'+g.u+'" data-n="'+esc(nm(g))+'" data-c="'+g.c+'" data-j="'+g.j+'">🗑 Jogo</button><button class="b x s" data-a="c" data-u="'+g.u+'" data-n="'+esc(nm(g))+'" data-c="'+g.c+'">🗑 Cartela</button></td>':'')+'</tr>').join('')+'</table>';updSel()}
+$('jl').onchange=e=>{const t=e.target;if(t.id=='jsel'){jvis().forEach(g=>t.checked?JSEL.add(kj(g)):JSEL.delete(kj(g)));drawJ()}
+else if(t.classList.contains('sj')){t.checked?JSEL.add(t.dataset.k):JSEL.delete(t.dataset.k);updSel()}};
+function imprSel(){const l=JL.filter(g=>JSEL.has(kj(g)));if(!l.length)return toast('Marque pelo menos um jogo na lista');imprLista(l)}
+function imprLista(l){const G={};l.forEach(g=>(G[g.u+'|'+g.c]=G[g.u+'|'+g.c]||[]).push(g));
+imprimir(Object.values(G).map(a=>ticket(a[0].c,nm(a[0]),a.map(g=>({j:g.j,d:g.d})),false,a[0].dt)).join(''))}
+$('jl').onclick=async e=>{const b=e.target.closest('button[data-a]');if(!b)return;const j=b.dataset.a=='j';
+if(!confirm(j?'Excluir o jogo '+b.dataset.j+' da cartela '+b.dataset.c+' de '+b.dataset.n+'?':'Excluir TODOS os jogos da cartela '+b.dataset.c+' de '+b.dataset.n+'?'))return;
+const x=await call('excluirJogo',{u:b.dataset.u,c:b.dataset.c,j:j?b.dataset.j:''});toast(x.erro||x.qtd+' jogo(s) excluído(s)');jogos()};
+function imprJ(){const l=jvis();if(!l.length)return toast('Nada para imprimir');imprLista(l)}
+function csv(){const t='nome;usuario;cartela;jogo;dezenas\n'+JL.map(g=>[nm(g),g.u,g.c,g.j,g.d.map(p2).join(' ')].join(';')).join('\n');
+const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+t],{type:'text/csv'}));a.download='jogos.csv';a.click()}
+async function dash(){const x=await call('dash',{acertos:$('fa').value,usuario:$('fu').value,cartela:$('fc').value});if(x.erro)return toast(x.erro);
+const s=new Set(x.sorteadas);DASH=x.lista;SET=s;WIN=x.venc||[];VIT=x.vit;
+$('kp').innerHTML='<div>JOGOS<b>'+x.total+'</b></div><div>7/10<b>'+x.cont[7]+'</b></div><div>8/10<b>'+x.cont[8]+'</b></div><div>9/10<b>'+x.cont[9]+'</b></div>';
+const w=WIN;$('dest').innerHTML=x.cont[10]?'<div class="card win"><h2>🏆 CARTELA VENCEDOR — 10/10 ('+x.cont[10]+')</h2>'+(x.vit?'<p class="mut">Vitória no sorteio de '+x.vit.data+' • '+x.vit.nome+'</p>':'')+w.map(g=>'<p>Cartela <b>'+g.c+'</b> (jogo '+g.j+') — '+esc(nm(g))+'<br>'+g.d.map(n=>'<span class="n h">'+p2(n)+'</span>').join('')+'</p>').join('')+'<button class="b p" onclick="shareWin()">📤 Compartilhar PNG</button><button class="b p" onclick="printWin()">🖨 Imprimir</button></div>':'';
+$('dl').innerHTML='<table><tr><th>Cartela</th><th>Jogo</th><th>Nome</th><th>Dezenas</th><th>Acertos</th><th></th></tr>'+x.lista.map((g,i)=>'<tr><td><b>'+g.c+'</b></td><td>'+g.j+'</td><td>'+esc(nm(g))+'</td><td>'+g.d.map(n=>'<span class="n '+(s.has(n)?'h':'')+'">'+p2(n)+'</span>').join('')+'</td><td><b>'+g.ac+'/10</b></td><td style="white-space:nowrap"><button class="b s" data-a="p" data-i="'+i+'" title="Imprimir este jogo">🖨</button><button class="b s" data-a="s" data-i="'+i+'" title="Compartilhar este jogo">📤</button></td></tr>').join('')+'</table>'}
+$('dl').onclick=e=>{const b=e.target.closest('button[data-i]');if(!b)return;const g=DASH[b.dataset.i];if(!g)return;
+if(b.dataset.a=='p')imprimir(ticket(g.c,nm(g),[{j:g.j,d:g.d}],false,g.dt||agora()));else shareJogo(g)};
+function shareJogo(g){if(g.ac>=10)return enviar([imgVenc(g)],'vencedor-'+g.c);
+enviar([imgLista('RESULTADO — '+g.ac+(g.ac==1?' ACERTO':' ACERTOS'),'Jogo '+g.j,[g],1)],'cartela-'+g.c+'-jogo-'+g.j)}
+async function sorteios(){const x=await call('sorteios');if(x.erro)return toast(x.erro);SOR=x;
+$('sl').innerHTML='<table><tr><th>Data</th><th>Horário</th><th>Dezenas</th>'+(ME.adm?'<th></th>':'')+'</tr>'+x.sorteios.map(s=>'<tr><td>'+s.data+'</td><td>'+s.horario+'</td><td>'+s.dezenas.map(n=>'<span class="n h">'+n+'</span>').join('')+'</td>'+(ME.adm?'<td><button class="b x s" data-d="'+s.data+'" data-h="'+s.horario+'">🗑</button></td>':'')+'</tr>').join('')+'</table>';
+const set=new Set(x.acumulado);$('ac').innerHTML=Array.from({length:100},(_,i)=>'<span class="'+(set.has(i)?'h':'')+'">'+p2(i)+'</span>').join('')}
+$('sl').onclick=async e=>{const b=e.target.closest('button[data-d]');if(!b||!confirm('Excluir o sorteio '+b.dataset.d+' '+b.dataset.h+'?'))return;
+const x=await call('excluirSorteio',{data:b.dataset.d,horario:b.dataset.h});toast(x.erro||'Sorteio excluído');sorteios()};
+async function atual(){const x=await call('atualizar');toast(x.erro||x.msg||'Gravados: '+(x.gravados.join(', ')||'nenhum novo'));sorteios()}
+async function admin(){$('md').value=new Date().toLocaleDateString('pt-BR');if(!$('mz').firstChild)$('mz').innerHTML='<input class="d" maxlength="2" inputmode="numeric">'.repeat(5);
+$('mz').querySelectorAll('.d').forEach((e,i,a)=>e.oninput=()=>{e.value=e.value.replace(/\D/g,'');if(e.value.length==2&&a[i+1])a[i+1].focus()});
+const x=await call('usuarios');if(x.erro)return toast(x.erro);loadNomes();
+$('ul').innerHTML='<table>'+x.usuarios.map(u=>'<tr><td><b>'+esc(u.n||u.u)+'</b>'+(u.adm?' <span class="n h">admin</span>':'')+'<br><small class="mut">login: '+u.u+'</small></td><td><button class="b s" data-a="n" data-u="'+u.u+'" data-n="'+esc(u.n||'')+'">✏ Nome</button><button class="b s" data-a="s" data-u="'+u.u+'">🔑 Senha</button>'+(u.u!=ME.u?'<button class="b x s" data-a="e" data-u="'+u.u+'">🗑 Excluir</button>':'')+'</td></tr>').join('')+'</table>'}
+$('ul').onclick=async e=>{const b=e.target.closest('button[data-a]');if(!b)return;const u=b.dataset.u;let x;
+if(b.dataset.a=='n'){const t=prompt('Nome de '+u+' (como aparece nas consultas):',b.dataset.n);if(t===null)return;x=await call('renomearUsuario',{u:u,nome:t})}
+else if(b.dataset.a=='s'){const p=prompt('Nova senha para '+u+':');if(!p)return;x=await call('redefinirSenha',{u:u,p:p})}
+else{if(!confirm('Excluir o acesso de '+u+'?'))return;x=await call('excluirUsuario',{u:u})}toast(x.erro||'Feito!');admin()};
+async function manual(){const z=[...$('mz').querySelectorAll('.d')].map(e=>e.value);if(z.some(v=>!v))return toast('Preencha as 5 dezenas');
+const x=await call('sorteioManual',{data:$('md').value.trim(),horario:$('mh').value,dezenas:z});toast(x.erro||'Sorteio lançado!');if(!x.erro)$('mz').querySelectorAll('.d').forEach(e=>e.value='')}
+async function encerrar(){if(!confirm('Encerrar o ciclo agora? Os dados da semana vão para as abas Arq_ da planilha e o sistema volta zerado.'))return;
+const x=await call('encerrarCiclo');toast(x.erro||'Ciclo encerrado: '+x.sorteios+' sorteio(s) e '+x.jogos+' jogo(s) arquivados');if(!x.erro){jogos();dash()}}
+async function novoU(){const nome=prompt('Nome (como vai aparecer nas consultas, ex.: Diego (Cachopa)):');if(nome===null)return;const u=prompt('Usuário de login (letras/números, sem espaço):');if(!u)return;const p=prompt('Senha (mín. 4):');if(!p)return;const x=await call('novoUsuario',{u:u,p:p,nome:nome});toast(x.erro||'Usuário criado!');admin()}
+const C={dk:'#173d2b',gr:'#0b6b43',cr:'#f4efdd',al:'#efe8d6',br:'#8a5a2b',tx:'#1d2330',gy:'#555'},FT='Arial,"Apple Color Emoji","Segoe UI Emoji",sans-serif';
+function mk(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');g.fillStyle=C.cr;g.fillRect(0,0,w,h);return[c,g]}
+function tx(g,s,x,y,f,col,al){g.font=f+' '+FT;g.fillStyle=col;g.textAlign=al||'left';g.fillText(s,x,y)}
+function imgLista(tit,sub,rows,uni){const H=uni?210+rows.length*107:1280,[c,g]=mk(887,H);g.fillStyle=C.dk;g.fillRect(0,0,887,126);g.fillRect(0,H-37,887,37);
+tx(g,tit,443,52,'bold 40px','#fff','center');tx(g,sub,443,96,'22px','#fff','center');
+rows.forEach((r,i)=>{const y=137+i*107;g.fillStyle=i%2?C.al:'#fff';g.fillRect(33,y,821,100);
+tx(g,'CARTELA',56,y+27,'bold 17px',C.tx);tx(g,r.c,56,y+60,'bold 30px',C.gr);
+tx(g,'Dezenas: '+r.d.map(p2).join(' • '),237,y+23,'17px','#333');
+tx(g,'Faltam: '+r.d.filter(n=>!SET.has(n)).map(p2).join(' • '),237,y+54,'17px',C.br);
+tx(g,r.ac+'/10',831,y+41,'bold 24px',C.gr,'right')});
+tx(g,'Resultado das Cartelas',443,H-13,'15px','#fff','center');return c}
+function imgVenc(r){const[c,g]=mk(1024,1280);g.fillStyle=C.dk;g.fillRect(26,26,972,186);g.fillStyle=C.gr;g.fillRect(32,1205,960,43);
+g.strokeStyle=C.dk;g.lineWidth=26;g.strokeRect(13,13,998,1254);
+tx(g,'🏆 CARTELA VENCEDOR',512,107,'bold 54px','#fff','center');tx(g,'10 / 10 ACERTOS',512,165,'bold 34px','#fff','center');
+tx(g,'CARTELA',512,288,'bold 28px',C.tx,'center');tx(g,r.c,512,370,'bold 76px',C.gr,'center');
+g.strokeStyle='#c4bfb0';g.lineWidth=3;g.setLineDash([14,12]);[427,891].forEach(y=>{g.beginPath();g.moveTo(77,y);g.lineTo(947,y);g.stroke()});g.setLineDash([]);
+tx(g,'10 DEZENAS DA CARTELA',512,492,'bold 28px',C.tx,'center');
+[...r.d].sort((a,b)=>a-b).forEach((n,i)=>{const x=161+(i%5)*175.25,y=597+(i>4?180:0);g.fillStyle=C.gr;g.beginPath();g.arc(x,y,61,0,7);g.fill();tx(g,p2(n),x,y+15,'bold 42px','#fff','center')});
+tx(g,'PARABÉNS! CARTELA COMPLETA',512,972,'bold 36px',C.tx,'center');tx(g,'Todas as 10 dezenas foram acertadas.',512,1028,'26px',C.gy,'center');
+tx(g,'Gerado pelo Dashboard de Cartelas',512,1146,'20px',C.gy,'center');return c}
+async function enviar(cs,nome){const fs=await Promise.all(cs.map((c,i)=>new Promise(r=>c.toBlob(b=>r(new File([b],nome+'-'+(i+1)+'.png',{type:'image/png'}))))));
+if(navigator.canShare&&navigator.canShare({files:fs}))try{return await navigator.share({files:fs})}catch(e){return}
+fs.forEach(f=>{const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;a.click()})}
+
+// ===== Histórico (ciclos arquivados) =====
+let HD=[],HSET=new Set(),HWIN=[],HVIT=null;
+async function histTab(){const x=await call('histCiclos');if(x.erro)return toast(x.erro);const s=$('hc'),v=s.value;
+$('hinfo').textContent='Ficam guardados os últimos '+x.guardar+' ciclos (cerca de 6 meses).';
+s.innerHTML=x.ciclos.length?x.ciclos.map(c=>'<option value="'+c.c+'">'+c.c+' • '+c.nj+' jogo(s)</option>').join(''):'<option value="">Nenhum ciclo encerrado ainda</option>';
+if(v&&x.ciclos.some(c=>c.c==v))s.value=v;hist()}
+async function hist(){const c=$('hc').value;
+if(!c){['hk','hdest','hl','hs','hac'].forEach(i=>$(i).innerHTML='');return}
+const x=await call('histDash',{ciclo:c,acertos:$('ha').value,usuario:$('hu').value,cartela:$('hq').value.trim()});if(x.erro)return toast(x.erro);
+HD=x.lista;HSET=new Set(x.sorteadas);HWIN=x.venc||[];HVIT=x.vit;const s=HSET;
+$('hk').innerHTML='<div>JOGOS<b>'+x.total+'</b></div><div>7/10<b>'+x.cont[7]+'</b></div><div>8/10<b>'+x.cont[8]+'</b></div><div>9/10<b>'+x.cont[9]+'</b></div>';
+$('hdest').innerHTML=x.cont[10]?'<div class="card win"><h2>🏆 CARTELA VENCEDOR — 10/10 ('+x.cont[10]+')</h2>'+(x.vit?'<p class="mut">Vitória no sorteio de '+x.vit.data+' • '+x.vit.nome+'</p>':'')+HWIN.map(g=>'<p>Cartela <b>'+g.c+'</b> (jogo '+g.j+') — '+esc(nm(g))+'<br>'+g.d.map(n=>'<span class="n h">'+p2(n)+'</span>').join('')+'</p>').join('')+'<button class="b p" onclick="hshareWin()">📤 Compartilhar PNG</button><button class="b p" onclick="hprintWin()">🖨 Imprimir</button></div>'
+:(x.vit?'<div class="card"><p class="mut">🏆 Houve ganhador neste ciclo, no sorteio de '+x.vit.data+' • '+x.vit.nome+'.</p></div>':'');
+$('hl').innerHTML=x.lista.length?'<table><tr><th>Cartela</th><th>Jogo</th><th>Nome</th><th>Dezenas</th><th>Acertos</th><th></th></tr>'+x.lista.map((g,i)=>'<tr><td><b>'+g.c+'</b></td><td>'+g.j+'</td><td>'+esc(nm(g))+'</td><td>'+g.d.map(n=>'<span class="n '+(s.has(n)?'h':'')+'">'+p2(n)+'</span>').join('')+'</td><td><b>'+g.ac+'/10</b></td><td style="white-space:nowrap"><button class="b s" data-a="p" data-i="'+i+'" title="Imprimir este jogo">🖨</button><button class="b s" data-a="s" data-i="'+i+'" title="Compartilhar este jogo">📤</button>'+(ME.adm?'<button class="b x s" data-a="x" data-i="'+i+'" title="Excluir do histórico">🗑</button>':'')+'</td></tr>').join('')+'</table>':'<p class="mut">Nenhuma cartela encontrada.</p>';
+$('hs').innerHTML='<table><tr><th>Data</th><th>Horário</th><th>Dezenas</th>'+(ME.adm?'<th></th>':'')+'</tr>'+x.sorteios.map(r=>'<tr><td>'+r.data+'</td><td>'+r.horario+'</td><td>'+r.dezenas.map(n=>'<span class="n h">'+n+'</span>').join('')+'</td>'+(ME.adm?'<td style="white-space:nowrap"><button class="b s" data-a="e" data-d="'+r.data+'" data-h="'+r.horario+'" title="Corrigir dezenas">✏</button><button class="b x s" data-a="x" data-d="'+r.data+'" data-h="'+r.horario+'" title="Excluir">🗑</button></td>':'')+'</tr>').join('')+'</table>';
+const ac=new Set(x.acumulado);$('hac').innerHTML=Array.from({length:100},(_,i)=>'<span class="'+(ac.has(i)?'h':'')+'">'+p2(i)+'</span>').join('')}
+function histCtx(){SET=HSET;VIT=HVIT}   // imgLista e ticketVenc leem estas variáveis
+$('hl').onclick=async e=>{const b=e.target.closest('button[data-i]');if(!b)return;const g=HD[b.dataset.i];if(!g)return;histCtx();
+if(b.dataset.a=='p')imprimir(ticket(g.c,nm(g),[{j:g.j,d:g.d}],false,g.dt));
+else if(b.dataset.a=='s')shareJogo(g);
+else if(confirm('Excluir o jogo '+g.j+' da cartela '+g.c+' de '+nm(g)+' deste ciclo?')){const x=await call('histJogoExcluir',{ciclo:$('hc').value,u:g.u,c:g.c,j:g.j});toast(x.erro||'Jogo excluído do histórico');hist()}};
+$('hs').onclick=async e=>{const b=e.target.closest('button[data-d]');if(!b)return;const c=$('hc').value,r={ciclo:c,data:b.dataset.d,horario:b.dataset.h};let x;
+if(b.dataset.a=='e'){const t=prompt('Novas 5 dezenas do sorteio '+r.data+' '+r.horario+' (separadas por espaço):');if(!t)return;
+const z=t.trim().split(/\s+/).map(Number);if(z.length!=5||z.some(n=>!(n>=0&&n<=99)))return toast('Informe 5 dezenas (00-99)');
+x=await call('histSorteioSalvar',Object.assign(r,{dezenas:z}))}
+else{if(!confirm('Excluir o sorteio '+r.data+' '+r.horario+' deste ciclo?'))return;x=await call('histSorteioExcluir',r)}
+toast(x.erro||'Histórico corrigido');hist()};
+function hshareList(){if(!HD.some(g=>g.ac<10))return toast('Nada para compartilhar (10/10 usa o botão do destaque)');
+const o=DASH;DASH=HD;histCtx();try{enviar(pagsDash(),'historico')}finally{DASH=o}}
+function hshareWin(){histCtx();enviar(HWIN.map(imgVenc),'vencedor')}
+function hprintWin(){histCtx();imprimir(HWIN.map(ticketVenc).join(''))}
+const esc=x=>String(x==null?'':x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),nm=g=>g.n||g.u;
+function senhaAbrir(){['pa','pn','pc'].forEach(i=>$(i).value='');$('pw').classList.remove('hide');$('pa').focus()}
+async function senhaSalvar(){const a=$('pa').value,n=$('pn').value,c=$('pc').value;if(!a||!n)return toast('Preencha a senha atual e a nova');
+if(n!==c)return toast('A confirmação não confere');if(n.trim().length<4)return toast('Senha nova muito curta (mínimo 4)');
+const x=await call('trocarSenha',{atual:a,nova:n});if(x.erro)return toast(x.erro);$('pw').classList.add('hide');toast('✅ Senha alterada!')}
+function pagsDash(){const l=DASH.filter(g=>g.ac<10);
+const grp={};l.forEach(g=>(grp[g.ac]=grp[g.ac]||[]).push(g));const pg=[];
+Object.keys(grp).sort((a,b)=>b-a).forEach(k=>{for(let i=0;i<grp[k].length;i+=10)pg.push([k,grp[k].slice(i,i+10)])});
+return pg.map((p,i)=>imgLista('RESULTADO — '+p[0]+' ACERTOS','Página '+(i+1)+'/'+pg.length+' • '+p[1].length+' cartela(s)',p[1]))}
+function shareDash(){if(!DASH.some(g=>g.ac<10))return toast('Nada para compartilhar (10/10 usa o botão do destaque)');enviar(pagsDash(),'cartelas')}
+function shareWin(){enviar(WIN.map(imgVenc),'vencedor')}
+function ticketVenc(g){return '<div class="pg"><div class="box t"><div class="h1">★ VENCEDOR ★</div><div class="sub">10 / 10 ACERTOS</div></div><div class="t lb">CARTELA</div><div class="t num">'+g.c+'</div>'+
+'<div class="inf"><span>Nome: <b>'+esc(nm(g))+'</b></span><span>Jogo <b>'+g.j+'</b></span></div>'+(g.dt?'<div class="inf"><span>Registrada em</span><b>'+g.dt+'</b></div>':'')+(VIT?'<div class="inf"><span>Sorteio: '+VIT.data+' • '+VIT.nome+'</span></div>':'')+
+'<div class="dz"></div><div class="g">'+[...g.d].sort((a,b)=>a-b).map(n=>'<b>'+p2(n)+'</b>').join('')+'</div>'+cicloTxt(g.dt)+'<div class="dz"></div><div class="ft"><b>PARABÉNS!</b><br>Todas as 10 dezenas foram acertadas.</div></div>'}
+function printWin(){if(!WIN.length)return toast('Nenhuma cartela vencedora');imprimir(WIN.map(ticketVenc).join(''))}
+function shareSor(){const[c,g]=mk(900,140+SOR.sorteios.length*34+110);g.fillStyle=C.dk;g.fillRect(0,0,900,90);tx(g,'DEZENAS SORTEADAS',450,58,'bold 36px','#fff','center');
+SOR.sorteios.forEach((s,i)=>tx(g,s.data+'  '+s.horario+':  '+s.dezenas.join(' • '),40,135+i*34,'22px',C.tx));
+tx(g,'Acumulado: '+(SOR.acumulado||[]).map(p2).join(' '),40,170+SOR.sorteios.length*34,'20px',C.gr);enviar([c],'sorteios')}
+</script></body></html>
