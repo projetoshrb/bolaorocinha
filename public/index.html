@@ -66,7 +66,7 @@ async function tgTeste(){const x=await call('telegramTeste');toast(x.erro||'Mens
 async function tgImagemTeste(){toast('Gerando imagem…');const x=await call('telegramImagemTeste');toast(x.erro||'Imagem de teste enviada')}
 async function tgReenviar(){if(!confirm('Reenviar o resumo do último sorteio ao Telegram?'))return;toast('Enviando…');const x=await call('telegramReenviar');toast(x.erro||'Resumo reenviado')}
 </script>
-<div class="card"><h2>Ciclo semanal</h2><p class="mut">Toda quarta, entre 01:00 e 02:00, o sistema arquiva os dados da semana e começa um novo ciclo. Use o botão só se precisar virar o ciclo antes disso.</p>
+<div class="card"><h2>Ciclo semanal</h2><p class="mut">Toda segunda, entre 05:00 e 06:00, o sistema arquiva os dados da semana anterior (eles ficam na aba Histórico) e começa um novo ciclo. O cadastro de cartelas abre na segunda às 06:00 e fecha na quinta às 13:00. Use o botão só se precisar virar o ciclo antes disso.</p>
 <button class="b x" onclick="encerrar()">🔄 Encerrar ciclo agora</button></div>
 <p class="mut">Cada correção é registrada na aba <b>Log</b> da planilha.</p></section>
 </main></div><div id="toast" class="hide"></div>
