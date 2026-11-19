@@ -1,0 +1,9 @@
+{
+  "name": "telegram-imagens",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Gera as imagens PNG do Bolão 10 Dezenas para o bot do Telegram",
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.0"
+  }
+}
