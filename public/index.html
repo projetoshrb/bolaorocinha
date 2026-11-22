@@ -42,7 +42,10 @@ header h1{font-family:Rockwell,'Roboto Slab',Georgia,serif;letter-spacing:1px;te
 <section id="cad"><div class="card hide" id="cadmsg" style="border-left:6px solid #b3261e"><b>⛔ Cadastro encerrado</b><p class="mut">O cadastro abre na segunda às 06:00 e fecha na quinta às 13:00.</p></div><div class="card"><h2>1. Número da cartela</h2><input id="cn" style="width:160px;font-size:20px" inputmode="numeric" placeholder="Ex: 1000" onkeydown="if(event.key=='Enter'){event.preventDefault();rows.firstChild.querySelector('.d').focus()}">
 <h2 style="margin-top:16px">2. Jogos (10 dezenas cada)</h2><p class="mut">Digite 2 números e o cursor pula sozinho. Ao terminar um jogo, abre outro para a mesma cartela.</p>
 <div id="rows"></div><button class="b" onclick="addRow(1)">➕ Outro jogo</button> <button class="b p" onclick="revisar()">Revisar e enviar ➜</button></div>
-<div id="rev" class="card hide"></div></section>
+<div id="rev" class="card hide"></div><div class="card hide" id="impc"><h2>📥 Importar da planilha</h2><p class="mut">Só administrador. Copie as células da planilha (cartela + 10 dezenas por linha) e cole abaixo. Cartela repetida vira o jogo 2, 3...</p>
+<select id="iu"></select><textarea id="it" rows="6" style="width:100%;margin-top:8px;font-family:monospace" placeholder="83301&#9;6&#9;83&#9;26&#9;1&#9;4&#9;22&#9;51&#9;55&#9;69&#9;98" oninput="$('ib').classList.add('hide');$('ip').innerHTML=''"></textarea>
+<button class="b p" onclick="impVer()">Verificar</button> <button class="b p hide" id="ib" onclick="impGo()">Importar</button><div id="ip" style="margin-top:8px"></div></div>
+</section>
 <section id="jog" class="hide"><div class="card"><h2>Jogos cadastrados</h2><select id="ju" class="hide" onchange="jogos()"><option value="">Todos os usuários</option></select> <input id="jq" placeholder="🔍 Cartela ou nome" oninput="drawJ()">
 <button class="b p" onclick="jogos()">Atualizar</button><button class="b" onclick="imprJ()">🖨 Imprimir lista</button><button class="b p hide" id="jps" onclick="imprSel()">🖨 Imprimir selecionados (<span id="jsn">0</span>)</button><button class="b" onclick="csv()">⬇ Baixar CSV</button>
 <p class="mut" id="jc"></p><div class="sc" id="jl"></div></div></section>
@@ -90,7 +93,7 @@ function toast(m){const t=$('toast');t.textContent=m;t.classList.remove('hide');
 async function entrar(){const x=await call('login',{u:$('lu').value,p:$('lp').value});if(x.erro){$('le').textContent=x.erro;return}
 T=x.token;ME=x;salvarSessao();iniciar(x)}
 function iniciar(x){$('login').classList.add('hide');$('app').classList.remove('hide');$('who').textContent='👤 '+(x.n||x.u)+(x.adm?' • admin':'');
-if(x.adm){['tadm','tdash','tsor','thist','at','ju','hu','jps'].forEach(i=>$(i).classList.remove('hide'));loadNomes()}addRow();jogos();call('cadStatus').then(r=>{QUIET=false;if(r&&r.aberto===false)$('cadmsg').classList.remove('hide')})}
+if(x.adm){['tadm','tdash','tsor','thist','at','ju','hu','jps','impc'].forEach(i=>$(i).classList.remove('hide'));loadNomes()}addRow();jogos();call('cadStatus').then(r=>{QUIET=false;if(r&&r.aberto===false)$('cadmsg').classList.remove('hide')})}
 $('lp').onkeydown=e=>{if(e.key=='Enter')entrar()};
 const TABS=['cad','dash','sor','jog','hist','adm'];
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{ABA=b.dataset.t;salvarSessao();document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x==b));
@@ -138,8 +141,25 @@ js.map(j=>'<div class="jg"><div class="jt">JOGO '+j.j+'</div><div class="g">'+j.
 '<div class="dz"></div><div class="ft">Confira os resultados no sistema<br><b>★ BOA SORTE! ★</b></div></div>'}
 function imprimir(h){const w=open('');w.document.write('<!DOCTYPE html><meta charset="utf-8"><title>Impressão</title><style>'+PCSS+'</style><body>'+h);w.document.close();w.focus();setTimeout(()=>w.print(),300)}
 async function jogos(){const x=await call('jogos',{usuario:$('ju').value});if(x.erro)return toast(x.erro);JL=x.jogos;JSEL=new Set([...JSEL].filter(k=>JL.some(g=>kj(g)==k)));drawJ()}
+
+let IMP=[];
+function impParse(t){const ok=[],er=[];String(t).replace(/^\uFEFF/,'').split(/\r?\n/).forEach((ln,i)=>{if(!ln.trim())return;const k=ln.trim().split(/[\t;, ]+/).filter(Boolean),n=i+1;
+if(k.length!==11)return er.push('Linha '+n+': esperado cartela + 10 dezenas (veio '+k.length+')');
+if(!/^\w{1,15}$/.test(k[0]))return er.push('Linha '+n+': cartela inválida');
+const d=k.slice(1);if(d.some(x=>!/^\d{1,2}$/.test(x)))return er.push('Linha '+n+': dezena inválida (use 00-99)');
+if(new Set(d.map(Number)).size!==10)return er.push('Linha '+n+': dezena repetida');ok.push([k[0]].concat(d))});return{ok,er}}
+function impVer(){if(!$('iu').value)return toast('Escolha o usuário');const r=impParse($('it').value);IMP=r.ok;
+const cs=new Set(r.ok.map(x=>x[0])).size;
+$('ip').innerHTML='<p><b>'+r.ok.length+'</b> jogo(s) válido(s) em <b>'+cs+'</b> cartela(s).'+(r.er.length?' <span style="color:#b3261e"><b>'+r.er.length+'</b> com erro:</span></p><div class="mut">'+r.er.slice(0,30).map(esc).join('<br>')+(r.er.length>30?'<br>...':'')+'</div><p>Corrija as linhas com erro para importar.':'')+'</p>';
+$('ib').classList.toggle('hide',!(r.ok.length&&!r.er.length))}
+async function impGo(){const u=$('iu').value;if(!u||!IMP.length)return;
+const fechado=!$('cadmsg').classList.contains('hide');
+if(!confirm((fechado?'ATENÇÃO: o cadastro está encerrado (ciclo em andamento). Os jogos entram AGORA, com a data/hora de hoje.\n\n':'')+'Importar '+IMP.length+' jogo(s) para '+$('iu').selectedOptions[0].textContent+'?'))return;
+$('ib').disabled=true;const x=await call('importar',{usuario:u,linhas:IMP});$('ib').disabled=false;
+if(x&&x.erro)return toast(x.erro);
+toast('Importados '+x.qtd+' jogo(s)');$('it').value='';$('ip').innerHTML='<p>✅ '+x.qtd+' jogo(s) importado(s).</p>';$('ib').classList.add('hide');IMP=[];jogos()}
 async function loadNomes(){const x=await call('nomes');if(x.erro)return;
-['ju','fu','hu'].forEach(id=>{const s=$(id),v=s.value;s.innerHTML='<option value="">Todos os usuários</option>'+x.nomes.map(n=>'<option value="'+esc(n.u)+'">'+esc(n.n)+'</option>').join('');s.value=v})}
+['ju','fu','hu'].forEach(id=>{const s=$(id),v=s.value;s.innerHTML='<option value="">Todos os usuários</option>'+x.nomes.map(n=>'<option value="'+esc(n.u)+'">'+esc(n.n)+'</option>').join('');s.value=v});const iu=$('iu'),vi=iu.value;iu.innerHTML='<option value="">— escolha o usuário dono dos jogos —</option>'+x.nomes.map(n=>'<option value="'+esc(n.u)+'">'+esc(n.n)+'</option>').join('');iu.value=vi}
 let JSEL=new Set();const kj=g=>g.u+'|'+g.c+'|'+g.j,jvis=()=>{const q=$('jq').value.trim().toLowerCase();return JL.filter(g=>!q||String(g.c).includes(q)||nm(g).toLowerCase().includes(q))};
 function updSel(){const n=$('jsn');if(n)n.textContent=JSEL.size;const a=$('jsel');if(a){const v=jvis();a.checked=v.length>0&&v.every(g=>JSEL.has(kj(g)))}}
 function drawJ(){const l=jvis();$('jc').textContent=l.length+' jogo(s)';
