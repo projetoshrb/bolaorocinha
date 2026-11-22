@@ -471,14 +471,16 @@ async function atual(){const x=await call('atualizar');toast(x.erro||x.msg||'Gra
 async function admin(){tgStatus();{const a=agora();$('md').value=a.slice(6,10)+'-'+a.slice(3,5)+'-'+a.slice(0,2)}if(!$('mz').firstChild)$('mz').innerHTML='<input class="d" maxlength="2" inputmode="numeric">'.repeat(5);
 $('mz').querySelectorAll('.d').forEach((e,i,a)=>e.oninput=()=>{e.value=e.value.replace(/\D/g,'');if(e.value.length==2&&a[i+1])a[i+1].focus()});
 const x=await call('usuarios');if(x.erro)return toast(x.erro);loadNomes();
-$('ul').innerHTML='<table>'+x.usuarios.map(u=>'<tr><td><b>'+esc(u.n||u.u)+'</b>'+(u.adm?' <span class="n h">admin</span>':'')+'<br><small class="mut">login: '+u.u+'</small></td><td><button class="b s" data-a="n" data-u="'+u.u+'" data-n="'+esc(u.n||'')+'">✏ Nome</button><button class="b s" data-a="s" data-u="'+u.u+'">🔑 Senha</button>'+(u.u!=ME.u?'<button class="b x s" data-a="e" data-u="'+u.u+'">🗑 Excluir</button>':'')+'</td></tr>').join('')+'</table>'}
+$('ul').innerHTML='<table>'+x.usuarios.map(u=>'<tr><td><b>'+esc(u.n||u.u)+'</b>'+(u.adm?' <span class="n h">admin</span>':'')+'<br><small class="mut">login: '+u.u+'</small></td><td><button class="b s" data-a="n" data-u="'+u.u+'" data-n="'+esc(u.n||'')+'">✏ Nome</button><button class="b s" data-a="s" data-u="'+u.u+'">🔑 Senha</button>'+(u.u!=ME.u?'<button class="b s" data-a="a" data-u="'+u.u+'" data-adm="'+(u.adm?1:0)+'">'+(u.adm?'⭐ Remover admin':'⭐ Tornar admin')+'</button><button class="b x s" data-a="e" data-u="'+u.u+'">🗑 Excluir</button>':'')+'</td></tr>').join('')+'</table>'}
 $('ul').onclick=async e=>{const b=e.target.closest('button[data-a]');if(!b)return;const u=b.dataset.u;
 if(b.dataset.a=='n')return abrirForm({titulo:'✏ Nome de '+u,campos:[{id:'nome',rotulo:'Nome (como aparece nas consultas)',valor:b.dataset.n}],
  enviar:async v=>{if(!v.nome)return 'Informe o nome';const x=await call('renomearUsuario',{u:u,nome:v.nome});if(x.erro)return x.erro;toast('✅ Nome alterado');admin()}});
 if(b.dataset.a=='s')return abrirForm({titulo:'🔑 Nova senha de '+u,texto:'A pessoa será desconectada e vai precisar entrar com a senha nova.',botao:'Redefinir senha',
  campos:[{id:'p',rotulo:'Senha nova',dica:'Mínimo 6 caracteres',cap:'none'}],
  enviar:async v=>{if(v.p.length<6)return 'A senha precisa ter pelo menos 6 caracteres';const x=await call('redefinirSenha',{u:u,p:v.p});if(x.erro)return x.erro;toast('✅ Senha redefinida');admin()}});
-if(!confirm('Excluir o acesso de '+u+'? Os cadastros dele continuam na planilha.'))return;const x=await call('excluirUsuario',{u:u});toast(x.erro||'Acesso excluído');admin()};
+if(b.dataset.a=='a'){const vira=b.dataset.adm!='1';if(!confirm(vira?'Tornar '+u+' admin? Ele passa a ver Dashboard, Sorteios, Histórico, Importar, Conferir e Admin, e vai precisar entrar de novo.':'Remover o admin de '+u+'? Ele volta a ser vendedor e vai precisar entrar de novo.'))return;
+const x=await call('definirAdm',{u:u,adm:vira});toast(x.erro||(vira?'⭐ '+u+' agora é admin':u+' voltou a ser vendedor'));return admin()}
+if(!confirm('Excluir o acesso de '+u+'? Os cadastros dele continuam no sistema.'))return;const x=await call('excluirUsuario',{u:u});toast(x.erro||'Acesso excluído');admin()};
 async function manual(){const z=[...$('mz').querySelectorAll('.d')].map(e=>e.value);if(z.some(v=>!v))return toast('Preencha as 5 dezenas');
 const dv=$('md').value.trim();if(!dv)return toast('Escolha a data do sorteio');
 const x=await call('sorteioManual',{data:/^\d{4}-\d{2}-\d{2}$/.test(dv)?dv.split('-').reverse().join('/'):dv,horario:$('mh').value,dezenas:z});toast(x.erro||'Sorteio lançado!');if(!x.erro)$('mz').querySelectorAll('.d').forEach(e=>e.value='')}

@@ -480,6 +480,21 @@ begin
   return jsonb_build_object('ok', true);
 end $$;
 
+-- Tornar ou remover admin. Não deixa mexer em si mesmo nem ficar sem nenhum admin; derruba a sessão da pessoa.
+create or replace function bolao.a_definiradm(p_u jsonb, p_d jsonb) returns jsonb language plpgsql as $$
+declare v_u text := coalesce(p_d->>'u', ''); v_adm boolean := coalesce((p_d->>'adm')::boolean, false); n int;
+begin
+  perform bolao.req_adm(p_u);
+  if v_u = p_u->>'u' then raise exception 'Você não pode mudar o seu próprio acesso de admin'; end if;
+  if not v_adm and (select count(*) from bolao.usuarios where adm and u <> v_u) = 0 then raise exception 'O sistema precisa ter pelo menos um admin'; end if;
+  update bolao.usuarios set adm = v_adm, v = v + 1 where u = v_u;
+  get diagnostics n = row_count;
+  if n = 0 then raise exception 'Usuário não encontrado'; end if;
+  delete from bolao.sessoes where u = v_u;
+  perform bolao.log_(p_u->>'u', case when v_adm then 'Tornou admin o usuário ' else 'Removeu o admin do usuário ' end || v_u);
+  return jsonb_build_object('ok', true);
+end $$;
+
 -- ===== Porta de entrada do site =====
 create or replace function public.api(t text default null, a text default null, d jsonb default null) returns jsonb
 language plpgsql security definer set search_path = bolao, public, extensions as $f$
