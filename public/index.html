@@ -143,14 +143,17 @@ function imprimir(h){const w=open('');w.document.write('<!DOCTYPE html><meta cha
 async function jogos(){const x=await call('jogos',{usuario:$('ju').value});if(x.erro)return toast(x.erro);JL=x.jogos;JSEL=new Set([...JSEL].filter(k=>JL.some(g=>kj(g)==k)));drawJ()}
 
 let IMP=[];
-function impParse(t){const ok=[],er=[];String(t).replace(/^\uFEFF/,'').split(/\r?\n/).forEach((ln,i)=>{if(!ln.trim())return;const k=ln.trim().split(/[\t;, ]+/).filter(Boolean),n=i+1;
-if(k.length!==11)return er.push('Linha '+n+': esperado cartela + 10 dezenas (veio '+k.length+')');
-if(!/^\w{1,15}$/.test(k[0]))return er.push('Linha '+n+': cartela inválida');
-const d=k.slice(1);if(d.some(x=>!/^\d{1,2}$/.test(x)))return er.push('Linha '+n+': dezena inválida (use 00-99)');
-if(new Set(d.map(Number)).size!==10)return er.push('Linha '+n+': dezena repetida');ok.push([k[0]].concat(d))});return{ok,er}}
+function impParse(t){const ok=[],er=[];String(t).replace(/^\uFEFF/,'').split(/\r?\n/).forEach((ln,i)=>{if(!ln.trim())return;const k=ln.trim().split(/[\t;, ]+/).filter(Boolean),n=i+1,ref='Linha '+n+' (cartela '+k[0]+'): ';
+if(k.length!==11)return er.push(ref+'tem '+(k.length-1)+' dezena(s), o correto são 10 → '+k.slice(1).join(' '));
+if(!/^\w{1,15}$/.test(k[0]))return er.push('Linha '+n+': número da cartela inválido "'+k[0]+'"');
+const d=k.slice(1),ruim=d.filter(x=>!/^\d{1,2}$/.test(x));
+if(ruim.length)return er.push(ref+'dezena inválida '+ruim.map(x=>'"'+x+'"').join(', ')+' (use 00 a 99) → '+d.join(' '));
+const c={};d.map(Number).forEach(x=>c[x]=(c[x]||0)+1);const rep=Object.keys(c).filter(x=>c[x]>1).map(x=>String(x).padStart(2,'0'));
+if(rep.length)return er.push(ref+'dezena repetida '+rep.join(', ')+' → '+d.join(' '));
+ok.push([k[0]].concat(d))});return{ok,er}}
 function impVer(){if(!$('iu').value)return toast('Escolha o usuário');const r=impParse($('it').value);IMP=r.ok;
 const cs=new Set(r.ok.map(x=>x[0])).size;
-$('ip').innerHTML='<p><b>'+r.ok.length+'</b> jogo(s) válido(s) em <b>'+cs+'</b> cartela(s).'+(r.er.length?' <span style="color:#b3261e"><b>'+r.er.length+'</b> com erro:</span></p><div class="mut">'+r.er.slice(0,30).map(esc).join('<br>')+(r.er.length>30?'<br>...':'')+'</div><p>Corrija as linhas com erro para importar.':'')+'</p>';
+$('ip').innerHTML='<p><b>'+r.ok.length+'</b> jogo(s) válido(s) em <b>'+cs+'</b> cartela(s).'+(r.er.length?' <span style="color:#b3261e"><b>'+r.er.length+'</b> com erro:</span></p><div class="mut">'+r.er.slice(0,50).map(x=>'• '+esc(x)).join('<br>')+(r.er.length>50?'<br>... e mais '+(r.er.length-50):'')+'</div><p>Corrija as linhas com erro para importar.':'')+'</p>';
 $('ib').classList.toggle('hide',!(r.ok.length&&!r.er.length))}
 async function impGo(){const u=$('iu').value;if(!u||!IMP.length)return;
 const fechado=!$('cadmsg').classList.contains('hide');
