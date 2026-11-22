@@ -17,16 +17,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  publicar:
+  # 1) Prepara os arquivos da pasta public/
+  preparar:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v5
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
           path: public
+
+  # 2) Publica (separado, como no modelo oficial: evita o erro "No artifacts named github-pages")
+  publicar:
+    needs: preparar
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - id: deployment
         uses: actions/deploy-pages@v5
