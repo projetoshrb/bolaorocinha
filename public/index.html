@@ -56,6 +56,14 @@ body.busy #carga{display:block}
 @keyframes carga{from{background-position:-50% 0}to{background-position:150% 0}}
 #toast{bottom:calc(96px + env(safe-area-inset-bottom,0px));max-width:calc(100vw - 32px);text-align:center;pointer-events:none}
 @media(max-width:700px){.faixa{display:none}main{padding:8px}header h1{font-size:16px}}
+.modal{position:fixed;inset:0;background:#0009;z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.modal .card{width:min(460px,100%);max-height:94vh;overflow:auto;margin:0;border-radius:18px 18px 0 0;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+.cmpimg{background:#e9e4d8;border-radius:10px;padding:10px;max-height:42vh;overflow:auto;text-align:center;margin:8px 0 12px}
+.cmpimg img{width:240px;max-width:100%;background:#fff;box-shadow:0 2px 6px #0003;min-height:120px}
+.b.wpp{background:#e7f5ea;color:#13612f;border:2px solid #9fd3ae}
+.codv{display:inline-block;margin-top:6px;font-family:ui-monospace,Menlo,monospace;font-weight:800;font-size:20px;letter-spacing:2px;background:#f4efe1;border:1.5px dashed #b9a676;border-radius:8px;padding:4px 12px}
+.res{border-radius:12px;padding:10px 12px;margin-top:10px}.res h3{margin:0 0 4px}.res.ok{background:#e3f3e8;border:2px solid #7cc596}.res.no{background:#fde0dd;border:2px solid #e39a93}
+.linkb{background:none;border:0;color:var(--vm);font-weight:700;text-decoration:underline;cursor:pointer;font-size:14px;padding:8px}
 </style></head><body><div id="carga" aria-hidden="true"></div>
 <div id="login" class="card"><div id="lbichos" aria-hidden="true"></div><h2>BOLAO ROCINHA</h2><p class="mut">Entre com seu usuário e senha</p><p class="mut" id="inst" style="font-size:13px"></p>
 <input id="lu" placeholder="Usuário" autocapitalize="none" autocomplete="username"><input id="lp" type="password" placeholder="Senha" autocomplete="current-password">
@@ -63,6 +71,10 @@ body.busy #carga{display:block}
 <div id="app" class="hide"><div id="pw" class="hide" style="position:fixed;inset:0;background:#0007;z-index:20;display:flex;align-items:center;justify-content:center"><div class="card" style="width:min(340px,92vw)"><h2>🔑 Trocar minha senha</h2>
 <input id="pa" type="password" placeholder="Senha atual" style="width:100%;margin-bottom:8px" autocomplete="current-password"><input id="pn" type="password" placeholder="Senha nova (mín. 6)" style="width:100%;margin-bottom:8px" autocomplete="new-password"><input id="pc" type="password" placeholder="Repita a senha nova" style="width:100%;margin-bottom:8px" autocomplete="new-password" onkeydown="if(event.key=='Enter')senhaSalvar()">
 <button class="b p" onclick="senhaSalvar()">Salvar</button><button class="b" onclick="$('pw').classList.add('hide')">Cancelar</button></div></div>
+<div id="cmp" class="modal hide" role="dialog" aria-labelledby="cmpt"><div class="card"><h2 id="cmpt">Comprovante</h2><div class="cmpimg"><img id="cmpi" alt="Prévia do comprovante"></div>
+<label class="lab" for="bob">Largura da bobina da impressora</label><select id="bob" onchange="trocaBobina()" style="width:100%"><option value="58">58 mm (mini portátil)</option><option value="80">80 mm</option></select>
+<div class="acts"><button class="b big" onclick="shareCupom('imp')">🖨 Imprimir</button><button class="b big wpp" onclick="shareCupom('wpp')">📲 WhatsApp</button><button class="b big" onclick="$('cmp').classList.add('hide')">Fechar</button></div>
+<p class="mut" style="font-size:12px">Imprimir: escolha o app da impressora (por exemplo, RawBT) na lista que abrir.</p></div></div>
 <header><h1>🦁 BOLAO ROCINHA</h1><div><span class="chip" id="who"></span><button class="b hide" id="binst" onclick="instalar()">📲 Instalar</button><button class="b" onclick="senhaAbrir()">🔑 Senha</button><button class="b" onclick="sair()">Sair</button></div></header>
 <div class="faixa" aria-hidden="true"><div class="trilho" id="trilho"></div></div>
 <nav><button data-t="cad" class="on">📝 Cadastrar</button><button data-t="dash" id="tdash" class="hide">🏆 Dashboard</button><button data-t="sor" id="tsor" class="hide">🎯 Sorteios</button><button data-t="jog">📋 Jogos</button><button data-t="hist" id="thist" class="hide">🕘 Histórico</button><button data-t="adm" id="tadm" class="hide">⚙️ Admin</button></nav>
@@ -107,6 +119,8 @@ async function tgTeste(){const x=await call('telegramTeste');toast(x.erro||'Mens
 async function tgImagemTeste(){toast('Gerando imagem…');const x=await call('telegramImagemTeste');toast(x.erro||'Imagem de teste enviada')}
 async function tgReenviar(){if(!confirm('Reenviar o resumo do último sorteio ao Telegram?'))return;toast('Enviando…');const x=await call('telegramReenviar');toast(x.erro||x.msg||'Resumo reenviado')}
 </script>
+<div class="card"><h2>🔎 Conferir comprovante</h2><p class="mut">Digite a cartela e o código de conferência impresso no comprovante.</p>
+<input id="vc" placeholder="Cartela" inputmode="numeric" style="width:130px"> <input id="vk" placeholder="Código (ex.: K7Q-29F)" autocapitalize="characters" autocomplete="off" style="width:200px" onkeydown="if(event.key=='Enter')conferir()"> <button class="b p" onclick="conferir()">Conferir</button><div id="vr"></div></div>
 <div class="card"><h2>Ciclo semanal</h2><p class="mut">Toda segunda, entre 05:00 e 06:00, o sistema arquiva os dados da semana anterior (eles ficam na aba Histórico) e começa um novo ciclo. O cadastro de cartelas abre na segunda às 06:00 e fecha na quinta às 13:00. Use o botão só se precisar virar o ciclo antes disso.</p>
 <button class="b x" onclick="encerrar()">🔄 Encerrar ciclo agora</button></div>
 <p class="mut">Cada correção é registrada na aba <b>Log</b> da planilha.</p></section>
@@ -194,9 +208,12 @@ if(x.erro){ok.disabled=false;$('volta').disabled=false;ok.textContent='✅ Confi
 try{navigator.vibrate&&navigator.vibrate([40,60,40])}catch(_){}
 rows.innerHTML='';$('cn').value='';addRow();limparRasc();avisoCartela();
 const tk=js.map((d,i)=>({j:x.ini+i,d})),dt=x.dt||agora();
-$('rev').innerHTML='<div class="done"><div class="big">✅</div><h2>Cartela '+esc(c)+' enviada</h2><p class="mut">'+x.qtd+(x.qtd==1?' jogo':' jogos')+' · '+esc(dt)+'</p></div>'+
-'<div class="acts"><button class="b big" id="pc">🖨 Imprimir comprovante</button><button class="b p big" id="prox">Próxima cartela ➜</button></div>';
-$('pc').onclick=()=>imprimir(ticket(c,ME.n||ME.u,tk,false,dt));$('prox').onclick=novaCartela;
+const o={c:c,u:ME.n||ME.u,dt:dt,js:tk,k:x.cod||''};prepCupom(o);
+$('rev').innerHTML='<div class="done"><div class="big">✅</div><h2>Cartela '+esc(c)+' enviada</h2><p class="mut">'+x.qtd+(x.qtd==1?' jogo':' jogos')+' · '+esc(dt)+'</p>'+
+(o.k?'<div class="codv">'+esc(o.k)+'</div><div class="mut" style="font-size:12px;margin-top:2px">código de conferência</div>':'')+'</div>'+
+'<div class="acts"><button class="b big" id="cpimp">🖨 Imprimir comprovante</button><button class="b big wpp" id="cpwpp">📲 Enviar por WhatsApp</button><button class="b p big" id="prox">Próxima cartela ➜</button></div>'+
+'<p style="text-align:center;margin:6px 0 0"><button class="linkb" id="cpver">Ver comprovante · bobina '+bobina()+' mm</button></p>';
+$('cpimp').onclick=()=>shareCupom('imp');$('cpwpp').onclick=()=>shareCupom('wpp');$('cpver').onclick=()=>abrirCupom(o);$('prox').onclick=novaCartela;
 $('rev').scrollIntoView({behavior:'smooth',block:'start'});jogos()}}
 // Impressão térmica 78mm: só preto e branco, alto contraste, dezenas em caixas (5 por linha).
 const PCSS='@page{size:78mm auto;margin:0}*{box-sizing:border-box}body{margin:0;width:78mm;padding:3mm 3mm 8mm;font-family:Arial,Helvetica,sans-serif;color:#000;background:#fff}'+
@@ -204,7 +221,8 @@ const PCSS='@page{size:78mm auto;margin:0}*{box-sizing:border-box}body{margin:0;
 '.box{border:3px double #000;border-radius:8px;padding:7px;margin-bottom:8px}.lb{font-size:12px;font-weight:700;letter-spacing:3px}.num{font-size:38px;font-weight:900;line-height:1.1;letter-spacing:1px}'+
 '.inf{font-size:12px;display:flex;justify-content:space-between;margin-top:3px}.dz{border-top:2px dashed #000;margin:8px 0}.jg{page-break-inside:avoid;margin:7px 0}'+
 '.jt{font-size:12px;font-weight:900;letter-spacing:1px;margin-bottom:3px}.g{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}'+
-'.g b{border:2px solid #000;border-radius:5px;text-align:center;font-size:20px;font-weight:900;padding:4px 0}.ft{font-size:11px;text-align:center;margin-top:6px;line-height:1.5}.pg{page-break-after:always}.pg:last-child{page-break-after:auto}';
+'.g b{border:2px solid #000;border-radius:5px;text-align:center;font-size:20px;font-weight:900;padding:4px 0}.ft{font-size:11px;text-align:center;margin-top:6px;line-height:1.5}.pg{page-break-after:always}.pg:last-child{page-break-after:auto}'+
+'.codb{border:2px solid #000;border-radius:6px;text-align:center;padding:5px;margin-top:6px;font-size:11px;font-weight:700}.codb b{display:block;font-family:monospace;font-size:24px;letter-spacing:3px}';
 const FUSO='America/Sao_Paulo',DIAS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 // Data e hora atuais no fuso do sistema, no mesmo formato gravado na planilha (dd/MM/yyyy HH:mm)
 const agora=()=>{const p={};new Intl.DateTimeFormat('pt-BR',{timeZone:FUSO,day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date()).forEach(x=>p[x.type]=x.value);return p.day+'/'+p.month+'/'+p.year+' '+p.hour+':'+p.minute};
@@ -215,10 +233,10 @@ const dia=Date.UTC(+m[3],+m[2]-1,+m[1]),volta=(new Date(dia).getUTCDay()+6)%7;le
 const f=t=>{const e=new Date(t);return DIAS[e.getUTCDay()]+' '+String(e.getUTCDate()).padStart(2,'0')+'/'+String(e.getUTCMonth()+1).padStart(2,'0')+'/'+e.getUTCFullYear()};
 return{cadIni:f(seg),cadFim:f(seg+3*864e5),ini:f(seg+3*864e5),fim:f(seg+6*864e5)}}
 const cicloTxt=dt=>{const c=cicloDe(dt);return c?'<div class="dz"></div><div class="t lb">SEMANA DOS SORTEIOS</div><div class="t" style="font-size:13px;margin-top:3px"><b>'+c.ini+' a '+c.fim+'</b></div><div class="ft" style="margin-top:4px">Cartela válida somente neste período.</div>':''}
-function ticket(c,u,js,conf,dt){return '<div class="pg"><div class="box t"><div class="h1">BOLAO ROCINHA</div><div class="sub">'+(conf?'CONFERÊNCIA — NÃO ENVIADO':'COMPROVANTE DE CARTELA')+'</div></div>'+
+function ticket(c,u,js,conf,dt,k){return '<div class="pg"><div class="box t"><div class="h1">BOLAO ROCINHA</div><div class="sub">'+(conf?'CONFERÊNCIA — NÃO ENVIADO':'COMPROVANTE DE CARTELA')+'</div></div>'+
 '<div class="t lb">CARTELA</div><div class="t num">'+esc(c)+'</div><div class="inf"><span>Nome: <b>'+esc(u)+'</b></span><span><b>'+js.length+'</b> jogo(s)</span></div><div class="inf"><span>Registrada em</span><b>'+dt+'</b></div>'+cicloTxt(dt)+'<div class="dz"></div>'+
 js.map(j=>'<div class="jg"><div class="jt">JOGO '+j.j+'</div><div class="g">'+j.d.map(n=>'<b>'+p2(n)+'</b>').join('')+'</div></div>').join('')+
-'<div class="dz"></div><div class="ft">Confira os resultados no sistema<br><b>★ BOA SORTE! ★</b></div></div>'}
+'<div class="dz"></div>'+(k?'<div class="codb">CÓDIGO DE CONFERÊNCIA<b>'+esc(k)+'</b></div>':'')+'<div class="ft">Confira os resultados com o vendedor<br><b>★ BOA SORTE! ★</b></div></div>'}
 function imprimir(h){const w=open('');w.document.write('<!DOCTYPE html><meta charset="utf-8"><title>Impressão</title><style>'+PCSS+'</style><body>'+h);w.document.close();w.focus();setTimeout(()=>w.print(),300)}
 async function jogos(){const x=await call('jogos',{usuario:$('ju').value});if(x.erro)return toast(x.erro);JL=x.jogos;JSEL=new Set([...JSEL].filter(k=>JL.some(g=>kj(g)==k)));drawJ()}
 
@@ -256,14 +274,14 @@ async function loadNomes(){const x=await call('nomes');if(x.erro)return;
 let JSEL=new Set();const kj=g=>g.u+'|'+g.c+'|'+g.j,jvis=()=>{const q=$('jq').value.trim().toLowerCase();return JL.filter(g=>!q||String(g.c).includes(q)||nm(g).toLowerCase().includes(q))};
 function updSel(){const n=$('jsn');if(n)n.textContent=JSEL.size;const a=$('jsel');if(a){const v=jvis();a.checked=v.length>0&&v.every(g=>JSEL.has(kj(g)))}}
 function drawJ(){const l=jvis();$('jc').textContent=l.length+' jogo(s)';
-$('jl').innerHTML='<table><tr>'+(ME.adm?'<th><input type="checkbox" id="jsel" title="Marcar todos os jogos da lista"></th>':'')+'<th>Nome</th><th>Cartela</th><th>Jogo</th><th>Dezenas</th>'+(ME.adm?'<th>Corrigir</th>':'')+'</tr>'+l.map(g=>'<tr>'+(ME.adm?'<td><input type="checkbox" class="sj" data-k="'+kj(g)+'"'+(JSEL.has(kj(g))?' checked':'')+'></td>':'')+'<td>'+esc(nm(g))+'</td><td><b>'+esc(g.c)+'</b></td><td>'+g.j+'</td><td>'+g.d.map(n=>'<span class="n">'+p2(n)+'</span>').join('')+'</td>'+
-(ME.adm?'<td><button class="b x s" data-a="j" data-u="'+g.u+'" data-n="'+esc(nm(g))+'" data-c="'+esc(g.c)+'" data-j="'+g.j+'">🗑 Jogo</button><button class="b x s" data-a="c" data-u="'+g.u+'" data-n="'+esc(nm(g))+'" data-c="'+esc(g.c)+'">🗑 Cartela</button></td>':'')+'</tr>').join('')+'</table>';updSel();updDia();avisoCartela()}
+$('jl').innerHTML='<table><tr>'+(ME.adm?'<th><input type="checkbox" id="jsel" title="Marcar todos os jogos da lista"></th>':'')+'<th>Nome</th><th>Cartela</th><th>Jogo</th><th>Dezenas</th><th>Comprovante</th>'+(ME.adm?'<th>Corrigir</th>':'')+'</tr>'+l.map(g=>'<tr>'+(ME.adm?'<td><input type="checkbox" class="sj" data-k="'+kj(g)+'"'+(JSEL.has(kj(g))?' checked':'')+'></td>':'')+'<td>'+esc(nm(g))+'</td><td><b>'+esc(g.c)+'</b></td><td>'+g.j+'</td><td>'+g.d.map(n=>'<span class="n">'+p2(n)+'</span>').join('')+'</td>'+
+'<td><button class="b s" data-a="k" data-k="'+esc(kj(g))+'" title="Imprimir ou enviar o comprovante">🧾</button></td>'+(ME.adm?'<td><button class="b x s" data-a="j" data-u="'+g.u+'" data-n="'+esc(nm(g))+'" data-c="'+esc(g.c)+'" data-j="'+g.j+'">🗑 Jogo</button><button class="b x s" data-a="c" data-u="'+g.u+'" data-n="'+esc(nm(g))+'" data-c="'+esc(g.c)+'">🗑 Cartela</button></td>':'')+'</tr>').join('')+'</table>';updSel();updDia();avisoCartela()}
 $('jl').onchange=e=>{const t=e.target;if(t.id=='jsel'){jvis().forEach(g=>t.checked?JSEL.add(kj(g)):JSEL.delete(kj(g)));drawJ()}
 else if(t.classList.contains('sj')){t.checked?JSEL.add(t.dataset.k):JSEL.delete(t.dataset.k);updSel()}};
 function imprSel(){const l=JL.filter(g=>JSEL.has(kj(g)));if(!l.length)return toast('Marque pelo menos um jogo na lista');imprLista(l)}
-function imprLista(l){const G={};l.forEach(g=>(G[g.u+'|'+g.c]=G[g.u+'|'+g.c]||[]).push(g));
-imprimir(Object.values(G).map(a=>ticket(a[0].c,nm(a[0]),a.map(g=>({j:g.j,d:g.d})),false,a[0].dt)).join(''))}
-$('jl').onclick=async e=>{const b=e.target.closest('button[data-a]');if(!b)return;const j=b.dataset.a=='j';
+function imprLista(l){const G={};l.forEach(g=>{const q=g.u+'|'+g.c+'|'+g.dt;(G[q]=G[q]||[]).push(g)});
+imprimir(Object.values(G).map(a=>ticket(a[0].c,nm(a[0]),a.map(g=>({j:g.j,d:g.d})),false,a[0].dt,a[0].k)).join(''))}
+$('jl').onclick=async e=>{const b=e.target.closest('button[data-a]');if(!b)return;if(b.dataset.a=='k')return cupomDeJogo(b.dataset.k);const j=b.dataset.a=='j';
 if(!confirm(j?'Excluir o jogo '+b.dataset.j+' da cartela '+b.dataset.c+' de '+b.dataset.n+'?':'Excluir TODOS os jogos da cartela '+b.dataset.c+' de '+b.dataset.n+'?'))return;
 const x=await call('excluirJogo',{u:b.dataset.u,c:b.dataset.c,j:j?b.dataset.j:''});toast(x.erro||x.qtd+' jogo(s) excluído(s)');jogos()};
 function imprJ(){const l=jvis();if(!l.length)return toast('Nada para imprimir');imprLista(l)}
@@ -275,7 +293,7 @@ $('kp').innerHTML='<div>JOGOS<b>'+x.total+'</b></div><div>7/10<b>'+x.cont[7]+'</
 const w=WIN;$('dest').innerHTML=x.cont[10]?'<div class="card win"><h2>🏆 CARTELA VENCEDORA — 10/10 ('+x.cont[10]+')</h2>'+(x.vit?'<p class="mut">Vitória no sorteio de '+x.vit.data+' • '+x.vit.nome+'</p>':'')+w.map(g=>'<p>Cartela <b>'+esc(g.c)+'</b> (jogo '+g.j+') — '+esc(nm(g))+'<br>'+g.d.map(n=>'<span class="n h">'+p2(n)+'</span>').join('')+'</p>').join('')+'<button class="b p" onclick="shareWin()">📤 Compartilhar PNG</button><button class="b p" onclick="printWin()">🖨 Imprimir</button></div>':'';
 $('dl').innerHTML='<table><tr><th>Cartela</th><th>Jogo</th><th>Nome</th><th>Dezenas</th><th>Acertos</th><th></th></tr>'+x.lista.map((g,i)=>'<tr><td><b>'+esc(g.c)+'</b></td><td>'+g.j+'</td><td>'+esc(nm(g))+'</td><td>'+g.d.map(n=>'<span class="n '+(s.has(n)?'h':'')+'">'+p2(n)+'</span>').join('')+'</td><td><b>'+g.ac+'/10</b></td><td style="white-space:nowrap"><button class="b s" data-a="p" data-i="'+i+'" title="Imprimir este jogo">🖨</button><button class="b s" data-a="s" data-i="'+i+'" title="Compartilhar este jogo">📤</button></td></tr>').join('')+'</table>'}
 $('dl').onclick=e=>{const b=e.target.closest('button[data-i]');if(!b)return;const g=DASH[b.dataset.i];if(!g)return;
-if(b.dataset.a=='p')imprimir(ticket(g.c,nm(g),[{j:g.j,d:g.d}],false,g.dt||agora()));else shareJogo(g)};
+if(b.dataset.a=='p')imprimir(ticket(g.c,nm(g),[{j:g.j,d:g.d}],false,g.dt||agora(),g.k));else shareJogo(g)};
 function shareJogo(g){if(g.ac>=10)return enviar([imgVenc(g)],'vencedor-'+g.c);
 enviar([imgLista('RESULTADO — '+g.ac+(g.ac==1?' ACERTO':' ACERTOS'),'Jogo '+g.j,[g],1)],'cartela-'+g.c+'-jogo-'+g.j)}
 async function sorteios(){const x=await call('sorteios');if(x.erro)return toast(x.erro);SOR=x;
@@ -339,7 +357,7 @@ $('hs').innerHTML='<table><tr><th>Data</th><th>Horário</th><th>Dezenas</th>'+(M
 const ac=new Set(x.acumulado);$('hac').innerHTML=Array.from({length:100},(_,i)=>'<span class="'+(ac.has(i)?'h':'')+'" title="'+bicho(i)[0]+'">'+p2(i)+'<i>'+bicho(i)[1]+'</i></span>').join('')}
 function histCtx(){SET=HSET;VIT=HVIT}   // imgLista e ticketVenc leem estas variáveis
 $('hl').onclick=async e=>{const b=e.target.closest('button[data-i]');if(!b)return;const g=HD[b.dataset.i];if(!g)return;histCtx();
-if(b.dataset.a=='p')imprimir(ticket(g.c,nm(g),[{j:g.j,d:g.d}],false,g.dt));
+if(b.dataset.a=='p')imprimir(ticket(g.c,nm(g),[{j:g.j,d:g.d}],false,g.dt,g.k));
 else if(b.dataset.a=='s')shareJogo(g);
 else if(confirm('Excluir o jogo '+g.j+' da cartela '+g.c+' de '+nm(g)+' deste ciclo?')){const x=await call('histJogoExcluir',{ciclo:$('hc').value,u:g.u,c:g.c,j:g.j});toast(x.erro||'Jogo excluído do histórico');hist()}};
 $('hs').onclick=async e=>{const b=e.target.closest('button[data-d]');if(!b)return;const c=$('hc').value,r={ciclo:c,data:b.dataset.d,horario:b.dataset.h};let x;
@@ -379,6 +397,64 @@ function printWin(){if(!WIN.length)return toast('Nenhuma cartela vencedora');imp
 function shareSor(){const[c,g]=mk(900,140+SOR.sorteios.length*34+110);g.fillStyle=C.dk;g.fillRect(0,0,900,90);tx(g,'DEZENAS SORTEADAS',450,58,'bold 36px','#fff','center');
 SOR.sorteios.forEach((s,i)=>tx(g,s.data+'  '+s.horario+':  '+s.dezenas.join(' • '),40,135+i*34,'22px',C.tx));
 tx(g,'Acumulado: '+(SOR.acumulado||[]).map(p2).join(' '),40,170+SOR.sorteios.length*34,'20px',C.gr);enviar([c],'sorteios')}
+// ===== Comprovante em imagem (impressora térmica e WhatsApp) =====
+// A imagem sai em preto e branco, na largura exata da bobina: 384 pontos (58 mm) ou 576 pontos (80 mm).
+const BOB_K='bolao_bobina';
+const bobina=()=>{try{return localStorage.getItem(BOB_K)==='80'?80:58}catch(_){return 58}};
+function setBobina(v){try{localStorage.setItem(BOB_K,String(v))}catch(_){}}
+function cupom(o){   // o = {c: cartela, u: nome do vendedor, dt: 'dd/MM/yyyy HH:mm', js: [{j, d:[10 dezenas]}], k: código}
+const W=bobina()===80?576:384,s=W/384,m=Math.round(10*s),cw=W-2*m,F='Arial,Helvetica,sans-serif';
+const cv=document.createElement('canvas'),g=cv.getContext('2d');
+const fonte=(px,b,mono)=>{g.font=(b?'bold ':'')+Math.round(px*s)+'px '+(mono?'"Courier New",ui-monospace,monospace':F)};
+function run(draw){let y=m;
+ const T=(t,x,yy,px,b,al,mono)=>{if(!draw)return;fonte(px,b,mono);g.textAlign=al||'left';g.fillText(t,x,yy)};
+ const fit=(t,px,b,max)=>{fonte(px,b);let r=t;while(r.length>4&&g.measureText(r).width>max)r=r.slice(0,-2)+'…';return r};
+ const caixa=(x,yy,w,h,lw)=>{if(draw){g.lineWidth=lw*s;g.strokeRect(x+lw*s/2,yy+lw*s/2,w-lw*s,h-lw*s)}};
+ const linha=()=>{if(draw){g.save();g.setLineDash([8*s,6*s]);g.lineWidth=2*s;g.beginPath();g.moveTo(m,y);g.lineTo(W-m,y);g.stroke();g.restore()}y+=12*s};
+ const bh=66*s;caixa(m,y,cw,bh,3);caixa(m+5*s,y+5*s,cw-10*s,bh-10*s,1.5);
+ T('BOLAO ROCINHA',W/2,y+35*s,28,1,'center');T('COMPROVANTE DE CARTELA',W/2,y+53*s,13,1,'center');y+=bh+24*s;
+ T('CARTELA',W/2,y,15,1,'center');y+=54*s;T(String(o.c),W/2,y,56,1,'center');y+=28*s;
+ const nj=o.js.length+(o.js.length==1?' jogo':' jogos');
+ T(fit('Vendedor: '+o.u,16,0,cw*.68),m,y,16,0);T(nj,W-m,y,16,1,'right');y+=22*s;
+ T('Registrada em',m,y,16,0);T(o.dt||'',W-m,y,16,1,'right');y+=14*s;
+ const cc=cicloDe(o.dt);
+ if(cc){linha();y+=8*s;T('SEMANA DOS SORTEIOS',W/2,y,14,1,'center');y+=24*s;T(cc.ini+' a '+cc.fim,W/2,y,17,1,'center');y+=20*s;
+  T('Cartela válida somente neste período.',W/2,y,13,0,'center');y+=12*s}
+ linha();
+ const gap=6*s,bw=(cw-4*gap)/5,bh2=46*s;
+ o.js.forEach(j=>{y+=16*s;T('JOGO '+j.j,m,y,15,1);y+=8*s;
+  j.d.forEach((n,i)=>{const x=m+(i%5)*(bw+gap),yy=y+Math.floor(i/5)*(bh2+gap);caixa(x,yy,bw,bh2,3);T(p2(n),x+bw/2,yy+bh2/2+11*s,30,1,'center')});
+  y+=2*bh2+gap+6*s});
+ linha();
+ if(o.k){y+=4*s;const ch=76*s;caixa(m,y,cw,ch,3);T('CÓDIGO DE CONFERÊNCIA',W/2,y+24*s,13,1,'center');T(o.k,W/2,y+62*s,36,1,'center',1);y+=ch+12*s}
+ y+=16*s;T('Confira os resultados com o vendedor',W/2,y,14,0,'center');y+=28*s;T('★ BOA SORTE! ★',W/2,y,18,1,'center');y+=44*s;
+ return Math.ceil(y)}
+const H=run(false);cv.width=W;cv.height=H;g.fillStyle='#fff';g.fillRect(0,0,W,H);g.fillStyle='#000';g.strokeStyle='#000';g.textBaseline='alphabetic';run(true);return cv}
+// O arquivo é preparado ANTES do toque no botão: o iPhone só abre o "compartilhar" se for na hora do toque.
+let CUP=null;
+function prepCupom(o){return new Promise(r=>cupom(o).toBlob(b=>{if(CUP&&CUP.url)URL.revokeObjectURL(CUP.url);
+ CUP={o:o,b:b,f:new File([b],'comprovante-'+o.c+'.png',{type:'image/png'}),url:URL.createObjectURL(b)};r(CUP)},'image/png'))}
+function shareCupom(modo){   // modo: 'imp' (app da impressora) ou 'wpp' (WhatsApp)
+ if(!CUP)return toast('Preparando o comprovante… toque de novo');const o=CUP.o;
+ const txt='Comprovante da cartela '+o.c+' · BOLAO ROCINHA'+(o.k?'\nCódigo de conferência: '+o.k:'');
+ const dados=modo=='wpp'?{files:[CUP.f],text:txt}:{files:[CUP.f],title:'Comprovante '+o.c};
+ if(navigator.canShare&&navigator.canShare(dados)){navigator.share(dados).catch(e=>{if(e&&e.name!=='AbortError')toast('Não foi possível compartilhar. Tente de novo.')});return}
+ // Computador ou navegador sem "compartilhar": impressão normal ou baixar a imagem.
+ if(modo=='imp')return imprimir(ticket(o.c,o.u,o.js,false,o.dt,o.k));
+ const a=document.createElement('a');a.href=CUP.url;a.download=CUP.f.name;a.click();toast('Imagem baixada. Envie pelo WhatsApp Web.')}
+function abrirCupom(o){$('bob').value=String(bobina());$('cmpt').textContent='Comprovante · cartela '+o.c;$('cmpi').removeAttribute('src');
+ $('cmp').classList.remove('hide');prepCupom(o).then(c=>$('cmpi').src=c.url)}
+function trocaBobina(){setBobina($('bob').value);if(CUP)prepCupom(CUP.o).then(c=>{$('cmpi').src=c.url})}
+// Comprovante de um envio a partir da lista de Jogos (jogos do mesmo vendedor, cartela e data/hora).
+function cupomDeJogo(key){const g=JL.find(x=>kj(x)===key);if(!g)return;
+ const l=JL.filter(x=>x.u===g.u&&String(x.c)===String(g.c)&&x.dt===g.dt).sort((a,b)=>Number(a.j)-Number(b.j));
+ abrirCupom({c:g.c,u:nm(g),dt:g.dt,js:l.map(x=>({j:x.j,d:x.d})),k:g.k})}
+// Admin: conferir um comprovante pela cartela + código
+async function conferir(){const c=$('vc').value.trim(),k=$('vk').value.trim();if(!c||!k)return toast('Informe a cartela e o código');
+ const x=await call('conferir',{cartela:c,codigo:k});if(x.erro)return toast(x.erro);
+ $('vr').innerHTML=x.valido?'<div class="res ok"><h3>✅ Comprovante verdadeiro</h3><p>Cartela <b>'+esc(x.cartela)+'</b> · vendedor <b>'+esc(x.n)+'</b><br>Registrada em '+esc(x.dt)+(x.ciclo?'<br>Semana já encerrada: '+esc(x.ciclo):'')+'</p><p class="mut">Confira se as dezenas do papel são estas:</p>'+
+  x.jogos.map(j=>'<p><b>Jogo '+esc(j.j)+':</b> '+j.d.map(n=>'<span class="n">'+p2(n)+'</span>').join('')+'</p>').join('')+'</div>'
+  :'<div class="res no"><h3>⛔ Código não confere</h3><p>Esse código não foi gerado pelo sistema para a cartela '+esc(c)+'. O comprovante pode ter sido alterado, o código foi digitado errado ou os jogos dessa cartela foram excluídos.</p></div>'}
 restaurar();
 
 // ===== App instalável (PWA) =====
