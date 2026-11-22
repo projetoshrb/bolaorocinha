@@ -33,7 +33,7 @@ header h1{font-family:Rockwell,'Roboto Slab',Georgia,serif;letter-spacing:1px;te
 <input id="lu" placeholder="Usuário" autocapitalize="none"><input id="lp" type="password" placeholder="Senha">
 <button class="b p" style="width:100%" onclick="entrar()">Entrar</button><p id="le" style="color:#b91c1c"></p></div>
 <div id="app" class="hide"><div id="pw" class="hide" style="position:fixed;inset:0;background:#0007;z-index:20;display:flex;align-items:center;justify-content:center"><div class="card" style="width:min(340px,92vw)"><h2>🔑 Trocar minha senha</h2>
-<input id="pa" type="password" placeholder="Senha atual" style="width:100%;margin-bottom:8px" autocomplete="current-password"><input id="pn" type="password" placeholder="Senha nova (mín. 4)" style="width:100%;margin-bottom:8px" autocomplete="new-password"><input id="pc" type="password" placeholder="Repita a senha nova" style="width:100%;margin-bottom:8px" autocomplete="new-password" onkeydown="if(event.key=='Enter')senhaSalvar()">
+<input id="pa" type="password" placeholder="Senha atual" style="width:100%;margin-bottom:8px" autocomplete="current-password"><input id="pn" type="password" placeholder="Senha nova (mín. 6)" style="width:100%;margin-bottom:8px" autocomplete="new-password"><input id="pc" type="password" placeholder="Repita a senha nova" style="width:100%;margin-bottom:8px" autocomplete="new-password" onkeydown="if(event.key=='Enter')senhaSalvar()">
 <button class="b p" onclick="senhaSalvar()">Salvar</button><button class="b" onclick="$('pw').classList.add('hide')">Cancelar</button></div></div>
 <header><h1>🦁 BOLAO ROCINHA</h1><div><span class="chip" id="who"></span><button class="b hide" id="binst" onclick="instalar()">📲 Instalar</button><button class="b" onclick="senhaAbrir()">🔑 Senha</button><button class="b" onclick="sair()">Sair</button></div></header>
 <div class="faixa" aria-hidden="true"><div class="trilho" id="trilho"></div></div>
@@ -74,7 +74,7 @@ header h1{font-family:Rockwell,'Roboto Slab',Georgia,serif;letter-spacing:1px;te
 <script>
 async function tgTeste(){const x=await call('telegramTeste');toast(x.erro||'Mensagem de teste enviada')}
 async function tgImagemTeste(){toast('Gerando imagem…');const x=await call('telegramImagemTeste');toast(x.erro||'Imagem de teste enviada')}
-async function tgReenviar(){if(!confirm('Reenviar o resumo do último sorteio ao Telegram?'))return;toast('Enviando…');const x=await call('telegramReenviar');toast(x.erro||'Resumo reenviado')}
+async function tgReenviar(){if(!confirm('Reenviar o resumo do último sorteio ao Telegram?'))return;toast('Enviando…');const x=await call('telegramReenviar');toast(x.erro||x.msg||'Resumo reenviado')}
 </script>
 <div class="card"><h2>Ciclo semanal</h2><p class="mut">Toda segunda, entre 05:00 e 06:00, o sistema arquiva os dados da semana anterior (eles ficam na aba Histórico) e começa um novo ciclo. O cadastro de cartelas abre na segunda às 06:00 e fecha na quinta às 13:00. Use o botão só se precisar virar o ciclo antes disso.</p>
 <button class="b x" onclick="encerrar()">🔄 Encerrar ciclo agora</button></div>
@@ -110,13 +110,13 @@ function revisar(){const c=$('cn').value.trim();if(!c)return toast('Informe o n�
 for(const r of rows.children){const v=[...r.querySelectorAll('.d')].map(e=>e.value);if(!v.some(x=>x))continue;
 if(v.some(x=>x.length<1))return toast('Há jogo incompleto');const n=v.map(Number);if(new Set(n).size!=10)return toast('Dezena repetida: '+n.map(p2).join(' '));js.push(n)}
 if(!js.length)return toast('Nenhum jogo preenchido');
-$('rev').classList.remove('hide');$('rev').innerHTML='<h2>Confirme: cartela '+c+' — '+js.length+' jogo(s)</h2>'+js.map((j,i)=>'<p><b>Jogo '+(i+1)+':</b> '+j.map(n=>'<span class="n">'+p2(n)+'</span>').join('')+'</p>').join('')+
+$('rev').classList.remove('hide');$('rev').innerHTML='<h2>Confirme: cartela '+esc(c)+' — '+js.length+' jogo(s)</h2>'+js.map((j,i)=>'<p><b>Jogo '+(i+1)+':</b> '+j.map(n=>'<span class="n">'+p2(n)+'</span>').join('')+'</p>').join('')+
 '<button class="b p" id="ok">✅ Confirmar envio</button><button class="b" id="pr">🖨 Imprimir</button><button class="b" onclick="$(\'rev\').classList.add(\'hide\')">Voltar e editar</button>';
 $('rev').scrollIntoView({behavior:'smooth'});
 $('pr').onclick=()=>imprimir(ticket(c,ME.n||ME.u,js.map((d,i)=>({j:i+1,d})),true,agora()));
 $('ok').onclick=async()=>{$('ok').disabled=true;const x=await call('salvar',{cartela:c,jogos:js});if(x.erro){$('ok').disabled=false;return toast(x.erro)}
 toast('✅ '+x.qtd+' jogo(s) salvo(s)!');rows.innerHTML='';addRow();$('cn').value='';
-$('rev').innerHTML='<h2>✅ Cartela '+c+' enviada!</h2><p class="mut">'+x.qtd+' jogo(s) registrado(s).</p><button class="b p" id="pc">🖨 Imprimir comprovante</button><button class="b" onclick="$(\'rev\').classList.add(\'hide\');window.scrollTo(0,0);$(\'cn\').focus()">Novo cadastro</button>';
+$('rev').innerHTML='<h2>✅ Cartela '+esc(c)+' enviada!</h2><p class="mut">'+x.qtd+' jogo(s) registrado(s).</p><button class="b p" id="pc">🖨 Imprimir comprovante</button><button class="b" onclick="$(\'rev\').classList.add(\'hide\');window.scrollTo(0,0);$(\'cn\').focus()">Novo cadastro</button>';
 $('pc').onclick=()=>imprimir(ticket(c,ME.n||ME.u,js.map((d,i)=>({j:x.ini+i,d})),false,x.dt||agora()))}}
 // Impressão térmica 78mm: só preto e branco, alto contraste, dezenas em caixas (5 por linha).
 const PCSS='@page{size:78mm auto;margin:0}*{box-sizing:border-box}body{margin:0;width:78mm;padding:3mm 3mm 8mm;font-family:Arial,Helvetica,sans-serif;color:#000;background:#fff}'+
@@ -136,7 +136,7 @@ const f=t=>{const e=new Date(t);return DIAS[e.getUTCDay()]+' '+String(e.getUTCDa
 return{cadIni:f(seg),cadFim:f(seg+3*864e5),ini:f(seg+3*864e5),fim:f(seg+6*864e5)}}
 const cicloTxt=dt=>{const c=cicloDe(dt);return c?'<div class="dz"></div><div class="t lb">SEMANA DOS SORTEIOS</div><div class="t" style="font-size:13px;margin-top:3px"><b>'+c.ini+' a '+c.fim+'</b></div><div class="ft" style="margin-top:4px">Cartela válida somente neste período.</div>':''}
 function ticket(c,u,js,conf,dt){return '<div class="pg"><div class="box t"><div class="h1">BOLAO ROCINHA</div><div class="sub">'+(conf?'CONFERÊNCIA — NÃO ENVIADO':'COMPROVANTE DE CARTELA')+'</div></div>'+
-'<div class="t lb">CARTELA</div><div class="t num">'+c+'</div><div class="inf"><span>Nome: <b>'+esc(u)+'</b></span><span><b>'+js.length+'</b> jogo(s)</span></div><div class="inf"><span>Registrada em</span><b>'+dt+'</b></div>'+cicloTxt(dt)+'<div class="dz"></div>'+
+'<div class="t lb">CARTELA</div><div class="t num">'+esc(c)+'</div><div class="inf"><span>Nome: <b>'+esc(u)+'</b></span><span><b>'+js.length+'</b> jogo(s)</span></div><div class="inf"><span>Registrada em</span><b>'+dt+'</b></div>'+cicloTxt(dt)+'<div class="dz"></div>'+
 js.map(j=>'<div class="jg"><div class="jt">JOGO '+j.j+'</div><div class="g">'+j.d.map(n=>'<b>'+p2(n)+'</b>').join('')+'</div></div>').join('')+
 '<div class="dz"></div><div class="ft">Confira os resultados no sistema<br><b>★ BOA SORTE! ★</b></div></div>'}
 function imprimir(h){const w=open('');w.document.write('<!DOCTYPE html><meta charset="utf-8"><title>Impressão</title><style>'+PCSS+'</style><body>'+h);w.document.close();w.focus();setTimeout(()=>w.print(),300)}
@@ -176,8 +176,8 @@ async function loadNomes(){const x=await call('nomes');if(x.erro)return;
 let JSEL=new Set();const kj=g=>g.u+'|'+g.c+'|'+g.j,jvis=()=>{const q=$('jq').value.trim().toLowerCase();return JL.filter(g=>!q||String(g.c).includes(q)||nm(g).toLowerCase().includes(q))};
 function updSel(){const n=$('jsn');if(n)n.textContent=JSEL.size;const a=$('jsel');if(a){const v=jvis();a.checked=v.length>0&&v.every(g=>JSEL.has(kj(g)))}}
 function drawJ(){const l=jvis();$('jc').textContent=l.length+' jogo(s)';
-$('jl').innerHTML='<table><tr>'+(ME.adm?'<th><input type="checkbox" id="jsel" title="Marcar todos os jogos da lista"></th>':'')+'<th>Nome</th><th>Cartela</th><th>Jogo</th><th>Dezenas</th>'+(ME.adm?'<th>Corrigir</th>':'')+'</tr>'+l.map(g=>'<tr>'+(ME.adm?'<td><input type="checkbox" class="sj" data-k="'+kj(g)+'"'+(JSEL.has(kj(g))?' checked':'')+'></td>':'')+'<td>'+esc(nm(g))+'</td><td><b>'+g.c+'</b></td><td>'+g.j+'</td><td>'+g.d.map(n=>'<span class="n">'+p2(n)+'</span>').join('')+'</td>'+
-(ME.adm?'<td><button class="b x s" data-a="j" data-u="'+g.u+'" data-n="'+esc(nm(g))+'" data-c="'+g.c+'" data-j="'+g.j+'">🗑 Jogo</button><button class="b x s" data-a="c" data-u="'+g.u+'" data-n="'+esc(nm(g))+'" data-c="'+g.c+'">🗑 Cartela</button></td>':'')+'</tr>').join('')+'</table>';updSel()}
+$('jl').innerHTML='<table><tr>'+(ME.adm?'<th><input type="checkbox" id="jsel" title="Marcar todos os jogos da lista"></th>':'')+'<th>Nome</th><th>Cartela</th><th>Jogo</th><th>Dezenas</th>'+(ME.adm?'<th>Corrigir</th>':'')+'</tr>'+l.map(g=>'<tr>'+(ME.adm?'<td><input type="checkbox" class="sj" data-k="'+kj(g)+'"'+(JSEL.has(kj(g))?' checked':'')+'></td>':'')+'<td>'+esc(nm(g))+'</td><td><b>'+esc(g.c)+'</b></td><td>'+g.j+'</td><td>'+g.d.map(n=>'<span class="n">'+p2(n)+'</span>').join('')+'</td>'+
+(ME.adm?'<td><button class="b x s" data-a="j" data-u="'+g.u+'" data-n="'+esc(nm(g))+'" data-c="'+esc(g.c)+'" data-j="'+g.j+'">🗑 Jogo</button><button class="b x s" data-a="c" data-u="'+g.u+'" data-n="'+esc(nm(g))+'" data-c="'+esc(g.c)+'">🗑 Cartela</button></td>':'')+'</tr>').join('')+'</table>';updSel()}
 $('jl').onchange=e=>{const t=e.target;if(t.id=='jsel'){jvis().forEach(g=>t.checked?JSEL.add(kj(g)):JSEL.delete(kj(g)));drawJ()}
 else if(t.classList.contains('sj')){t.checked?JSEL.add(t.dataset.k):JSEL.delete(t.dataset.k);updSel()}};
 function imprSel(){const l=JL.filter(g=>JSEL.has(kj(g)));if(!l.length)return toast('Marque pelo menos um jogo na lista');imprLista(l)}
@@ -192,8 +192,8 @@ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff
 async function dash(){const x=await call('dash',{acertos:$('fa').value,usuario:$('fu').value,cartela:$('fc').value});if(x.erro)return toast(x.erro);
 const s=new Set(x.sorteadas);DASH=x.lista;SET=s;WIN=x.venc||[];VIT=x.vit;
 $('kp').innerHTML='<div>JOGOS<b>'+x.total+'</b></div><div>7/10<b>'+x.cont[7]+'</b></div><div>8/10<b>'+x.cont[8]+'</b></div><div>9/10<b>'+x.cont[9]+'</b></div>';
-const w=WIN;$('dest').innerHTML=x.cont[10]?'<div class="card win"><h2>🏆 CARTELA VENCEDOR — 10/10 ('+x.cont[10]+')</h2>'+(x.vit?'<p class="mut">Vitória no sorteio de '+x.vit.data+' • '+x.vit.nome+'</p>':'')+w.map(g=>'<p>Cartela <b>'+g.c+'</b> (jogo '+g.j+') — '+esc(nm(g))+'<br>'+g.d.map(n=>'<span class="n h">'+p2(n)+'</span>').join('')+'</p>').join('')+'<button class="b p" onclick="shareWin()">📤 Compartilhar PNG</button><button class="b p" onclick="printWin()">🖨 Imprimir</button></div>':'';
-$('dl').innerHTML='<table><tr><th>Cartela</th><th>Jogo</th><th>Nome</th><th>Dezenas</th><th>Acertos</th><th></th></tr>'+x.lista.map((g,i)=>'<tr><td><b>'+g.c+'</b></td><td>'+g.j+'</td><td>'+esc(nm(g))+'</td><td>'+g.d.map(n=>'<span class="n '+(s.has(n)?'h':'')+'">'+p2(n)+'</span>').join('')+'</td><td><b>'+g.ac+'/10</b></td><td style="white-space:nowrap"><button class="b s" data-a="p" data-i="'+i+'" title="Imprimir este jogo">🖨</button><button class="b s" data-a="s" data-i="'+i+'" title="Compartilhar este jogo">📤</button></td></tr>').join('')+'</table>'}
+const w=WIN;$('dest').innerHTML=x.cont[10]?'<div class="card win"><h2>🏆 CARTELA VENCEDORA — 10/10 ('+x.cont[10]+')</h2>'+(x.vit?'<p class="mut">Vitória no sorteio de '+x.vit.data+' • '+x.vit.nome+'</p>':'')+w.map(g=>'<p>Cartela <b>'+esc(g.c)+'</b> (jogo '+g.j+') — '+esc(nm(g))+'<br>'+g.d.map(n=>'<span class="n h">'+p2(n)+'</span>').join('')+'</p>').join('')+'<button class="b p" onclick="shareWin()">📤 Compartilhar PNG</button><button class="b p" onclick="printWin()">🖨 Imprimir</button></div>':'';
+$('dl').innerHTML='<table><tr><th>Cartela</th><th>Jogo</th><th>Nome</th><th>Dezenas</th><th>Acertos</th><th></th></tr>'+x.lista.map((g,i)=>'<tr><td><b>'+esc(g.c)+'</b></td><td>'+g.j+'</td><td>'+esc(nm(g))+'</td><td>'+g.d.map(n=>'<span class="n '+(s.has(n)?'h':'')+'">'+p2(n)+'</span>').join('')+'</td><td><b>'+g.ac+'/10</b></td><td style="white-space:nowrap"><button class="b s" data-a="p" data-i="'+i+'" title="Imprimir este jogo">🖨</button><button class="b s" data-a="s" data-i="'+i+'" title="Compartilhar este jogo">📤</button></td></tr>').join('')+'</table>'}
 $('dl').onclick=e=>{const b=e.target.closest('button[data-i]');if(!b)return;const g=DASH[b.dataset.i];if(!g)return;
 if(b.dataset.a=='p')imprimir(ticket(g.c,nm(g),[{j:g.j,d:g.d}],false,g.dt||agora()));else shareJogo(g)};
 function shareJogo(g){if(g.ac>=10)return enviar([imgVenc(g)],'vencedor-'+g.c);
@@ -204,7 +204,7 @@ const set=new Set(x.acumulado);$('ac').innerHTML=Array.from({length:100},(_,i)=>
 $('sl').onclick=async e=>{const b=e.target.closest('button[data-d]');if(!b||!confirm('Excluir o sorteio '+b.dataset.d+' '+b.dataset.h+'?'))return;
 const x=await call('excluirSorteio',{data:b.dataset.d,horario:b.dataset.h});toast(x.erro||'Sorteio excluído');sorteios()};
 async function atual(){const x=await call('atualizar');toast(x.erro||x.msg||'Gravados: '+(x.gravados.join(', ')||'nenhum novo'));sorteios()}
-async function admin(){$('md').value=new Date().toLocaleDateString('pt-BR');if(!$('mz').firstChild)$('mz').innerHTML='<input class="d" maxlength="2" inputmode="numeric">'.repeat(5);
+async function admin(){$('md').value=agora().slice(0,10);if(!$('mz').firstChild)$('mz').innerHTML='<input class="d" maxlength="2" inputmode="numeric">'.repeat(5);
 $('mz').querySelectorAll('.d').forEach((e,i,a)=>e.oninput=()=>{e.value=e.value.replace(/\D/g,'');if(e.value.length==2&&a[i+1])a[i+1].focus()});
 const x=await call('usuarios');if(x.erro)return toast(x.erro);loadNomes();
 $('ul').innerHTML='<table>'+x.usuarios.map(u=>'<tr><td><b>'+esc(u.n||u.u)+'</b>'+(u.adm?' <span class="n h">admin</span>':'')+'<br><small class="mut">login: '+u.u+'</small></td><td><button class="b s" data-a="n" data-u="'+u.u+'" data-n="'+esc(u.n||'')+'">✏ Nome</button><button class="b s" data-a="s" data-u="'+u.u+'">🔑 Senha</button>'+(u.u!=ME.u?'<button class="b x s" data-a="e" data-u="'+u.u+'">🗑 Excluir</button>':'')+'</td></tr>').join('')+'</table>'}
@@ -216,7 +216,7 @@ async function manual(){const z=[...$('mz').querySelectorAll('.d')].map(e=>e.val
 const x=await call('sorteioManual',{data:$('md').value.trim(),horario:$('mh').value,dezenas:z});toast(x.erro||'Sorteio lançado!');if(!x.erro)$('mz').querySelectorAll('.d').forEach(e=>e.value='')}
 async function encerrar(){if(!confirm('Encerrar o ciclo agora? Os dados da semana vão para as abas Arq_ da planilha e o sistema volta zerado.'))return;
 const x=await call('encerrarCiclo');toast(x.erro||'Ciclo encerrado: '+x.sorteios+' sorteio(s) e '+x.jogos+' jogo(s) arquivados');if(!x.erro){jogos();dash()}}
-async function novoU(){const nome=prompt('Nome (como vai aparecer nas consultas, ex.: Diego (Cachopa)):');if(nome===null)return;const u=prompt('Usuário de login (letras/números, sem espaço):');if(!u)return;const p=prompt('Senha (mín. 4):');if(!p)return;const x=await call('novoUsuario',{u:u,p:p,nome:nome});toast(x.erro||'Usuário criado!');admin()}
+async function novoU(){const nome=prompt('Nome (como vai aparecer nas consultas, ex.: Diego (Cachopa)):');if(nome===null)return;const u=prompt('Usuário de login (letras/números, sem espaço):');if(!u)return;const p=prompt('Senha (mín. 6):');if(!p)return;const x=await call('novoUsuario',{u:u,p:p,nome:nome});toast(x.erro||'Usuário criado!');admin()}
 const C={dk:'#173d2b',gr:'#0b6b43',cr:'#f4efdd',al:'#efe8d6',br:'#8a5a2b',tx:'#1d2330',gy:'#555'},FT='Arial,"Apple Color Emoji","Segoe UI Emoji",sans-serif';
 function mk(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');g.fillStyle=C.cr;g.fillRect(0,0,w,h);return[c,g]}
 function tx(g,s,x,y,f,col,al){g.font=f+' '+FT;g.fillStyle=col;g.textAlign=al||'left';g.fillText(s,x,y)}
@@ -230,7 +230,7 @@ tx(g,r.ac+'/10',831,y+41,'bold 24px',C.gr,'right')});
 tx(g,'Resultado das Cartelas',443,H-13,'15px','#fff','center');return c}
 function imgVenc(r){const[c,g]=mk(1024,1280);g.fillStyle=C.dk;g.fillRect(26,26,972,186);g.fillStyle=C.gr;g.fillRect(32,1205,960,43);
 g.strokeStyle=C.dk;g.lineWidth=26;g.strokeRect(13,13,998,1254);
-tx(g,'🏆 CARTELA VENCEDOR',512,107,'bold 54px','#fff','center');tx(g,'10 / 10 ACERTOS',512,165,'bold 34px','#fff','center');
+tx(g,'🏆 CARTELA VENCEDORA',512,107,'bold 54px','#fff','center');tx(g,'10 / 10 ACERTOS',512,165,'bold 34px','#fff','center');
 tx(g,'CARTELA',512,288,'bold 28px',C.tx,'center');tx(g,r.c,512,370,'bold 76px',C.gr,'center');
 g.strokeStyle='#c4bfb0';g.lineWidth=3;g.setLineDash([14,12]);[427,891].forEach(y=>{g.beginPath();g.moveTo(77,y);g.lineTo(947,y);g.stroke()});g.setLineDash([]);
 tx(g,'10 DEZENAS DA CARTELA',512,492,'bold 28px',C.tx,'center');
@@ -252,9 +252,9 @@ if(!c){['hk','hdest','hl','hs','hac'].forEach(i=>$(i).innerHTML='');return}
 const x=await call('histDash',{ciclo:c,acertos:$('ha').value,usuario:$('hu').value,cartela:$('hq').value.trim()});if(x.erro)return toast(x.erro);
 HD=x.lista;HSET=new Set(x.sorteadas);HWIN=x.venc||[];HVIT=x.vit;const s=HSET;
 $('hk').innerHTML='<div>JOGOS<b>'+x.total+'</b></div><div>7/10<b>'+x.cont[7]+'</b></div><div>8/10<b>'+x.cont[8]+'</b></div><div>9/10<b>'+x.cont[9]+'</b></div>';
-$('hdest').innerHTML=x.cont[10]?'<div class="card win"><h2>🏆 CARTELA VENCEDOR — 10/10 ('+x.cont[10]+')</h2>'+(x.vit?'<p class="mut">Vitória no sorteio de '+x.vit.data+' • '+x.vit.nome+'</p>':'')+HWIN.map(g=>'<p>Cartela <b>'+g.c+'</b> (jogo '+g.j+') — '+esc(nm(g))+'<br>'+g.d.map(n=>'<span class="n h">'+p2(n)+'</span>').join('')+'</p>').join('')+'<button class="b p" onclick="hshareWin()">📤 Compartilhar PNG</button><button class="b p" onclick="hprintWin()">🖨 Imprimir</button></div>'
+$('hdest').innerHTML=x.cont[10]?'<div class="card win"><h2>🏆 CARTELA VENCEDORA — 10/10 ('+x.cont[10]+')</h2>'+(x.vit?'<p class="mut">Vitória no sorteio de '+x.vit.data+' • '+x.vit.nome+'</p>':'')+HWIN.map(g=>'<p>Cartela <b>'+esc(g.c)+'</b> (jogo '+g.j+') — '+esc(nm(g))+'<br>'+g.d.map(n=>'<span class="n h">'+p2(n)+'</span>').join('')+'</p>').join('')+'<button class="b p" onclick="hshareWin()">📤 Compartilhar PNG</button><button class="b p" onclick="hprintWin()">🖨 Imprimir</button></div>'
 :(x.vit?'<div class="card"><p class="mut">🏆 Houve ganhador neste ciclo, no sorteio de '+x.vit.data+' • '+x.vit.nome+'.</p></div>':'');
-$('hl').innerHTML=x.lista.length?'<table><tr><th>Cartela</th><th>Jogo</th><th>Nome</th><th>Dezenas</th><th>Acertos</th><th></th></tr>'+x.lista.map((g,i)=>'<tr><td><b>'+g.c+'</b></td><td>'+g.j+'</td><td>'+esc(nm(g))+'</td><td>'+g.d.map(n=>'<span class="n '+(s.has(n)?'h':'')+'">'+p2(n)+'</span>').join('')+'</td><td><b>'+g.ac+'/10</b></td><td style="white-space:nowrap"><button class="b s" data-a="p" data-i="'+i+'" title="Imprimir este jogo">🖨</button><button class="b s" data-a="s" data-i="'+i+'" title="Compartilhar este jogo">📤</button>'+(ME.adm?'<button class="b x s" data-a="x" data-i="'+i+'" title="Excluir do histórico">🗑</button>':'')+'</td></tr>').join('')+'</table>':'<p class="mut">Nenhuma cartela encontrada.</p>';
+$('hl').innerHTML=x.lista.length?'<table><tr><th>Cartela</th><th>Jogo</th><th>Nome</th><th>Dezenas</th><th>Acertos</th><th></th></tr>'+x.lista.map((g,i)=>'<tr><td><b>'+esc(g.c)+'</b></td><td>'+g.j+'</td><td>'+esc(nm(g))+'</td><td>'+g.d.map(n=>'<span class="n '+(s.has(n)?'h':'')+'">'+p2(n)+'</span>').join('')+'</td><td><b>'+g.ac+'/10</b></td><td style="white-space:nowrap"><button class="b s" data-a="p" data-i="'+i+'" title="Imprimir este jogo">🖨</button><button class="b s" data-a="s" data-i="'+i+'" title="Compartilhar este jogo">📤</button>'+(ME.adm?'<button class="b x s" data-a="x" data-i="'+i+'" title="Excluir do histórico">🗑</button>':'')+'</td></tr>').join('')+'</table>':'<p class="mut">Nenhuma cartela encontrada.</p>';
 $('hs').innerHTML='<table><tr><th>Data</th><th>Horário</th><th>Dezenas</th>'+(ME.adm?'<th></th>':'')+'</tr>'+x.sorteios.map(r=>'<tr><td>'+r.data+'</td><td>'+r.horario+'</td><td>'+r.dezenas.map(n=>'<span class="n h">'+n+'</span>').join('')+'</td>'+(ME.adm?'<td style="white-space:nowrap"><button class="b s" data-a="e" data-d="'+r.data+'" data-h="'+r.horario+'" title="Corrigir dezenas">✏</button><button class="b x s" data-a="x" data-d="'+r.data+'" data-h="'+r.horario+'" title="Excluir">🗑</button></td>':'')+'</tr>').join('')+'</table>';
 const ac=new Set(x.acumulado);$('hac').innerHTML=Array.from({length:100},(_,i)=>'<span class="'+(ac.has(i)?'h':'')+'" title="'+bicho(i)[0]+'">'+p2(i)+'<i>'+bicho(i)[1]+'</i></span>').join('')}
 function histCtx(){SET=HSET;VIT=HVIT}   // imgLista e ticketVenc leem estas variáveis
@@ -277,14 +277,14 @@ const BICHOS=[['Avestruz','🦤'],['Águia','🦅'],['Burro','🐴'],['Borboleta
 const bicho=n=>BICHOS[(n==0?25:Math.ceil(n/4))-1];
 (()=>{const f=BICHOS.map(b=>'<span>'+b[1]+'</span>').join('');$('trilho').innerHTML=f+f;$('lbichos').textContent=['🦁','🐘','🦅','🐅','🐍'].join(' ')})();
 const esc=x=>String(x==null?'':x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),nm=g=>g.n||g.u;
-function sair(){semSessao();location.reload()}
+async function sair(){QUIET=true;await call('sair');semSessao();location.reload()}   // avisa o servidor para encerrar o login
 // F5 não desloga: o login fica guardado só nesta aba (some ao fechar a aba) e é conferido no servidor ao reabrir.
 function restaurar(){let s=null;try{s=SS&&JSON.parse(SS.getItem('bolao_s')||'null')}catch(e){}
 if(!s||!s.t){document.documentElement.className='';return}T=s.t;ME=s.me||{};QUIET=true;   // QUIET: se o token venceu, volta ao login sem aviso
 iniciar(ME);if(s.tab&&s.tab!='cad'){const b=document.querySelector('nav button[data-t="'+s.tab+'"]');if(b&&!b.classList.contains('hide'))b.click()}}
 function senhaAbrir(){['pa','pn','pc'].forEach(i=>$(i).value='');$('pw').classList.remove('hide');$('pa').focus()}
 async function senhaSalvar(){const a=$('pa').value,n=$('pn').value,c=$('pc').value;if(!a||!n)return toast('Preencha a senha atual e a nova');
-if(n!==c)return toast('A confirmação não confere');if(n.trim().length<4)return toast('Senha nova muito curta (mínimo 4)');
+if(n!==c)return toast('A confirmação não confere');if(n.trim().length<6)return toast('Senha nova muito curta (mínimo 6)');
 const x=await call('trocarSenha',{atual:a,nova:n});if(x.erro)return toast(x.erro);$('pw').classList.add('hide');toast('✅ Senha alterada!')}
 function pagsDash(){const l=DASH.filter(g=>g.ac<10);
 const grp={};l.forEach(g=>(grp[g.ac]=grp[g.ac]||[]).push(g));const pg=[];
@@ -292,7 +292,7 @@ Object.keys(grp).sort((a,b)=>b-a).forEach(k=>{for(let i=0;i<grp[k].length;i+=10)
 return pg.map((p,i)=>imgLista('RESULTADO — '+p[0]+' ACERTOS','Página '+(i+1)+'/'+pg.length+' • '+p[1].length+' cartela(s)',p[1]))}
 function shareDash(){if(!DASH.some(g=>g.ac<10))return toast('Nada para compartilhar (10/10 usa o botão do destaque)');enviar(pagsDash(),'cartelas')}
 function shareWin(){enviar(WIN.map(imgVenc),'vencedor')}
-function ticketVenc(g){return '<div class="pg"><div class="box t"><div class="h1">★ VENCEDOR ★</div><div class="sub">10 / 10 ACERTOS</div></div><div class="t lb">CARTELA</div><div class="t num">'+g.c+'</div>'+
+function ticketVenc(g){return '<div class="pg"><div class="box t"><div class="h1">★ VENCEDOR ★</div><div class="sub">10 / 10 ACERTOS</div></div><div class="t lb">CARTELA</div><div class="t num">'+esc(g.c)+'</div>'+
 '<div class="inf"><span>Nome: <b>'+esc(nm(g))+'</b></span><span>Jogo <b>'+g.j+'</b></span></div>'+(g.dt?'<div class="inf"><span>Registrada em</span><b>'+g.dt+'</b></div>':'')+(VIT?'<div class="inf"><span>Sorteio: '+VIT.data+' • '+VIT.nome+'</span></div>':'')+
 '<div class="dz"></div><div class="g">'+[...g.d].sort((a,b)=>a-b).map(n=>'<b>'+p2(n)+'</b>').join('')+'</div>'+cicloTxt(g.dt)+'<div class="dz"></div><div class="ft"><b>PARABÉNS!</b><br>Todas as 10 dezenas foram acertadas.</div></div>'}
 function printWin(){if(!WIN.length)return toast('Nenhuma cartela vencedora');imprimir(WIN.map(ticketVenc).join(''))}
