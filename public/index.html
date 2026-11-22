@@ -173,7 +173,7 @@ nav button i{font-style:normal;margin-right:4px}#tmais{display:none}
 <div class="barra" id="ibarra"><button class="b p big" id="ib" type="button" onclick="impGo()" disabled>Importar</button><small id="iberr"></small></div></div></section>
 <section id="conf" class="hide"><div class="card"><h2>🔎 Conferir comprovante</h2><p class="mut">Digite a cartela e o código de conferência impresso no comprovante.</p>
 <div class="jtool"><input id="vc" placeholder="Cartela" inputmode="numeric" style="width:130px"> <input id="vk" placeholder="Código (ex.: K7Q-29F)" autocapitalize="characters" autocomplete="off" style="width:200px" onkeydown="if(event.key=='Enter')conferir()"> <button class="b p" onclick="conferir()">Conferir</button></div><div id="vr"></div></div></section>
-<section id="adm" class="hide"><div class="card"><h2>Usuários</h2><button class="b p" onclick="novoU()">➕ Novo usuário</button><div class="sc" id="ul"></div><p class="mut">Excluir um usuário remove só o acesso; os cadastros dele continuam na planilha.</p></div>
+<section id="adm" class="hide"><div class="card"><h2>Usuários</h2><button class="b p" onclick="novoU()">➕ Novo usuário</button><div class="sc" id="ul"></div><p class="mut">Excluir um usuário remove só o acesso; os jogos dele continuam no sistema.</p></div>
 <div class="card"><h2>Lançar sorteio manualmente</h2><p class="mut">Use se o resultado automático falhar. Se já existir, será substituído.</p>
 <input id="md" type="date" aria-label="Data do sorteio"> <select id="mh"><option>14h</option><option>16h</option><option>18h</option><option>21h</option></select>
 <div id="mz" class="g5" style="margin:8px 0;max-width:320px"></div><button class="b p" onclick="manual()">Lançar</button></div>
@@ -196,7 +196,7 @@ async function tgReenviar(){if(!confirm('Reenviar o resumo do último sorteio ao
 
 <div class="card"><h2>Ciclo semanal</h2><p class="mut">Toda segunda, entre 05:00 e 06:00, o sistema arquiva os dados da semana anterior (eles ficam na aba Histórico) e começa um novo ciclo. O cadastro de cartelas abre na segunda às 06:00 e fecha na quinta às 13:00. Use o botão só se precisar virar o ciclo antes disso.</p>
 <button class="b x" onclick="encerrar()">🔄 Encerrar ciclo agora</button></div>
-<p class="mut">Cada correção é registrada na aba <b>Log</b> da planilha.</p></section>
+<p class="mut">Cada correção fica registrada no Log do sistema (Supabase) e vai junto no backup semanal.</p></section>
 </main></div><div id="toast" class="hide"></div>
 <script>
 let CARGA=0,T='',ME={},DASH=[],SOR={},SET=new Set(),JL=[],WIN=[],VIT=null;const $=i=>document.getElementById(i),p2=n=>String(n).padStart(2,'0');
@@ -484,7 +484,7 @@ if(!confirm('Excluir o acesso de '+u+'? Os cadastros dele continuam no sistema.'
 async function manual(){const z=[...$('mz').querySelectorAll('.d')].map(e=>e.value);if(z.some(v=>!v))return toast('Preencha as 5 dezenas');
 const dv=$('md').value.trim();if(!dv)return toast('Escolha a data do sorteio');
 const x=await call('sorteioManual',{data:/^\d{4}-\d{2}-\d{2}$/.test(dv)?dv.split('-').reverse().join('/'):dv,horario:$('mh').value,dezenas:z});toast(x.erro||'Sorteio lançado!');if(!x.erro)$('mz').querySelectorAll('.d').forEach(e=>e.value='')}
-async function encerrar(){if(!confirm('Encerrar o ciclo agora? Os dados da semana vão para as abas Arq_ da planilha e o sistema volta zerado.'))return;
+async function encerrar(){if(!confirm('Encerrar o ciclo agora? Os dados da semana vão para o Histórico e o sistema volta zerado.'))return;
 const x=await call('encerrarCiclo');toast(x.erro||'Ciclo encerrado: '+x.sorteios+' sorteio(s) e '+x.jogos+' jogo(s) arquivados');if(!x.erro){jogos();dash()}}
 
 const C={dk:'#173d2b',gr:'#0b6b43',cr:'#f4efdd',al:'#efe8d6',br:'#8a5a2b',tx:'#1d2330',gy:'#555'},FT='Arial,"Apple Color Emoji","Segoe UI Emoji",sans-serif';
