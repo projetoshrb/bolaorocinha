@@ -64,6 +64,32 @@ body.busy #carga{display:block}
 .codv{display:inline-block;margin-top:6px;font-family:ui-monospace,Menlo,monospace;font-weight:800;font-size:20px;letter-spacing:2px;background:#f4efe1;border:1.5px dashed #b9a676;border-radius:8px;padding:4px 12px}
 .res{border-radius:12px;padding:10px 12px;margin-top:10px}.res h3{margin:0 0 4px}.res.ok{background:#e3f3e8;border:2px solid #7cc596}.res.no{background:#fde0dd;border:2px solid #e39a93}
 .linkb{background:none;border:0;color:var(--vm);font-weight:700;text-decoration:underline;cursor:pointer;font-size:14px;padding:8px}
+/* ===== Fase 3: menu da conta, abas embaixo e cartões ===== */
+header .conta{display:flex;align-items:center;gap:6px;background:#ffffff22;color:#fff;border:0;border-radius:999px;padding:6px 6px 6px 12px;font-size:14px;font-weight:600;cursor:pointer;min-height:40px;max-width:60vw}
+header .conta span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}header .conta b{width:30px;height:30px;border-radius:50%;background:#ffffff33;display:grid;place-items:center;font-size:16px;font-weight:400;flex:none}
+nav button i{font-style:normal;margin-right:4px}#tmais{display:none}
+.jtool{display:flex;flex-wrap:wrap;gap:6px;align-items:center}#jq{flex:1;min-width:170px}
+.selall{display:flex;align-items:center;gap:8px;margin:8px 0;font-weight:600;font-size:14px}
+.cc{background:#fffdf5;border:1.5px solid var(--borda);border-radius:14px;padding:10px 12px;margin:10px 0;max-width:560px}
+.cct{display:flex;justify-content:space-between;align-items:baseline;gap:4px 10px;flex-wrap:wrap}.cct b{font-size:18px}.cct span{font-size:13px;color:#7a6a55}
+.ccn{font-size:13px;color:#555;margin-top:2px}
+.cc details{margin-top:4px}.cc summary{cursor:pointer;color:var(--vm);font-weight:700;font-size:14px;padding:6px 0;list-style:none}.cc summary::-webkit-details-marker{display:none}
+.cc summary .t2,.cc details[open] summary .t1{display:none}.cc details[open] summary .t2{display:inline}
+.jj{margin:4px 0 10px}.jh{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:#7a6a55;margin-bottom:4px;min-height:30px}.jh .sp{flex:1}.jh input{width:20px;height:20px}
+.gg5{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;max-width:380px}.gg5 i{font-style:normal;text-align:center;background:#f1e7c6;border-radius:7px;font-weight:700;padding:5px 0;font-variant-numeric:tabular-nums}
+.ccacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.ccacts .b{flex:1 1 160px;min-height:44px;font-size:14px}
+#toast{z-index:50}
+@media(max-width:700px){
+ body{padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+ nav{position:fixed;top:auto;bottom:0;left:0;right:0;z-index:15;overflow:visible;border-bottom:0;border-top:2px solid var(--borda);box-shadow:0 -2px 8px #0002;background:#fff;padding-bottom:env(safe-area-inset-bottom,0px)}
+ nav button{min-width:0;display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 2px 5px;font-size:11.5px;border-bottom:0;border-top:3px solid transparent;line-height:1.2}
+ nav button i{font-size:21px;margin:0}
+ nav button.on{border-top-color:var(--vm)}
+ #thist,#tadm{display:none!important}#tmais:not(.hide){display:flex}
+ .barra{bottom:calc(60px + env(safe-area-inset-bottom,0px));padding-bottom:8px}
+ #toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+ header{padding-bottom:10px}
+}
 </style></head><body><div id="carga" aria-hidden="true"></div>
 <div id="login" class="card"><div id="lbichos" aria-hidden="true"></div><h2>BOLAO ROCINHA</h2><p class="mut">Entre com seu usuário e senha</p><p class="mut" id="inst" style="font-size:13px"></p>
 <input id="lu" placeholder="Usuário" autocapitalize="none" autocomplete="username"><input id="lp" type="password" placeholder="Senha" autocomplete="current-password">
@@ -75,9 +101,15 @@ body.busy #carga{display:block}
 <label class="lab" for="bob">Largura da bobina da impressora</label><select id="bob" onchange="trocaBobina()" style="width:100%"><option value="58">58 mm (mini portátil)</option><option value="80">80 mm</option></select>
 <div class="acts"><button class="b big" onclick="shareCupom('imp')">🖨 Imprimir</button><button class="b big wpp" onclick="shareCupom('wpp')">📲 WhatsApp</button><button class="b big" onclick="$('cmp').classList.add('hide')">Fechar</button></div>
 <p class="mut" style="font-size:12px">Imprimir: escolha o app da impressora (por exemplo, RawBT) na lista que abrir.</p></div></div>
-<header><h1>🦁 BOLAO ROCINHA</h1><div><span class="chip" id="who"></span><button class="b hide" id="binst" onclick="instalar()">📲 Instalar</button><button class="b" onclick="senhaAbrir()">🔑 Senha</button><button class="b" onclick="sair()">Sair</button></div></header>
+<div id="menu" class="modal hide" role="dialog" aria-labelledby="mwho" onclick="if(event.target===this)fecharMenu()"><div class="card"><h2 id="mwho"></h2>
+<div class="acts"><button class="b big hide" id="binst" onclick="fecharMenu();instalar()">📲 Instalar o app no celular</button>
+<label class="lab" for="mbob" style="margin-top:4px">Bobina da impressora</label><select id="mbob" onchange="setBobina(this.value);toast('Bobina: '+this.value+' mm')"><option value="58">58 mm (mini portátil)</option><option value="80">80 mm</option></select>
+<button class="b big" onclick="fecharMenu();senhaAbrir()">🔑 Trocar minha senha</button><button class="b big x" onclick="sair()">🚪 Sair</button><button class="b big" onclick="fecharMenu()">Fechar</button></div></div></div>
+<div id="mais" class="modal hide" role="dialog" onclick="if(event.target===this)this.classList.add('hide')"><div class="card"><h2>Mais</h2>
+<div class="acts"><button class="b big" onclick="irAba('hist')">🕘 Histórico</button><button class="b big" onclick="irAba('adm')">⚙️ Admin</button><button class="b big" onclick="$('mais').classList.add('hide')">Fechar</button></div></div></div>
+<header><h1>🦁 BOLAO ROCINHA</h1><button class="conta" id="bconta" onclick="abrirMenu()" aria-label="Menu da conta"><span id="who"></span><b>👤</b></button></header>
 <div class="faixa" aria-hidden="true"><div class="trilho" id="trilho"></div></div>
-<nav><button data-t="cad" class="on">📝 Cadastrar</button><button data-t="dash" id="tdash" class="hide">🏆 Dashboard</button><button data-t="sor" id="tsor" class="hide">🎯 Sorteios</button><button data-t="jog">📋 Jogos</button><button data-t="hist" id="thist" class="hide">🕘 Histórico</button><button data-t="adm" id="tadm" class="hide">⚙️ Admin</button></nav>
+<nav><button data-t="cad" class="on"><i>📝</i>Cadastrar</button><button data-t="dash" id="tdash" class="hide"><i>🏆</i>Dashboard</button><button data-t="sor" id="tsor" class="hide"><i>🎯</i>Sorteios</button><button data-t="jog" id="tjog"><i>📋</i>Jogos</button><button data-t="hist" id="thist" class="hide"><i>🕘</i>Histórico</button><button data-t="adm" id="tadm" class="hide"><i>⚙️</i>Admin</button><button id="tmais" class="hide" type="button" onclick="$('mais').classList.remove('hide')"><i>☰</i>Mais</button></nav>
 <main>
 <section id="cad"><div class="card hide" id="cadmsg" style="border-left:6px solid #b3261e"><b>⛔ Cadastro encerrado</b><p class="mut">O cadastro abre na segunda às 06:00 e fecha na quinta às 13:00.</p></div><div class="card cadc"><div class="dia hide" id="dia"></div>
 <label class="lab" for="cn">Número da cartela</label><input id="cn" class="cart" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="Ex: 1000" oninput="avisoCartela();validar();salvarRasc()" onkeydown="if(event.key=='Enter'){event.preventDefault();rows.firstChild.querySelector('.d').focus()}">
@@ -89,8 +121,8 @@ body.busy #carga{display:block}
 <select id="iu"></select><textarea id="it" rows="6" style="width:100%;margin-top:8px;font-family:monospace" placeholder="83301&#9;6&#9;83&#9;26&#9;1&#9;4&#9;22&#9;51&#9;55&#9;69&#9;98" ></textarea>
 <button class="b p" onclick="impVer()">Verificar</button> <button class="b p hide" id="ib" onclick="impGo()">Importar</button><div id="ip" style="margin-top:8px"></div></div>
 </section>
-<section id="jog" class="hide"><div class="card"><h2>Jogos cadastrados</h2><select id="ju" class="hide" onchange="jogos()"><option value="">Todos os usuários</option></select> <input id="jq" placeholder="🔍 Cartela ou nome" oninput="drawJ()">
-<button class="b p" onclick="jogos()">Atualizar</button><button class="b" onclick="imprJ()">🖨 Imprimir lista</button><button class="b p hide" id="jps" onclick="imprSel()">🖨 Imprimir selecionados (<span id="jsn">0</span>)</button><button class="b" onclick="csv()">⬇ Baixar CSV</button>
+<section id="jog" class="hide"><div class="card"><h2 id="jtit">Jogos cadastrados</h2><div class="jtool"><select id="ju" class="hide" onchange="jogos()"><option value="">Todos os usuários</option></select><input id="jq" type="search" placeholder="🔍 Buscar cartela ou nome" oninput="JLIM=40;drawJ()"></div>
+<button class="b p" onclick="jogos()">🔄 Atualizar</button><button class="b hide" id="jimp" onclick="imprJ()">🖨 Imprimir lista</button><button class="b p hide" id="jps" onclick="imprSel()">🖨 Imprimir selecionados (<span id="jsn">0</span>)</button><button class="b hide" id="jcsv" onclick="csv()">⬇ Baixar CSV</button>
 <p class="mut" id="jc"></p><div class="sc" id="jl"></div></div></section>
 <section id="dash" class="hide"><div class="k" id="kp"></div><div id="dest"></div>
 <div class="card"><h2>Pesquisar jogos</h2><select id="fa"><option value="">Todos (7 a 10)</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
@@ -137,11 +169,11 @@ const x=await r.json();if(x&&x.sessao){semSessao();if(!QUIET)alert(x.erro);locat
 function toast(m){const t=$('toast');t.textContent=m;t.classList.remove('hide');setTimeout(()=>t.classList.add('hide'),2600)}
 async function entrar(){const x=await call('login',{u:$('lu').value,p:$('lp').value});if(x.erro){$('le').textContent=x.erro;return}
 T=x.token;ME=x;salvarSessao();iniciar(x)}
-function iniciar(x){$('login').classList.add('hide');$('app').classList.remove('hide');$('who').textContent='👤 '+(x.n||x.u)+(x.adm?' • admin':'');
-if(x.adm){['tadm','tdash','tsor','thist','at','ju','hu','jps','impc'].forEach(i=>$(i).classList.remove('hide'));loadNomes()}if(!restaurarRasc())addRow();jogos();call('cadStatus').then(r=>{QUIET=false;if(r&&r.aberto===false)$('cadmsg').classList.remove('hide')})}
+function iniciar(x){$('login').classList.add('hide');$('app').classList.remove('hide');$('who').textContent=(x.n||x.u);$('mwho').textContent='👤 '+(x.n||x.u)+(x.adm?' · admin':'');if(!x.adm){$('tjog').innerHTML='<i>📋</i>Minhas cartelas';$('jtit').textContent='Minhas cartelas'}
+if(x.adm){['tadm','tdash','tsor','thist','tmais','at','ju','hu','jps','impc','jimp','jcsv'].forEach(i=>$(i).classList.remove('hide'));loadNomes()}if(!restaurarRasc())addRow();jogos();call('cadStatus').then(r=>{QUIET=false;if(r&&r.aberto===false)$('cadmsg').classList.remove('hide')})}
 $('lp').onkeydown=e=>{if(e.key=='Enter')entrar()};
 const TABS=['cad','dash','sor','jog','hist','adm'];
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{ABA=b.dataset.t;salvarSessao();document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x==b));
+document.querySelectorAll('nav button[data-t]').forEach(b=>b.onclick=()=>{ABA=b.dataset.t;salvarSessao();document.querySelectorAll('nav button[data-t]').forEach(x=>x.classList.toggle('on',x==b));$('tmais').classList.toggle('on',ABA=='hist'||ABA=='adm');window.scrollTo(0,0);
 TABS.forEach(s=>$(s).classList.toggle('hide',s!=b.dataset.t));const t=b.dataset.t;({jog:jogos,dash:dash,sor:sorteios,hist:histTab,adm:admin}[t]||(()=>0))()});
 // ===== Cadastro rápido (celular) =====
 const rows=$('rows'),okC=c=>/^\w{1,15}$/.test(c);
@@ -273,9 +305,30 @@ async function loadNomes(){const x=await call('nomes');if(x.erro)return;
 ['ju','fu','hu'].forEach(id=>{const s=$(id),v=s.value;s.innerHTML='<option value="">Todos os usuários</option>'+x.nomes.map(n=>'<option value="'+esc(n.u)+'">'+esc(n.n)+'</option>').join('');s.value=v});const iu=$('iu'),vi=iu.value;iu.innerHTML='<option value="">— escolha o usuário dono dos jogos —</option>'+x.nomes.map(n=>'<option value="'+esc(n.u)+'">'+esc(n.n)+'</option>').join('');iu.value=vi}
 let JSEL=new Set();const kj=g=>g.u+'|'+g.c+'|'+g.j,jvis=()=>{const q=$('jq').value.trim().toLowerCase();return JL.filter(g=>!q||String(g.c).includes(q)||nm(g).toLowerCase().includes(q))};
 function updSel(){const n=$('jsn');if(n)n.textContent=JSEL.size;const a=$('jsel');if(a){const v=jvis();a.checked=v.length>0&&v.every(g=>JSEL.has(kj(g)))}}
-function drawJ(){const l=jvis();$('jc').textContent=l.length+' jogo(s)';
-$('jl').innerHTML='<table><tr>'+(ME.adm?'<th><input type="checkbox" id="jsel" title="Marcar todos os jogos da lista"></th>':'')+'<th>Nome</th><th>Cartela</th><th>Jogo</th><th>Dezenas</th><th>Comprovante</th>'+(ME.adm?'<th>Corrigir</th>':'')+'</tr>'+l.map(g=>'<tr>'+(ME.adm?'<td><input type="checkbox" class="sj" data-k="'+kj(g)+'"'+(JSEL.has(kj(g))?' checked':'')+'></td>':'')+'<td>'+esc(nm(g))+'</td><td><b>'+esc(g.c)+'</b></td><td>'+g.j+'</td><td>'+g.d.map(n=>'<span class="n">'+p2(n)+'</span>').join('')+'</td>'+
-'<td><button class="b s" data-a="k" data-k="'+esc(kj(g))+'" title="Imprimir ou enviar o comprovante">🧾</button></td>'+(ME.adm?'<td><button class="b x s" data-a="j" data-u="'+g.u+'" data-n="'+esc(nm(g))+'" data-c="'+esc(g.c)+'" data-j="'+g.j+'">🗑 Jogo</button><button class="b x s" data-a="c" data-u="'+g.u+'" data-n="'+esc(nm(g))+'" data-c="'+esc(g.c)+'">🗑 Cartela</button></td>':'')+'</tr>').join('')+'</table>';updSel();updDia();avisoCartela()}
+// ===== Lista de cartelas em cartões (celular) =====
+let JLIM=40;   // cartões mostrados por vez (o resto aparece em "Mostrar mais")
+const dtKey=dt=>{const m=/(\d+)\/(\d+)\/(\d+)\s+(\d+):(\d+)/.exec(dt||'');return m?m[3]+m[2].padStart(2,'0')+m[1].padStart(2,'0')+m[4].padStart(2,'0')+m[5]:''};
+const fmtDt=dt=>{const m=/(\d+)\/(\d+)\/(\d+)\s+(\d+:\d+)/.exec(dt||'');return m?DIAS[new Date(Date.UTC(+m[3],+m[2]-1,+m[1])).getUTCDay()]+' '+m[1]+'/'+m[2]+' '+m[4]:(dt||'')};
+function cardCartela(x,i){
+ const env={};x.js.forEach(g=>(env[g.dt]=env[g.dt]||[]).push(g));const ks=Object.keys(env).sort((a,b)=>dtKey(a)<dtKey(b)?-1:1);
+ const btns=ks.map(dt=>{const l=env[dt],a=l[0].j,z=l[l.length-1].j;
+  return '<button class="b s" data-a="k" data-k="'+esc(kj(l[0]))+'">🧾 Comprovante'+(ks.length>1?' · '+esc(fmtDt(dt))+' (jogo'+(l.length>1?'s '+esc(a)+'–'+esc(z):' '+esc(a))+')':'')+'</button>'}).join('');
+ const jh=x.js.map(g=>'<div class="jj"><div class="jh">'+(ME.adm?'<input type="checkbox" class="sj" data-k="'+esc(kj(g))+'"'+(JSEL.has(kj(g))?' checked':'')+' aria-label="Marcar o jogo '+esc(g.j)+'">':'')+
+  '<span>JOGO '+esc(g.j)+'</span><span class="sp"></span>'+(ME.adm?'<button class="b x s" data-a="j" data-u="'+esc(g.u)+'" data-n="'+esc(nm(g))+'" data-c="'+esc(g.c)+'" data-j="'+esc(g.j)+'">🗑 Jogo</button>':'')+
+  '</div><div class="gg5">'+g.d.map(n=>'<i>'+p2(n)+'</i>').join('')+'</div></div>').join('');
+ return '<div class="cc"><div class="cct"><b>Cartela '+esc(x.c)+'</b><span>'+x.js.length+(x.js.length==1?' jogo':' jogos')+' · '+esc(fmtDt(x.ult))+'</span></div>'+
+  (ME.adm?'<div class="ccn">👤 '+esc(x.n)+'</div>':'')+
+  '<details'+(i<3?' open':'')+'><summary><span class="t1">Ver jogos ▾</span><span class="t2">Esconder jogos ▴</span></summary>'+jh+
+  (ME.adm?'<button class="b x s" data-a="c" data-u="'+esc(x.u)+'" data-n="'+esc(x.n)+'" data-c="'+esc(x.c)+'">🗑 Excluir a cartela inteira</button>':'')+'</details>'+
+  '<div class="ccacts">'+btns+'</div></div>'}
+function drawJ(){const l=jvis(),G=[],M={};
+ l.forEach(g=>{const q=g.u+'|'+g.c;if(!M[q]){M[q]={u:g.u,c:g.c,n:nm(g),js:[],ult:''};G.push(M[q])}M[q].js.push(g)});
+ G.forEach(x=>{x.js.sort((a,b)=>Number(a.j)-Number(b.j));x.ult=x.js.reduce((m,g)=>dtKey(g.dt)>dtKey(m)?g.dt:m,'')});
+ G.sort((a,b)=>dtKey(b.ult)<dtKey(a.ult)?-1:dtKey(b.ult)>dtKey(a.ult)?1:0);   // mais recentes primeiro
+ $('jc').textContent=G.length+(G.length==1?' cartela':' cartelas')+' · '+l.length+(l.length==1?' jogo':' jogos');
+ $('jl').innerHTML=(G.length?(ME.adm?'<label class="selall"><input type="checkbox" id="jsel"> Marcar todos os jogos da lista</label>':'')+G.slice(0,JLIM).map(cardCartela).join('')+
+  (G.length>JLIM?'<button class="b big" type="button" onclick="JLIM+=40;drawJ()">Mostrar mais ('+(G.length-JLIM)+' cartelas)</button>':''):'<p class="mut">Nenhuma cartela encontrada.</p>');
+ updSel();updDia();avisoCartela()}
 $('jl').onchange=e=>{const t=e.target;if(t.id=='jsel'){jvis().forEach(g=>t.checked?JSEL.add(kj(g)):JSEL.delete(kj(g)));drawJ()}
 else if(t.classList.contains('sj')){t.checked?JSEL.add(t.dataset.k):JSEL.delete(t.dataset.k);updSel()}};
 function imprSel(){const l=JL.filter(g=>JSEL.has(kj(g)));if(!l.length)return toast('Marque pelo menos um jogo na lista');imprLista(l)}
@@ -455,6 +508,9 @@ async function conferir(){const c=$('vc').value.trim(),k=$('vk').value.trim();if
  $('vr').innerHTML=x.valido?'<div class="res ok"><h3>✅ Comprovante verdadeiro</h3><p>Cartela <b>'+esc(x.cartela)+'</b> · vendedor <b>'+esc(x.n)+'</b><br>Registrada em '+esc(x.dt)+(x.ciclo?'<br>Semana já encerrada: '+esc(x.ciclo):'')+'</p><p class="mut">Confira se as dezenas do papel são estas:</p>'+
   x.jogos.map(j=>'<p><b>Jogo '+esc(j.j)+':</b> '+j.d.map(n=>'<span class="n">'+p2(n)+'</span>').join('')+'</p>').join('')+'</div>'
   :'<div class="res no"><h3>⛔ Código não confere</h3><p>Esse código não foi gerado pelo sistema para a cartela '+esc(c)+'. O comprovante pode ter sido alterado, o código foi digitado errado ou os jogos dessa cartela foram excluídos.</p></div>'}
+function abrirMenu(){$('mbob').value=String(bobina());$('menu').classList.remove('hide')}
+function fecharMenu(){$('menu').classList.add('hide')}
+function irAba(t){$('mais').classList.add('hide');const b=document.querySelector('nav button[data-t="'+t+'"]');if(b)b.click()}
 restaurar();
 
 // ===== App instalável (PWA) =====
