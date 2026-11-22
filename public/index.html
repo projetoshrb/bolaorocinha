@@ -90,6 +90,9 @@ nav button i{font-style:normal;margin-right:4px}#tmais{display:none}
  #toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
  header{padding-bottom:10px}
 }
+.fin{width:100%}.fh{display:block;color:#7a6a55;font-size:12px;margin:3px 0 0}#frmc .lab{margin-top:12px}#frmc .fdz{max-width:320px}
+.ferr{color:#b3261e;font-weight:600;min-height:1.2em;margin:8px 0 0}
+#md{min-height:44px}
 </style></head><body><div id="carga" aria-hidden="true"></div>
 <div id="login" class="card"><div id="lbichos" aria-hidden="true"></div><h2>BOLAO ROCINHA</h2><p class="mut">Entre com seu usuário e senha</p><p class="mut" id="inst" style="font-size:13px"></p>
 <input id="lu" placeholder="Usuário" autocapitalize="none" autocomplete="username"><input id="lp" type="password" placeholder="Senha" autocomplete="current-password">
@@ -107,6 +110,8 @@ nav button i{font-style:normal;margin-right:4px}#tmais{display:none}
 <button class="b big" onclick="fecharMenu();senhaAbrir()">🔑 Trocar minha senha</button><button class="b big x" onclick="sair()">🚪 Sair</button><button class="b big" onclick="fecharMenu()">Fechar</button></div></div></div>
 <div id="mais" class="modal hide" role="dialog" onclick="if(event.target===this)this.classList.add('hide')"><div class="card"><h2>Mais</h2>
 <div class="acts"><button class="b big" onclick="irAba('hist')">🕘 Histórico</button><button class="b big" onclick="irAba('adm')">⚙️ Admin</button><button class="b big" onclick="$('mais').classList.add('hide')">Fechar</button></div></div></div>
+<div id="frm" class="modal hide" role="dialog" aria-labelledby="frmt" onclick="if(event.target===this)fecharForm()"><form class="card" id="frmf" novalidate><h2 id="frmt"></h2><div id="frmc"></div><p id="frme" class="ferr" role="alert"></p>
+<div class="acts"><button class="b p big" id="frmb" type="submit">Salvar</button><button class="b big" type="button" onclick="fecharForm()">Cancelar</button></div></form></div>
 <header><h1>🦁 BOLAO ROCINHA</h1><button class="conta" id="bconta" onclick="abrirMenu()" aria-label="Menu da conta"><span id="who"></span><b>👤</b></button></header>
 <div class="faixa" aria-hidden="true"><div class="trilho" id="trilho"></div></div>
 <nav><button data-t="cad" class="on"><i>📝</i>Cadastrar</button><button data-t="dash" id="tdash" class="hide"><i>🏆</i>Dashboard</button><button data-t="sor" id="tsor" class="hide"><i>🎯</i>Sorteios</button><button data-t="jog" id="tjog"><i>📋</i>Jogos</button><button data-t="hist" id="thist" class="hide"><i>🕘</i>Histórico</button><button data-t="adm" id="tadm" class="hide"><i>⚙️</i>Admin</button><button id="tmais" class="hide" type="button" onclick="$('mais').classList.remove('hide')"><i>☰</i>Mais</button></nav>
@@ -141,8 +146,8 @@ nav button i{font-style:normal;margin-right:4px}#tmais{display:none}
 <div class="card"><h2>Acumulado das dezenas</h2><p class="mut">Em verde, as que saíram no ciclo.</p><div class="grid" id="hac"></div></div></section>
 <section id="adm" class="hide"><div class="card"><h2>Usuários</h2><button class="b p" onclick="novoU()">➕ Novo usuário</button><div class="sc" id="ul"></div><p class="mut">Excluir um usuário remove só o acesso; os cadastros dele continuam na planilha.</p></div>
 <div class="card"><h2>Lançar sorteio manualmente</h2><p class="mut">Use se o resultado automático falhar. Se já existir, será substituído.</p>
-<input id="md" style="width:120px" placeholder="dd/mm/aaaa"> <select id="mh"><option>14h</option><option>16h</option><option>18h</option><option>21h</option></select>
-<div id="mz" style="margin:8px 0"></div><button class="b p" onclick="manual()">Lançar</button></div>
+<input id="md" type="date" aria-label="Data do sorteio"> <select id="mh"><option>14h</option><option>16h</option><option>18h</option><option>21h</option></select>
+<div id="mz" class="g5" style="margin:8px 0;max-width:320px"></div><button class="b p" onclick="manual()">Lançar</button></div>
 <div class="card"><h2>Telegram</h2>
 <p class="mut">O bot envia o resumo sozinho a cada sorteio novo, com as cartelas em imagem. Use os botões para testar.</p>
 <button class="b" onclick="tgTeste()">✈️ Mensagem de teste</button><button class="b" onclick="tgImagemTeste()">🖼 Imagem de teste</button><button class="b" onclick="tgReenviar()">🔁 Reenviar último sorteio</button></div>
@@ -355,19 +360,23 @@ const set=new Set(x.acumulado);$('ac').innerHTML=Array.from({length:100},(_,i)=>
 $('sl').onclick=async e=>{const b=e.target.closest('button[data-d]');if(!b||!confirm('Excluir o sorteio '+b.dataset.d+' '+b.dataset.h+'?'))return;
 const x=await call('excluirSorteio',{data:b.dataset.d,horario:b.dataset.h});toast(x.erro||'Sorteio excluído');sorteios()};
 async function atual(){const x=await call('atualizar');toast(x.erro||x.msg||'Gravados: '+(x.gravados.join(', ')||'nenhum novo'));sorteios()}
-async function admin(){$('md').value=agora().slice(0,10);if(!$('mz').firstChild)$('mz').innerHTML='<input class="d" maxlength="2" inputmode="numeric">'.repeat(5);
+async function admin(){{const a=agora();$('md').value=a.slice(6,10)+'-'+a.slice(3,5)+'-'+a.slice(0,2)}if(!$('mz').firstChild)$('mz').innerHTML='<input class="d" maxlength="2" inputmode="numeric">'.repeat(5);
 $('mz').querySelectorAll('.d').forEach((e,i,a)=>e.oninput=()=>{e.value=e.value.replace(/\D/g,'');if(e.value.length==2&&a[i+1])a[i+1].focus()});
 const x=await call('usuarios');if(x.erro)return toast(x.erro);loadNomes();
 $('ul').innerHTML='<table>'+x.usuarios.map(u=>'<tr><td><b>'+esc(u.n||u.u)+'</b>'+(u.adm?' <span class="n h">admin</span>':'')+'<br><small class="mut">login: '+u.u+'</small></td><td><button class="b s" data-a="n" data-u="'+u.u+'" data-n="'+esc(u.n||'')+'">✏ Nome</button><button class="b s" data-a="s" data-u="'+u.u+'">🔑 Senha</button>'+(u.u!=ME.u?'<button class="b x s" data-a="e" data-u="'+u.u+'">🗑 Excluir</button>':'')+'</td></tr>').join('')+'</table>'}
-$('ul').onclick=async e=>{const b=e.target.closest('button[data-a]');if(!b)return;const u=b.dataset.u;let x;
-if(b.dataset.a=='n'){const t=prompt('Nome de '+u+' (como aparece nas consultas):',b.dataset.n);if(t===null)return;x=await call('renomearUsuario',{u:u,nome:t})}
-else if(b.dataset.a=='s'){const p=prompt('Nova senha para '+u+':');if(!p)return;x=await call('redefinirSenha',{u:u,p:p})}
-else{if(!confirm('Excluir o acesso de '+u+'?'))return;x=await call('excluirUsuario',{u:u})}toast(x.erro||'Feito!');admin()};
+$('ul').onclick=async e=>{const b=e.target.closest('button[data-a]');if(!b)return;const u=b.dataset.u;
+if(b.dataset.a=='n')return abrirForm({titulo:'✏ Nome de '+u,campos:[{id:'nome',rotulo:'Nome (como aparece nas consultas)',valor:b.dataset.n}],
+ enviar:async v=>{if(!v.nome)return 'Informe o nome';const x=await call('renomearUsuario',{u:u,nome:v.nome});if(x.erro)return x.erro;toast('✅ Nome alterado');admin()}});
+if(b.dataset.a=='s')return abrirForm({titulo:'🔑 Nova senha de '+u,texto:'A pessoa será desconectada e vai precisar entrar com a senha nova.',botao:'Redefinir senha',
+ campos:[{id:'p',rotulo:'Senha nova',dica:'Mínimo 6 caracteres',cap:'none'}],
+ enviar:async v=>{if(v.p.length<6)return 'A senha precisa ter pelo menos 6 caracteres';const x=await call('redefinirSenha',{u:u,p:v.p});if(x.erro)return x.erro;toast('✅ Senha redefinida');admin()}});
+if(!confirm('Excluir o acesso de '+u+'? Os cadastros dele continuam na planilha.'))return;const x=await call('excluirUsuario',{u:u});toast(x.erro||'Acesso excluído');admin()};
 async function manual(){const z=[...$('mz').querySelectorAll('.d')].map(e=>e.value);if(z.some(v=>!v))return toast('Preencha as 5 dezenas');
-const x=await call('sorteioManual',{data:$('md').value.trim(),horario:$('mh').value,dezenas:z});toast(x.erro||'Sorteio lançado!');if(!x.erro)$('mz').querySelectorAll('.d').forEach(e=>e.value='')}
+const dv=$('md').value.trim();if(!dv)return toast('Escolha a data do sorteio');
+const x=await call('sorteioManual',{data:/^\d{4}-\d{2}-\d{2}$/.test(dv)?dv.split('-').reverse().join('/'):dv,horario:$('mh').value,dezenas:z});toast(x.erro||'Sorteio lançado!');if(!x.erro)$('mz').querySelectorAll('.d').forEach(e=>e.value='')}
 async function encerrar(){if(!confirm('Encerrar o ciclo agora? Os dados da semana vão para as abas Arq_ da planilha e o sistema volta zerado.'))return;
 const x=await call('encerrarCiclo');toast(x.erro||'Ciclo encerrado: '+x.sorteios+' sorteio(s) e '+x.jogos+' jogo(s) arquivados');if(!x.erro){jogos();dash()}}
-async function novoU(){const nome=prompt('Nome (como vai aparecer nas consultas, ex.: Diego (Cachopa)):');if(nome===null)return;const u=prompt('Usuário de login (letras/números, sem espaço):');if(!u)return;const p=prompt('Senha (mín. 6):');if(!p)return;const x=await call('novoUsuario',{u:u,p:p,nome:nome});toast(x.erro||'Usuário criado!');admin()}
+
 const C={dk:'#173d2b',gr:'#0b6b43',cr:'#f4efdd',al:'#efe8d6',br:'#8a5a2b',tx:'#1d2330',gy:'#555'},FT='Arial,"Apple Color Emoji","Segoe UI Emoji",sans-serif';
 function mk(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');g.fillStyle=C.cr;g.fillRect(0,0,w,h);return[c,g]}
 function tx(g,s,x,y,f,col,al){g.font=f+' '+FT;g.fillStyle=col;g.textAlign=al||'left';g.fillText(s,x,y)}
@@ -413,12 +422,11 @@ $('hl').onclick=async e=>{const b=e.target.closest('button[data-i]');if(!b)retur
 if(b.dataset.a=='p')imprimir(ticket(g.c,nm(g),[{j:g.j,d:g.d}],false,g.dt,g.k));
 else if(b.dataset.a=='s')shareJogo(g);
 else if(confirm('Excluir o jogo '+g.j+' da cartela '+g.c+' de '+nm(g)+' deste ciclo?')){const x=await call('histJogoExcluir',{ciclo:$('hc').value,u:g.u,c:g.c,j:g.j});toast(x.erro||'Jogo excluído do histórico');hist()}};
-$('hs').onclick=async e=>{const b=e.target.closest('button[data-d]');if(!b)return;const c=$('hc').value,r={ciclo:c,data:b.dataset.d,horario:b.dataset.h};let x;
-if(b.dataset.a=='e'){const t=prompt('Novas 5 dezenas do sorteio '+r.data+' '+r.horario+' (separadas por espaço):');if(!t)return;
-const z=t.trim().split(/\s+/).map(Number);if(z.length!=5||z.some(n=>!(n>=0&&n<=99)))return toast('Informe 5 dezenas (00-99)');
-x=await call('histSorteioSalvar',Object.assign(r,{dezenas:z}))}
-else{if(!confirm('Excluir o sorteio '+r.data+' '+r.horario+' deste ciclo?'))return;x=await call('histSorteioExcluir',r)}
-toast(x.erro||'Histórico corrigido');hist()};
+$('hs').onclick=async e=>{const b=e.target.closest('button[data-d]');if(!b)return;const r={ciclo:$('hc').value,data:b.dataset.d,horario:b.dataset.h};
+if(b.dataset.a=='e'){const atual=[...b.closest('tr').querySelectorAll('.n')].map(s=>Number(s.textContent));
+ return abrirForm({titulo:'✏ Corrigir sorteio '+r.data+' '+r.horario,texto:'A apuração deste ciclo é refeita com as dezenas novas.',campos:[{id:'z',tipo:'dez5',rotulo:'As 5 dezenas',valor:atual}],
+  enviar:async v=>{if(v.z.some(x=>!x))return 'Preencha as 5 dezenas';const x=await call('histSorteioSalvar',Object.assign({},r,{dezenas:v.z.map(Number)}));if(x.erro)return x.erro;toast('✅ Histórico corrigido');hist()}})}
+if(!confirm('Excluir o sorteio '+r.data+' '+r.horario+' deste ciclo?'))return;const x=await call('histSorteioExcluir',r);toast(x.erro||'Sorteio excluído');hist()};
 function hshareList(){if(!HD.some(g=>g.ac<10))return toast('Nada para compartilhar (10/10 usa o botão do destaque)');
 const o=DASH;DASH=HD;histCtx();try{enviar(pagsDash(),'historico')}finally{DASH=o}}
 function hshareWin(){histCtx();enviar(HWIN.map(imgVenc),'vencedor')}
@@ -511,6 +519,28 @@ async function conferir(){const c=$('vc').value.trim(),k=$('vk').value.trim();if
 function abrirMenu(){$('mbob').value=String(bobina());$('menu').classList.remove('hide')}
 function fecharMenu(){$('menu').classList.add('hide')}
 function irAba(t){$('mais').classList.add('hide');const b=document.querySelector('nav button[data-t="'+t+'"]');if(b)b.click()}
+// ===== Formulários próprios do admin (no lugar das caixinhas do navegador) =====
+let FRM=null;
+function abrirForm(o){FRM=o;$('frmt').textContent=o.titulo;$('frmb').textContent=o.botao||'Salvar';$('frme').textContent='';
+ $('frmc').innerHTML=(o.texto?'<p class="mut">'+esc(o.texto)+'</p>':'')+o.campos.map(c=>c.tipo=='dez5'
+  ?'<label class="lab">'+esc(c.rotulo)+'</label><div class="g5 fdz" data-id="'+c.id+'">'+Array.from({length:5},(_,i)=>'<input class="d" maxlength="2" inputmode="numeric" autocomplete="off" aria-label="Dezena '+(i+1)+'" value="'+((c.valor||[])[i]==null?'':p2(c.valor[i]))+'">').join('')+'</div>'
+  :'<label class="lab" for="f_'+c.id+'">'+esc(c.rotulo)+'</label><input id="f_'+c.id+'" class="fin" type="text" value="'+esc(c.valor||'')+'" placeholder="'+esc(c.dica||'')+'" autocomplete="off" autocapitalize="'+(c.cap||'sentences')+'">'+(c.ajuda?'<small class="fh">'+esc(c.ajuda)+'</small>':'')).join('');
+ $('frmc').querySelectorAll('.fdz').forEach(g=>{const ins=[...g.children];ins.forEach((e,i)=>{e.oninput=()=>{e.value=e.value.replace(/\D/g,'');if(e.value.length==2&&ins[i+1])ins[i+1].focus()};
+  e.onkeydown=ev=>{if(ev.key=='Backspace'&&!e.value&&i>0)ins[i-1].focus()}})});
+ $('frmb').disabled=false;$('frm').classList.remove('hide');const f=$('frmc').querySelector('input');if(f)setTimeout(()=>f.focus(),60)}
+function fecharForm(){$('frm').classList.add('hide');FRM=null}
+$('frmf').onsubmit=async ev=>{ev.preventDefault();if(!FRM)return;const v={};
+ FRM.campos.forEach(c=>{v[c.id]=c.tipo=='dez5'?[...$('frmc').querySelector('.fdz[data-id="'+c.id+'"]').children].map(e=>e.value):$('f_'+c.id).value.trim()});
+ const b=$('frmb');b.disabled=true;let erro;try{erro=await FRM.enviar(v)}catch(e){erro=String(e.message||e)}b.disabled=false;
+ if(erro){$('frme').textContent=erro;return}fecharForm()};
+function novoU(){abrirForm({titulo:'➕ Novo usuário',botao:'Criar usuário',campos:[
+ {id:'nome',rotulo:'Nome (como aparece nas consultas)',dica:'Ex.: Diego (Cachopa)'},
+ {id:'u',rotulo:'Usuário de login',dica:'Ex.: diego',cap:'none',ajuda:'3 a 20 letras minúsculas, números ou _ (sem espaço nem acento).'},
+ {id:'p',rotulo:'Senha',dica:'Mínimo 6 caracteres',cap:'none',ajuda:'Passe para o vendedor. Ele pode trocar depois em 👤 → Trocar minha senha.'}],
+ enviar:async v=>{const u=v.u.toLowerCase();if(!v.nome)return 'Informe o nome';
+  if(!/^[a-z0-9_]{3,20}$/.test(u))return 'Usuário inválido: use 3 a 20 letras minúsculas, números ou _';
+  if(v.p.length<6)return 'A senha precisa ter pelo menos 6 caracteres';
+  const x=await call('novoUsuario',{u:u,p:v.p,nome:v.nome});if(x.erro)return x.erro;toast('✅ Usuário '+u+' criado');admin()}})}
 restaurar();
 
 // ===== App instalável (PWA) =====
