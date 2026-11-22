@@ -85,7 +85,7 @@ nav button i{font-style:normal;margin-right:4px}#tmais{display:none}
  nav button{min-width:0;display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 2px 5px;font-size:11.5px;border-bottom:0;border-top:3px solid transparent;line-height:1.2}
  nav button i{font-size:21px;margin:0}
  nav button.on{border-top-color:var(--vm)}
- #thist,#tadm{display:none!important}#tmais:not(.hide){display:flex}
+ #thist,#tadm,#timp{display:none!important}#tmais:not(.hide){display:flex}
  .barra{bottom:calc(60px + env(safe-area-inset-bottom,0px));padding-bottom:8px}
  #toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
  header{padding-bottom:10px}
@@ -93,6 +93,17 @@ nav button i{font-style:normal;margin-right:4px}#tmais{display:none}
 .fin{width:100%}.fh{display:block;color:#7a6a55;font-size:12px;margin:3px 0 0}#frmc .lab{margin-top:12px}#frmc .fdz{max-width:320px}
 .ferr{color:#b3261e;font-weight:600;min-height:1.2em;margin:8px 0 0}
 #md{min-height:44px}
+/* ===== Importar ===== */
+.itabs{display:flex;gap:6px;margin:12px 0 4px}.itabs button{flex:1;min-height:44px;border:2px solid var(--borda);background:#fff;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;color:var(--tx)}
+.itabs button.on{background:var(--vm);border-color:var(--vm);color:#fff}
+.ist{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:15px}.ist .e{color:#b3261e}.ist .r{color:#8a5a00}
+.ic{background:#fff;border:2px solid #e3b7b2;border-radius:12px;padding:10px;margin:10px 0;max-width:460px}.ic.ok{border-color:#7cc596;background:#f3fbf5}.ic.rep{border-color:#e0b84a;background:#fffaf0}
+.ich{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:14px}.ich .b.x.s{margin-left:0;padding:7px 9px}.ich .sp{flex:1}
+.ic .orig{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#6b5b47;background:#f6f1e4;border-radius:6px;padding:4px 6px;margin:6px 0;overflow-x:auto;white-space:nowrap}
+.ic .imsg{font-size:14px;font-weight:700;color:#b3261e;margin:4px 0 8px}.ic.ok .imsg{color:var(--gr)}.ic.rep .imsg{color:#8a5a00}
+.ic .icart{width:105px;font-weight:800;font-size:18px;padding:6px 8px}.ic .icart.bad{border-color:#b3261e;background:#fde0dd;color:#b3261e}
+.ic .g5 .d{font-size:19px}
+#imp .cc summary{color:var(--tx);font-weight:400}
 </style></head><body><div id="carga" aria-hidden="true"></div>
 <div id="login" class="card"><div id="lbichos" aria-hidden="true"></div><h2>BOLAO ROCINHA</h2><p class="mut">Entre com seu usuário e senha</p><p class="mut" id="inst" style="font-size:13px"></p>
 <input id="lu" placeholder="Usuário" autocapitalize="none" autocomplete="username"><input id="lp" type="password" placeholder="Senha" autocomplete="current-password">
@@ -109,12 +120,12 @@ nav button i{font-style:normal;margin-right:4px}#tmais{display:none}
 <label class="lab" for="mbob" style="margin-top:4px">Bobina da impressora</label><select id="mbob" onchange="setBobina(this.value);toast('Bobina: '+this.value+' mm')"><option value="58">58 mm (mini portátil)</option><option value="80">80 mm</option></select>
 <button class="b big" onclick="fecharMenu();senhaAbrir()">🔑 Trocar minha senha</button><button class="b big x" onclick="sair()">🚪 Sair</button><button class="b big" onclick="fecharMenu()">Fechar</button></div></div></div>
 <div id="mais" class="modal hide" role="dialog" onclick="if(event.target===this)this.classList.add('hide')"><div class="card"><h2>Mais</h2>
-<div class="acts"><button class="b big" onclick="irAba('hist')">🕘 Histórico</button><button class="b big" onclick="irAba('adm')">⚙️ Admin</button><button class="b big" onclick="$('mais').classList.add('hide')">Fechar</button></div></div></div>
+<div class="acts"><button class="b big" onclick="irAba('hist')">🕘 Histórico</button><button class="b big" onclick="irAba('imp')">📥 Importar planilha</button><button class="b big" onclick="irAba('adm')">⚙️ Admin</button><button class="b big" onclick="$('mais').classList.add('hide')">Fechar</button></div></div></div>
 <div id="frm" class="modal hide" role="dialog" aria-labelledby="frmt" onclick="if(event.target===this)fecharForm()"><form class="card" id="frmf" novalidate><h2 id="frmt"></h2><div id="frmc"></div><p id="frme" class="ferr" role="alert"></p>
 <div class="acts"><button class="b p big" id="frmb" type="submit">Salvar</button><button class="b big" type="button" onclick="fecharForm()">Cancelar</button></div></form></div>
 <header><h1>🦁 BOLAO ROCINHA</h1><button class="conta" id="bconta" onclick="abrirMenu()" aria-label="Menu da conta"><span id="who"></span><b>👤</b></button></header>
 <div class="faixa" aria-hidden="true"><div class="trilho" id="trilho"></div></div>
-<nav><button data-t="cad" class="on"><i>📝</i>Cadastrar</button><button data-t="dash" id="tdash" class="hide"><i>🏆</i>Dashboard</button><button data-t="sor" id="tsor" class="hide"><i>🎯</i>Sorteios</button><button data-t="jog" id="tjog"><i>📋</i>Jogos</button><button data-t="hist" id="thist" class="hide"><i>🕘</i>Histórico</button><button data-t="adm" id="tadm" class="hide"><i>⚙️</i>Admin</button><button id="tmais" class="hide" type="button" onclick="$('mais').classList.remove('hide')"><i>☰</i>Mais</button></nav>
+<nav><button data-t="cad" class="on"><i>📝</i>Cadastrar</button><button data-t="dash" id="tdash" class="hide"><i>🏆</i>Dashboard</button><button data-t="sor" id="tsor" class="hide"><i>🎯</i>Sorteios</button><button data-t="jog" id="tjog"><i>📋</i>Jogos</button><button data-t="hist" id="thist" class="hide"><i>🕘</i>Histórico</button><button data-t="adm" id="tadm" class="hide"><i>⚙️</i>Admin</button><button data-t="imp" id="timp" class="hide"><i>📥</i>Importar</button><button id="tmais" class="hide" type="button" onclick="$('mais').classList.remove('hide')"><i>☰</i>Mais</button></nav>
 <main>
 <section id="cad"><div class="card hide" id="cadmsg" style="border-left:6px solid #b3261e"><b>⛔ Cadastro encerrado</b><p class="mut">O cadastro abre na segunda às 06:00 e fecha na quinta às 13:00.</p></div><div class="card cadc"><div class="dia hide" id="dia"></div>
 <label class="lab" for="cn">Número da cartela</label><input id="cn" class="cart" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="Ex: 1000" oninput="avisoCartela();validar();salvarRasc()" onkeydown="if(event.key=='Enter'){event.preventDefault();rows.firstChild.querySelector('.d').focus()}">
@@ -122,9 +133,7 @@ nav button i{font-style:normal;margin-right:4px}#tmais{display:none}
 <p class="mut">Digite 2 números e o cursor pula sozinho. Ao completar um jogo, o próximo abre.</p>
 <div id="rows"></div><div class="acts2"><button class="b" type="button" onclick="addRow(1)">➕ Outro jogo</button><button class="b" type="button" onclick="if(confirm('Apagar a cartela e os jogos digitados?'))limparCad()">🧹 Limpar tudo</button></div></div>
 <div class="barra" id="barra"><button class="b p big" id="benv" onclick="revisar()" disabled>Enviar cartela</button><small id="berr"></small></div>
-<div id="rev" class="card hide"></div><div class="card hide" id="impc"><h2>📥 Importar da planilha</h2><p class="mut">Só administrador. Copie as células da planilha (cartela + 10 dezenas por linha) e cole abaixo. Cartela repetida vira o jogo 2, 3...</p>
-<select id="iu"></select><textarea id="it" rows="6" style="width:100%;margin-top:8px;font-family:monospace" placeholder="83301&#9;6&#9;83&#9;26&#9;1&#9;4&#9;22&#9;51&#9;55&#9;69&#9;98" ></textarea>
-<button class="b p" onclick="impVer()">Verificar</button> <button class="b p hide" id="ib" onclick="impGo()">Importar</button><div id="ip" style="margin-top:8px"></div></div>
+<div id="rev" class="card hide"></div>
 </section>
 <section id="jog" class="hide"><div class="card"><h2 id="jtit">Jogos cadastrados</h2><div class="jtool"><select id="ju" class="hide" onchange="jogos()"><option value="">Todos os usuários</option></select><input id="jq" type="search" placeholder="🔍 Buscar cartela ou nome" oninput="JLIM=40;drawJ()"></div>
 <button class="b p" onclick="jogos()">🔄 Atualizar</button><button class="b hide" id="jimp" onclick="imprJ()">🖨 Imprimir lista</button><button class="b p hide" id="jps" onclick="imprSel()">🖨 Imprimir selecionados (<span id="jsn">0</span>)</button><button class="b hide" id="jcsv" onclick="csv()">⬇ Baixar CSV</button>
@@ -144,6 +153,17 @@ nav button i{font-style:normal;margin-right:4px}#tmais{display:none}
 <div class="card"><h2>Cartelas do ciclo</h2><div class="sc" id="hl"></div></div>
 <div class="card"><h2>Sorteios do ciclo</h2><div class="sc" id="hs"></div></div>
 <div class="card"><h2>Acumulado das dezenas</h2><p class="mut">Em verde, as que saíram no ciclo.</p><div class="grid" id="hac"></div></div></section>
+<section id="imp" class="hide"><div class="card"><h2>📥 Importar jogos da planilha</h2><p class="mut">Só administrador. Uma linha por jogo: cartela e as 10 dezenas. Cartela repetida vira o jogo 2, 3...</p>
+<label class="lab" for="iu">1. Vendedor dono dos jogos</label><select id="iu" style="width:100%;max-width:420px" onchange="impRevalida()"></select>
+<label class="lab" style="margin-top:16px">2. Planilha</label>
+<div class="acts2"><label class="b" for="ifile" style="display:inline-flex;align-items:center;cursor:pointer">📄 Escolher arquivo (Excel ou CSV)</label><input type="file" id="ifile" accept=".xlsx,.xls,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" hidden onchange="impArquivo(this)"></div>
+<p class="mut" style="margin:10px 0 4px">ou cole as células copiadas do Google Planilhas ou do Excel:</p>
+<textarea id="it" rows="5" style="width:100%;font-family:ui-monospace,monospace" placeholder="83301&#9;6&#9;83&#9;26&#9;1&#9;4&#9;22&#9;51&#9;55&#9;69&#9;98"></textarea>
+<div class="acts2"><button class="b p" type="button" onclick="impVer()">Verificar</button><button class="b" type="button" onclick="impLimpar()">Limpar</button></div></div>
+<div id="ires" class="hide"><div class="card"><h2>3. Revisão</h2><div id="isum"></div>
+<div class="itabs" role="tablist"><button id="itE" class="on" type="button" onclick="impAba('e')">Revisar (<span id="inE">0</span>)</button><button id="itV" type="button" onclick="impAba('v')">Válidos (<span id="inV">0</span>)</button></div>
+<div id="ilist"></div></div>
+<div class="barra" id="ibarra"><button class="b p big" id="ib" type="button" onclick="impGo()" disabled>Importar</button><small id="iberr"></small></div></div></section>
 <section id="adm" class="hide"><div class="card"><h2>Usuários</h2><button class="b p" onclick="novoU()">➕ Novo usuário</button><div class="sc" id="ul"></div><p class="mut">Excluir um usuário remove só o acesso; os cadastros dele continuam na planilha.</p></div>
 <div class="card"><h2>Lançar sorteio manualmente</h2><p class="mut">Use se o resultado automático falhar. Se já existir, será substituído.</p>
 <input id="md" type="date" aria-label="Data do sorteio"> <select id="mh"><option>14h</option><option>16h</option><option>18h</option><option>21h</option></select>
@@ -175,11 +195,11 @@ function toast(m){const t=$('toast');t.textContent=m;t.classList.remove('hide');
 async function entrar(){const x=await call('login',{u:$('lu').value,p:$('lp').value});if(x.erro){$('le').textContent=x.erro;return}
 T=x.token;ME=x;salvarSessao();iniciar(x)}
 function iniciar(x){$('login').classList.add('hide');$('app').classList.remove('hide');$('who').textContent=(x.n||x.u);$('mwho').textContent='👤 '+(x.n||x.u)+(x.adm?' · admin':'');if(!x.adm){$('tjog').innerHTML='<i>📋</i>Minhas cartelas';$('jtit').textContent='Minhas cartelas'}
-if(x.adm){['tadm','tdash','tsor','thist','tmais','at','ju','hu','jps','impc','jimp','jcsv'].forEach(i=>$(i).classList.remove('hide'));loadNomes()}if(!restaurarRasc())addRow();jogos();call('cadStatus').then(r=>{QUIET=false;if(r&&r.aberto===false)$('cadmsg').classList.remove('hide')})}
+if(x.adm){['tadm','tdash','tsor','thist','tmais','at','ju','hu','jps','timp','jimp','jcsv'].forEach(i=>$(i).classList.remove('hide'));loadNomes()}if(!restaurarRasc())addRow();jogos();call('cadStatus').then(r=>{QUIET=false;if(r&&r.aberto===false)$('cadmsg').classList.remove('hide')})}
 $('lp').onkeydown=e=>{if(e.key=='Enter')entrar()};
-const TABS=['cad','dash','sor','jog','hist','adm'];
-document.querySelectorAll('nav button[data-t]').forEach(b=>b.onclick=()=>{ABA=b.dataset.t;salvarSessao();document.querySelectorAll('nav button[data-t]').forEach(x=>x.classList.toggle('on',x==b));$('tmais').classList.toggle('on',ABA=='hist'||ABA=='adm');window.scrollTo(0,0);
-TABS.forEach(s=>$(s).classList.toggle('hide',s!=b.dataset.t));const t=b.dataset.t;({jog:jogos,dash:dash,sor:sorteios,hist:histTab,adm:admin}[t]||(()=>0))()});
+const TABS=['cad','dash','sor','jog','hist','imp','adm'];
+document.querySelectorAll('nav button[data-t]').forEach(b=>b.onclick=()=>{ABA=b.dataset.t;salvarSessao();document.querySelectorAll('nav button[data-t]').forEach(x=>x.classList.toggle('on',x==b));$('tmais').classList.toggle('on',ABA=='hist'||ABA=='adm'||ABA=='imp');window.scrollTo(0,0);
+TABS.forEach(s=>$(s).classList.toggle('hide',s!=b.dataset.t));const t=b.dataset.t;({jog:jogos,dash:dash,sor:sorteios,hist:histTab,imp:impTab,adm:admin}[t]||(()=>0))()});
 // ===== Cadastro rápido (celular) =====
 const rows=$('rows'),okC=c=>/^\w{1,15}$/.test(c);
 // Quantos jogos esta cartela já tem do próprio vendedor (pela lista de Jogos já carregada)
@@ -277,35 +297,105 @@ js.map(j=>'<div class="jg"><div class="jt">JOGO '+j.j+'</div><div class="g">'+j.
 function imprimir(h){const w=open('');w.document.write('<!DOCTYPE html><meta charset="utf-8"><title>Impressão</title><style>'+PCSS+'</style><body>'+h);w.document.close();w.focus();setTimeout(()=>w.print(),300)}
 async function jogos(){const x=await call('jogos',{usuario:$('ju').value});if(x.erro)return toast(x.erro);JL=x.jogos;JSEL=new Set([...JSEL].filter(k=>JL.some(g=>kj(g)==k)));drawJ()}
 
-let IMP=[],ERR=[],IK=0;
-const IB=x=>'<b class="ie">'+esc(x)+'</b>';
-function impChk(c,d){const v=d.map(x=>String(x).trim()),vals=v.filter(Boolean),bad=[];let msg='';
-if(!/^\w{1,15}$/.test(String(c).trim()))return{ok:0,bad,msg:'número da cartela inválido',cbad:1};
-if(vals.length!==10){v.forEach((x,i)=>{if(!x&&i<10)bad.push(i)});return{ok:0,bad,msg:'tem <b>'+vals.length+'</b> dezena(s), o correto são 10'}}
-const ruim=[];v.forEach((x,i)=>{if(x&&!/^\d{1,2}$/.test(x)){bad.push(i);ruim.push(x)}});
-if(ruim.length)return{ok:0,bad,msg:'dezena inválida '+ruim.map(IB).join(' ')+' (use 00 a 99)'};
-const c2={};vals.forEach(x=>c2[+x]=(c2[+x]||0)+1);const rep=Object.keys(c2).filter(x=>c2[x]>1).map(Number);
-if(rep.length){v.forEach((x,i)=>{if(x&&rep.includes(+x))bad.push(i)});return{ok:0,bad,msg:'dezena repetida '+rep.map(x=>IB(String(x).padStart(2,'0'))).join(' ')}}
-return{ok:1,bad,msg:''}}
-function impParse(t){const ok=[],er=[];String(t).replace(/^﻿/,'').split(/\r?\n/).forEach((ln,i)=>{if(!ln.trim())return;const k=ln.trim().split(/[\t;, ]+/).filter(Boolean),c=k[0],d=k.slice(1);
-if(impChk(c,d).ok)ok.push([c.trim()].concat(d.map(x=>x.trim()).filter(Boolean)));else er.push({k:++IK,n:i+1,c:c,d:d.length<10?d.concat(Array(10-d.length).fill('')):d})});return{ok,er}}
-function impSt(){const e=ERR.length;$('ist').innerHTML='<p><b>'+IMP.length+'</b> jogo(s) válido(s) em <b>'+new Set(IMP.map(x=>x[0])).size+'</b> cartela(s).'+(e?' <span style="color:#b3261e"><b>'+e+'</b> com erro — corrija abaixo ou descarte.</span>':'')+'</p>';
-$('ib').textContent='Importar '+IMP.length+' válido(s)';$('ib').classList.toggle('hide',!IMP.length)}
-function impRowHtml(r){const q=impChk(r.c,r.d);
-return '<div class="irow" id="ir'+r.k+'" style="border:1px solid #e3b7b2;border-radius:10px;padding:8px;margin-bottom:8px"><div><b>Linha '+r.n+'</b> · cartela <input class="ic" value="'+esc(r.c)+'" style="width:110px" oninput="impEd('+r.k+',-1,this.value)"> <button class="b" onclick="impDesc('+r.k+')">Descartar</button></div><div class="im" style="color:#b3261e;margin:4px 0">'+q.msg+'</div><div class="ids">'+r.d.map((x,j)=>'<input class="id'+(q.bad.includes(j)?' bad':'')+'" value="'+esc(x)+'" inputmode="numeric" maxlength="4" oninput="impEd('+r.k+','+j+',this.value)">').join('')+'</div></div>'}
-function impRender(){impSt();$('ierr').innerHTML=ERR.map(impRowHtml).join('')}
-function impEd(k,j,v){const i=ERR.findIndex(r=>r.k===k);if(i<0)return;const r=ERR[i];if(j<0)r.c=v;else r.d[j]=v;const q=impChk(r.c,r.d),el=$('ir'+k);
-if(q.ok){IMP.push([String(r.c).trim()].concat(r.d.map(x=>String(x).trim()).filter(Boolean)));ERR.splice(i,1);el.outerHTML='<div class="mut" style="margin-bottom:8px">✅ Linha '+r.n+' (cartela '+esc(r.c)+') corrigida</div>';impSt();return}
-el.querySelector('.im').innerHTML=q.msg;el.querySelectorAll('.id').forEach((x,n)=>x.classList.toggle('bad',q.bad.includes(n)))}
-function impDesc(k){ERR=ERR.filter(r=>r.k!==k);impRender()}
-function impVer(){if(!$('iu').value)return toast('Escolha o usuário');const r=impParse($('it').value);IMP=r.ok;ERR=r.er;
-$('ip').innerHTML='<div id="ist"></div><div id="ierr"></div>';impRender()}
-async function impGo(){const u=$('iu').value;if(!u||!IMP.length)return;
-const fechado=!$('cadmsg').classList.contains('hide');
-if(!confirm((fechado?'ATENÇÃO: o cadastro está encerrado (ciclo em andamento). Os jogos entram AGORA, com a data/hora de hoje.\n\n':'')+'Importar '+IMP.length+' jogo(s) para '+$('iu').selectedOptions[0].textContent+'?'+(ERR.length?'\n\n'+ERR.length+' linha(s) com erro continuam na tela para corrigir.':'')))return;
-$('ib').disabled=true;const x=await call('importar',{usuario:u,linhas:IMP});$('ib').disabled=false;
-if(x&&x.erro)return toast(x.erro);
-const nq=(x&&x.qtd)||IMP.length;toast('Importados '+nq+' jogo(s)');$('it').value='';IMP=[];impRender();$('ist').insertAdjacentHTML('afterbegin','<p>✅ '+nq+' jogo(s) importado(s).</p>');jogos()}
+// ===== Importar jogos da planilha (só admin) =====
+let LIN=[],IK=0,IABA='e',IMPJ=[],IFONTE='';
+// Uma linha de texto vira células: tabulação (copiado do Google Planilhas/Excel), ponto e vírgula, vírgula ou espaços.
+const impCells=ln=>ln.indexOf('\t')>=0?ln.split('\t'):ln.indexOf(';')>=0?ln.split(';'):ln.indexOf(',')>=0?ln.split(','):ln.trim().split(/\s+/);
+const impDz=L=>L.d.map(x=>String(x).trim()).filter(Boolean).map(Number);
+const impSig=(c,d)=>String(c).trim()+'|'+[...d].map(Number).sort((a,b)=>a-b).join(',');
+const impJa=c=>IMPJ.filter(g=>String(g.c)===String(c)).reduce((m,g)=>Math.max(m,Number(g.j)||0),0);
+function impDeLinhas(rows){LIN=[];IK=0;let cab=false;
+ rows.forEach((r,i)=>{const cells=(r||[]).map(x=>String(x==null?'':x).trim());while(cells.length&&!cells[cells.length-1])cells.pop();
+  if(!cells.length)return;
+  if(!LIN.length&&!cab&&cells.filter(x=>x&&!/^\d+$/.test(x)).length>=3){cab=true;return}   // cabeçalho (cartela, d1, d2...)
+  const d=cells.slice(1);while(d.length<10)d.push('');
+  LIN.push({k:++IK,n:i+1,orig:cells.join('  '),c:cells[0]||'',d:d,desc:false,forca:false})});
+ return cab}
+function impChk(L){const bad=new Set(),msgs=[];let cbad=false;const c=String(L.c).trim();
+ if(!/^\w{1,15}$/.test(c)){cbad=true;msgs.push(c?'Número da cartela inválido':'Falta o número da cartela')}
+ const v=L.d.map(x=>String(x).trim()),cheias=[],ruins=[];
+ v.forEach((x,i)=>{if(!x)return;if(!/^\d{1,2}$/.test(x)){bad.add(i);ruins.push(x)}else cheias.push([i,+x])});
+ if(ruins.length)msgs.push('Valor inválido: '+ruins.map(x=>'"'+x+'"').join(', ')+' (use 00 a 99)');
+ const nf=v.filter(Boolean).length;
+ if(nf<10){msgs.push('Faltam '+(10-nf)+(10-nf==1?' dezena':' dezenas'));v.forEach((x,i)=>{if(!x&&i<10)bad.add(i)})}
+ else if(nf>10)msgs.push('Tem '+nf+' dezenas: apague '+(nf-10==1?'a que sobra':'as que sobram'));
+ const cont={};cheias.forEach(([,n])=>cont[n]=(cont[n]||0)+1);const rep=Object.keys(cont).filter(n=>cont[n]>1).map(Number);
+ if(rep.length){cheias.forEach(([i,n])=>{if(rep.includes(n))bad.add(i)});msgs.push('Dezena repetida: '+rep.map(p2).join(', '))}
+ return{ok:!msgs.length,msg:msgs.join(' · '),bad:bad,cbad:cbad}}
+// Classifica cada linha: com erro, repetida (na planilha ou já no sistema) ou válida.
+function impAvalia(){const vistos={},sis={};IMPJ.forEach(g=>{sis[impSig(g.c,g.d)]=g.j});
+ LIN.forEach(L=>{L.q=impChk(L);L.rep=null;if(L.desc)return;if(!L.q.ok){L.cls='err';return}
+  const s=impSig(L.c,impDz(L));
+  if(vistos[s]){L.rep='planilha';L.repN=vistos[s]}else{vistos[s]=L.n;if(sis[s]!=null){L.rep='sistema';L.repJ=sis[s]}}
+  L.cls=L.rep&&!L.forca?'rep':'ok'})}
+function impCard(L){const q=L.q,rep=L.cls=='rep';
+ const msg=rep?(L.rep=='planilha'?'Jogo repetido na planilha (igual à linha '+L.repN+'). Esta cópia será ignorada.':'Este jogo já existe no sistema para este vendedor (jogo '+L.repJ+'). Será ignorado.'):q.msg;
+ return '<div class="ic'+(rep?' rep':'')+'" id="ic'+L.k+'"><div class="ich"><b>Linha '+L.n+'</b><span>· cartela</span>'+
+  (rep?'<b>'+esc(L.c)+'</b>':'<input class="icart'+(q.cbad?' bad':'')+'" value="'+esc(L.c)+'" data-k="'+L.k+'" data-i="-1" inputmode="numeric" autocomplete="off" aria-label="Cartela da linha '+L.n+'">')+
+  '<span class="sp"></span><button class="b x s" type="button" data-desc="'+L.k+'">Descartar</button></div>'+
+  '<div class="orig" title="Linha original da planilha">'+esc(L.orig)+'</div><div class="imsg">'+esc(msg)+'</div>'+
+  (rep?'<div class="gg5">'+impDz(L).map(n=>'<i>'+p2(n)+'</i>').join('')+'</div><button class="b s" type="button" data-forca="'+L.k+'" style="margin-top:8px">Importar mesmo assim</button>'
+  :'<div class="g5">'+L.d.map((x,i)=>'<input class="d'+(q.bad.has(i)?' bad':'')+'" value="'+esc(x)+'" maxlength="4" inputmode="numeric" autocomplete="off" data-k="'+L.k+'" data-i="'+i+'" aria-label="Linha '+L.n+', dezena '+(i+1)+'">').join('')+'</div>')+'</div>'}
+function impValidos(){const ok=LIN.filter(L=>!L.desc&&L.cls=='ok');if(!ok.length)return '<p class="mut">Nenhum jogo válido ainda.</p>';
+ const G=[],M={};ok.forEach(L=>{const c=String(L.c).trim();if(!M[c]){M[c]={c:c,ls:[]};G.push(M[c])}M[c].ls.push(L)});
+ return G.map(g=>{const ja=impJa(g.c);return '<details class="cc"><summary><b>Cartela '+esc(g.c)+'</b> · '+g.ls.length+(g.ls.length==1?' jogo':' jogos')+
+  (ja?' · já tem '+ja+', entram como '+(ja+1)+(g.ls.length>1?' a '+(ja+g.ls.length):''):'')+'</summary>'+
+  g.ls.map((L,i)=>'<div class="jj"><div class="jh"><span>Linha '+L.n+' → JOGO '+(ja+i+1)+(L.forca?' · repetido, importar mesmo assim':'')+'</span><span class="sp"></span><button class="b x s" type="button" data-desc="'+L.k+'" aria-label="Descartar a linha '+L.n+'">✕</button></div>'+
+  '<div class="gg5">'+impDz(L).map(n=>'<i>'+p2(n)+'</i>').join('')+'</div></div>').join('')+'</details>'}).join('')}
+function impSum(){const n={err:0,rep:0,ok:0,desc:0};LIN.forEach(L=>{if(L.desc)n.desc++;else n[L.cls]++});
+ const cs=new Set(LIN.filter(L=>!L.desc&&L.cls=='ok').map(L=>String(L.c).trim())).size;
+ $('isum').innerHTML='<div class="ist"><span><b>'+n.ok+'</b> '+(n.ok==1?'válido':'válidos')+' em <b>'+cs+'</b> '+(cs==1?'cartela':'cartelas')+'</span>'+
+  (n.err?'<span class="e"><b>'+n.err+'</b> com erro</span>':'')+(n.rep?'<span class="r"><b>'+n.rep+'</b> '+(n.rep==1?'repetido (ignorado)':'repetidos (ignorados)')+'</span>':'')+
+  (n.desc?'<span><b>'+n.desc+'</b> '+(n.desc==1?'descartado':'descartados')+'</span>':'')+'</div>'+(IFONTE?'<p class="mut">'+esc(IFONTE)+'</p>':'');
+ $('inE').textContent=n.err+n.rep;$('inV').textContent=n.ok;
+ const u=$('iu'),nome=u.value?u.selectedOptions[0].textContent:'',b=$('ib');
+ b.textContent='Importar '+n.ok+(n.ok==1?' jogo':' jogos')+(nome?' para '+nome:'');b.disabled=!n.ok||!u.value||n.ok>3000;
+ $('iberr').textContent=!u.value?'Escolha o vendedor no passo 1':n.ok>3000?'Máximo de 3000 jogos por importação':n.err?(n.err==1?'1 linha com erro fica de fora até ser corrigida':n.err+' linhas com erro ficam de fora até serem corrigidas'):''}
+function impRender(){impAvalia();impSum();$('itE').classList.toggle('on',IABA=='e');$('itV').classList.toggle('on',IABA=='v');
+ $('ilist').innerHTML=IABA=='e'?(LIN.filter(L=>!L.desc&&L.cls!='ok').map(impCard).join('')||'<p class="mut">✅ Nenhuma linha para revisar.</p>'):impValidos();
+ $('ires').classList.toggle('hide',!LIN.length)}
+function impAba(a){IABA=a;impRender()}
+async function impExistentes(){const u=$('iu').value;IMPJ=[];if(!u)return;const x=await call('jogos',{usuario:u});IMPJ=(x&&x.jogos)||[]}
+async function impRevalida(){await impExistentes();if(LIN.length)impRender()}
+async function impCarregar(rows){const cab=impDeLinhas(rows);if(cab)IFONTE+=' · cabeçalho ignorado';
+ if(!LIN.length){impRender();return toast('Nenhuma linha com dados encontrada')}
+ await impExistentes();impAvalia();IABA=LIN.some(L=>L.cls!='ok')?'e':'v';impRender();$('ires').scrollIntoView({behavior:'smooth',block:'start'})}
+function impVer(){const t=$('it').value;if(!t.trim())return toast('Cole as células da planilha ou escolha um arquivo');
+ const rows=String(t).replace(/^﻿/,'').split(/\r?\n/).map(impCells);IFONTE='Colado: '+rows.filter(r=>r.some(x=>String(x).trim())).length+' linhas';impCarregar(rows)}
+function impXLSX(){return window.XLSX?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');
+ s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';s.onload=ok;s.onerror=()=>no(new Error('não foi possível carregar o leitor de Excel. Verifique a internet.'));document.head.appendChild(s)})}
+async function impArquivo(inp){const f=inp.files&&inp.files[0];inp.value='';if(!f)return;
+ try{let rows,aba='';
+  if(/\.csv$/i.test(f.name)||f.type==='text/csv')rows=(await f.text()).replace(/^﻿/,'').split(/\r?\n/).map(impCells);
+  else{toast('Lendo a planilha…');await impXLSX();const wb=XLSX.read(await f.arrayBuffer(),{type:'array'});aba=wb.SheetNames[0];
+   rows=XLSX.utils.sheet_to_json(wb.Sheets[aba],{header:1,raw:false,defval:''})}
+  $('it').value='';IFONTE='Arquivo: '+f.name+(aba?' (aba "'+aba+'")':'')+' · '+rows.filter(r=>(r||[]).some(x=>String(x).trim())).length+' linhas';await impCarregar(rows)}
+ catch(e){toast('Não consegui ler o arquivo: '+(e.message||e))}}
+function impLimpar(){LIN=[];IFONTE='';$('it').value='';impRender()}
+// Janela de cadastro pelo relógio de Brasília (o servidor libera o admin sempre; aqui é só para avisar).
+function cadAbertoLocal(){const p={};new Intl.DateTimeFormat('en-US',{timeZone:FUSO,weekday:'short',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date()).forEach(x=>p[x.type]=x.value);
+ const m={Mon:0,Tue:1,Wed:2,Thu:3,Fri:4,Sat:5,Sun:6}[p.weekday]*1440+(+p.hour)*60+(+p.minute);return m>=360&&m<3*1440+780}
+async function impGo(){const u=$('iu').value,ls=LIN.filter(L=>!L.desc&&L.cls=='ok');if(!u||!ls.length)return;
+ const nome=$('iu').selectedOptions[0].textContent,fora=LIN.filter(L=>!L.desc&&L.cls!='ok').length;
+ if(!confirm((cadAbertoLocal()?'':'ATENÇÃO: o cadastro está fechado agora (abre segunda 06:00 e fecha quinta 13:00). Os jogos entram AGORA, com a data e hora de hoje.\n\n')+
+  'Importar '+ls.length+(ls.length==1?' jogo':' jogos')+' para '+nome+'?'+(fora?'\n\n'+fora+(fora==1?' linha fica':' linhas ficam')+' de fora (com erro ou repetida).':'')))return;
+ const b=$('ib');b.disabled=true;b.textContent='Importando…';
+ const x=await call('importar',{usuario:u,linhas:ls.map(L=>[String(L.c).trim()].concat(impDz(L).map(p2)))});
+ if(x.erro){impSum();return toast(x.erro)}
+ const q=x.qtd||ls.length;LIN=LIN.filter(L=>ls.indexOf(L)<0);try{navigator.vibrate&&navigator.vibrate([40,60,40])}catch(_){}
+ toast('✅ '+q+(q==1?' jogo importado':' jogos importados')+' para '+nome);
+ IFONTE='✅ '+q+(q==1?' jogo importado':' jogos importados')+' para '+nome+'.'+(LIN.some(L=>!L.desc&&L.cls!='ok')?' As linhas abaixo ficaram de fora.':'');
+ await impExistentes();IABA='e';impRender();jogos()}
+function impTab(){if($('iu').options.length<2)loadNomes()}
+$('ilist').oninput=e=>{const t=e.target,k=+t.dataset.k;if(!k)return;const L=LIN.find(x=>x.k===k);if(!L)return;const i=+t.dataset.i;
+ const v=t.value.replace(/\s/g,'');if(v!==t.value)t.value=v;if(i<0)L.c=v;else L.d[i]=v;
+ impAvalia();impSum();const card=$('ic'+k),q=L.q;if(!card)return;
+ card.classList.toggle('ok',L.cls=='ok');card.querySelector('.imsg').textContent=L.cls=='ok'?'✓ Corrigido. Já conta nos válidos.':L.cls=='rep'?'Corrigido, mas ficou igual a outro jogo. Ele será ignorado.':q.msg;
+ const ci=card.querySelector('.icart');if(ci)ci.classList.toggle('bad',q.cbad);card.querySelectorAll('.d').forEach((x,j)=>x.classList.toggle('bad',q.bad.has(j)));
+ if(i>=0&&/^\d{2}$/.test(v)){const ins=[...card.querySelectorAll('.d')];if(ins[i+1])ins[i+1].focus()}};
+$('ilist').onclick=e=>{const d=e.target.closest('[data-desc]'),f=e.target.closest('[data-forca]');
+ if(d){const L=LIN.find(x=>x.k==d.dataset.desc);if(L){L.desc=true;impRender();toast('Linha '+L.n+' descartada')}}
+ else if(f){const L=LIN.find(x=>x.k==f.dataset.forca);if(L){L.forca=true;impRender();toast('A linha '+L.n+' será importada')}}};
 async function loadNomes(){const x=await call('nomes');if(x.erro)return;
 ['ju','fu','hu'].forEach(id=>{const s=$(id),v=s.value;s.innerHTML='<option value="">Todos os usuários</option>'+x.nomes.map(n=>'<option value="'+esc(n.u)+'">'+esc(n.n)+'</option>').join('');s.value=v});const iu=$('iu'),vi=iu.value;iu.innerHTML='<option value="">— escolha o usuário dono dos jogos —</option>'+x.nomes.map(n=>'<option value="'+esc(n.u)+'">'+esc(n.n)+'</option>').join('');iu.value=vi}
 let JSEL=new Set();const kj=g=>g.u+'|'+g.c+'|'+g.j,jvis=()=>{const q=$('jq').value.trim().toLowerCase();return JL.filter(g=>!q||String(g.c).includes(q)||nm(g).toLowerCase().includes(q))};
