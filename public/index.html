@@ -77,7 +77,7 @@ nav button i{font-style:normal;margin-right:4px}#tmais{display:none}
 .cc summary .t2,.cc details[open] summary .t1{display:none}.cc details[open] summary .t2{display:inline}
 .jj{margin:4px 0 10px}.jh{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:#7a6a55;margin-bottom:4px;min-height:30px}.jh .sp{flex:1}.jh input{width:20px;height:20px}
 .gg5{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;max-width:380px}.gg5 i{font-style:normal;text-align:center;background:#f1e7c6;border-radius:7px;font-weight:700;padding:5px 0;font-variant-numeric:tabular-nums}
-.ccacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.ccacts .b{flex:1 1 160px;min-height:44px;font-size:14px}
+.ccacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.ccacts .b{flex:1 1 120px;min-height:44px;font-size:14px}
 #toast{z-index:50}
 @media(max-width:700px){
  body{padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
@@ -85,7 +85,7 @@ nav button i{font-style:normal;margin-right:4px}#tmais{display:none}
  nav button{min-width:0;display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 2px 5px;font-size:11.5px;border-bottom:0;border-top:3px solid transparent;line-height:1.2}
  nav button i{font-size:21px;margin:0}
  nav button.on{border-top-color:var(--vm)}
- #thist,#tadm,#timp{display:none!important}#tmais:not(.hide){display:flex}
+ #thist,#tadm,#timp,#tconf{display:none!important}#tmais:not(.hide){display:flex}
  .barra{bottom:calc(60px + env(safe-area-inset-bottom,0px));padding-bottom:8px}
  #toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
  header{padding-bottom:10px}
@@ -104,6 +104,15 @@ nav button i{font-style:normal;margin-right:4px}#tmais{display:none}
 .ic .icart{width:105px;font-weight:800;font-size:18px;padding:6px 8px}.ic .icart.bad{border-color:#b3261e;background:#fde0dd;color:#b3261e}
 .ic .g5 .d{font-size:19px}
 #imp .cc summary{color:var(--tx);font-weight:400}
+/* ===== Dashboard: botões 7/8/9 e cartões ===== */
+.k .kb{font:inherit;font-size:13px;cursor:pointer;color:#fff;background:linear-gradient(var(--vm),var(--dk));border-radius:14px;padding:14px;text-align:center;border:2px solid var(--ouro);min-height:auto}
+.k .kb.on{box-shadow:0 0 0 4px var(--ouro);background:linear-gradient(#c8262b,var(--vm))}.k .kb.on::after{content:"▼";display:block;font-size:11px;color:#ffd54a;margin-top:2px}
+.k .kb:focus-visible{outline:3px solid var(--gr);outline-offset:2px}
+.k .kinfo{background:#fff8e1;color:var(--dk);border:2px dashed var(--borda)}.k .kinfo b{color:var(--vm)}.k .kinfo small{display:block;font-size:11px;color:#7a6a55}
+.cct .acb,.acb{font-weight:800;font-size:15px;color:#fff;background:var(--gr);border-radius:999px;padding:2px 10px;white-space:nowrap}.acb.w{background:#d97706}
+.gg5.mt{margin-top:8px}.gg5 i.h{background:var(--gr);color:#fff}.falta{font-size:14px;margin-top:8px;color:#8a5a2b}
+#dest .win,#hdest .win,#hdest .card{margin-top:0}
+@media(max-width:700px){.k{grid-template-columns:repeat(4,1fr);gap:6px}.k div,.k .kb{padding:10px 2px;font-size:12px}.k b{font-size:26px}}
 </style></head><body><div id="carga" aria-hidden="true"></div>
 <div id="login" class="card"><div id="lbichos" aria-hidden="true"></div><h2>BOLAO ROCINHA</h2><p class="mut">Entre com seu usuário e senha</p><p class="mut" id="inst" style="font-size:13px"></p>
 <input id="lu" placeholder="Usuário" autocapitalize="none" autocomplete="username"><input id="lp" type="password" placeholder="Senha" autocomplete="current-password">
@@ -120,12 +129,12 @@ nav button i{font-style:normal;margin-right:4px}#tmais{display:none}
 <label class="lab" for="mbob" style="margin-top:4px">Bobina da impressora</label><select id="mbob" onchange="setBobina(this.value);toast('Bobina: '+this.value+' mm')"><option value="58">58 mm (mini portátil)</option><option value="80">80 mm</option></select>
 <button class="b big" onclick="fecharMenu();senhaAbrir()">🔑 Trocar minha senha</button><button class="b big x" onclick="sair()">🚪 Sair</button><button class="b big" onclick="fecharMenu()">Fechar</button></div></div></div>
 <div id="mais" class="modal hide" role="dialog" onclick="if(event.target===this)this.classList.add('hide')"><div class="card"><h2>Mais</h2>
-<div class="acts"><button class="b big" onclick="irAba('hist')">🕘 Histórico</button><button class="b big" onclick="irAba('imp')">📥 Importar planilha</button><button class="b big" onclick="irAba('adm')">⚙️ Admin</button><button class="b big" onclick="$('mais').classList.add('hide')">Fechar</button></div></div></div>
+<div class="acts"><button class="b big" onclick="irAba('hist')">🕘 Histórico</button><button class="b big" onclick="irAba('conf')">🔎 Conferir comprovante</button><button class="b big" onclick="irAba('imp')">📥 Importar planilha</button><button class="b big" onclick="irAba('adm')">⚙️ Admin</button><button class="b big" onclick="$('mais').classList.add('hide')">Fechar</button></div></div></div>
 <div id="frm" class="modal hide" role="dialog" aria-labelledby="frmt" onclick="if(event.target===this)fecharForm()"><form class="card" id="frmf" novalidate><h2 id="frmt"></h2><div id="frmc"></div><p id="frme" class="ferr" role="alert"></p>
 <div class="acts"><button class="b p big" id="frmb" type="submit">Salvar</button><button class="b big" type="button" onclick="fecharForm()">Cancelar</button></div></form></div>
 <header><h1>🦁 BOLAO ROCINHA</h1><button class="conta" id="bconta" onclick="abrirMenu()" aria-label="Menu da conta"><span id="who"></span><b>👤</b></button></header>
 <div class="faixa" aria-hidden="true"><div class="trilho" id="trilho"></div></div>
-<nav><button data-t="cad" class="on"><i>📝</i>Cadastrar</button><button data-t="dash" id="tdash" class="hide"><i>🏆</i>Dashboard</button><button data-t="sor" id="tsor" class="hide"><i>🎯</i>Sorteios</button><button data-t="jog" id="tjog"><i>📋</i>Jogos</button><button data-t="hist" id="thist" class="hide"><i>🕘</i>Histórico</button><button data-t="adm" id="tadm" class="hide"><i>⚙️</i>Admin</button><button data-t="imp" id="timp" class="hide"><i>📥</i>Importar</button><button id="tmais" class="hide" type="button" onclick="$('mais').classList.remove('hide')"><i>☰</i>Mais</button></nav>
+<nav><button data-t="cad" class="on"><i>📝</i>Cadastrar</button><button data-t="dash" id="tdash" class="hide"><i>🏆</i>Dashboard</button><button data-t="sor" id="tsor" class="hide"><i>🎯</i>Sorteios</button><button data-t="jog" id="tjog"><i>📋</i>Jogos</button><button data-t="hist" id="thist" class="hide"><i>🕘</i>Histórico</button><button data-t="adm" id="tadm" class="hide"><i>⚙️</i>Admin</button><button data-t="imp" id="timp" class="hide"><i>📥</i>Importar</button><button data-t="conf" id="tconf" class="hide"><i>🔎</i>Conferir</button><button id="tmais" class="hide" type="button" onclick="$('mais').classList.remove('hide')"><i>☰</i>Mais</button></nav>
 <main>
 <section id="cad"><div class="card hide" id="cadmsg" style="border-left:6px solid #b3261e"><b>⛔ Cadastro encerrado</b><p class="mut">O cadastro abre na segunda às 06:00 e fecha na quinta às 13:00.</p></div><div class="card cadc"><div class="dia hide" id="dia"></div>
 <label class="lab" for="cn">Número da cartela</label><input id="cn" class="cart" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="Ex: 1000" oninput="avisoCartela();validar();salvarRasc()" onkeydown="if(event.key=='Enter'){event.preventDefault();rows.firstChild.querySelector('.d').focus()}">
@@ -138,19 +147,17 @@ nav button i{font-style:normal;margin-right:4px}#tmais{display:none}
 <section id="jog" class="hide"><div class="card"><h2 id="jtit">Jogos cadastrados</h2><div class="jtool"><select id="ju" class="hide" onchange="jogos()"><option value="">Todos os usuários</option></select><input id="jq" type="search" placeholder="🔍 Buscar cartela ou nome" oninput="JLIM=40;drawJ()"></div>
 <button class="b p" onclick="jogos()">🔄 Atualizar</button><button class="b hide" id="jimp" onclick="imprJ()">🖨 Imprimir lista</button><button class="b p hide" id="jps" onclick="imprSel()">🖨 Imprimir selecionados (<span id="jsn">0</span>)</button><button class="b hide" id="jcsv" onclick="csv()">⬇ Baixar CSV</button>
 <p class="mut" id="jc"></p><div class="sc" id="jl"></div></div></section>
-<section id="dash" class="hide"><div class="k" id="kp"></div><div id="dest"></div>
-<div class="card"><h2>Pesquisar jogos</h2><select id="fa"><option value="">Todos (7 a 10)</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
-<select id="fu"><option value="">Todos os usuários</option></select> <input id="fc" placeholder="Nº da cartela" style="width:130px">
-<button class="b p" onclick="dash()">Pesquisar</button><button class="b" onclick="shareDash()">📤 Compartilhar PNG</button><div class="sc" id="dl"></div></div></section>
+<section id="dash" class="hide"><div id="dest"></div><div class="k" id="kp"></div>
+<div class="card"><h2 id="dtit">Jogos</h2><div class="jtool"><select id="fu" onchange="dash()"><option value="">Todos os usuários</option></select><input id="fc" type="search" inputmode="numeric" placeholder="Nº da cartela" style="width:140px" onkeydown="if(event.key=='Enter')dash()"><button class="b p" type="button" onclick="dash()">🔍 Buscar cartela</button><button class="b hide" id="fcx" type="button" onclick="$('fc').value='';dash()">Limpar busca</button></div>
+<div class="acts2"><button class="b" type="button" onclick="shareDash()">📤 Compartilhar PNG desta lista</button></div><div id="dl"></div></div></section>
 <section id="sor" class="hide"><div class="card"><h2>Resultados por dia e horário</h2><button class="b p hide" id="at" onclick="atual()">🔄 Buscar resultados agora</button><button class="b" onclick="shareSor()">📤 PNG</button><div class="sc" id="sl"></div></div>
 <div class="card"><h2>Acumulado das dezenas</h2><p class="mut">Em verde, as que já saíram.</p><div class="grid" id="ac"></div></div></section>
 <section id="hist" class="hide"><div class="card"><h2>🕘 Histórico de ciclos</h2><p class="mut">Semanas já encerradas. Escolha o ciclo para ver a apuração como ela ficou.</p>
 <select id="hc" onchange="hist()"></select> <select id="hu" class="hide" onchange="hist()"><option value="">Todos os usuários</option></select>
-<select id="ha" onchange="hist()"><option value="">Todos (7 a 10)</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
-<input id="hq" placeholder="Nº da cartela" style="width:130px" onkeydown="if(event.key=='Enter')hist()">
-<button class="b p" onclick="hist()">Pesquisar</button><button class="b" onclick="hshareList()">📤 Compartilhar PNG</button><p class="mut" id="hinfo"></p></div>
-<div class="k" id="hk"></div><div id="hdest"></div>
-<div class="card"><h2>Cartelas do ciclo</h2><div class="sc" id="hl"></div></div>
+<input id="hq" type="search" inputmode="numeric" placeholder="Nº da cartela" style="width:140px" onkeydown="if(event.key=='Enter')hist()">
+<button class="b p" onclick="hist()">🔍 Buscar cartela</button><button class="b hide" id="hqx" type="button" onclick="$('hq').value='';hist()">Limpar busca</button><p class="mut" id="hinfo"></p></div>
+<div id="hdest"></div><div class="k" id="hk"></div>
+<div class="card"><h2 id="htit">Cartelas do ciclo</h2><div class="acts2"><button class="b" type="button" onclick="hshareList()">📤 Compartilhar PNG desta lista</button></div><div id="hl"></div></div>
 <div class="card"><h2>Sorteios do ciclo</h2><div class="sc" id="hs"></div></div>
 <div class="card"><h2>Acumulado das dezenas</h2><p class="mut">Em verde, as que saíram no ciclo.</p><div class="grid" id="hac"></div></div></section>
 <section id="imp" class="hide"><div class="card"><h2>📥 Importar jogos da planilha</h2><p class="mut">Só administrador. Uma linha por jogo: cartela e as 10 dezenas. Cartela repetida vira o jogo 2, 3...</p>
@@ -164,6 +171,8 @@ nav button i{font-style:normal;margin-right:4px}#tmais{display:none}
 <div class="itabs" role="tablist"><button id="itE" class="on" type="button" onclick="impAba('e')">Revisar (<span id="inE">0</span>)</button><button id="itV" type="button" onclick="impAba('v')">Válidos (<span id="inV">0</span>)</button></div>
 <div id="ilist"></div></div>
 <div class="barra" id="ibarra"><button class="b p big" id="ib" type="button" onclick="impGo()" disabled>Importar</button><small id="iberr"></small></div></div></section>
+<section id="conf" class="hide"><div class="card"><h2>🔎 Conferir comprovante</h2><p class="mut">Digite a cartela e o código de conferência impresso no comprovante.</p>
+<div class="jtool"><input id="vc" placeholder="Cartela" inputmode="numeric" style="width:130px"> <input id="vk" placeholder="Código (ex.: K7Q-29F)" autocapitalize="characters" autocomplete="off" style="width:200px" onkeydown="if(event.key=='Enter')conferir()"> <button class="b p" onclick="conferir()">Conferir</button></div><div id="vr"></div></div></section>
 <section id="adm" class="hide"><div class="card"><h2>Usuários</h2><button class="b p" onclick="novoU()">➕ Novo usuário</button><div class="sc" id="ul"></div><p class="mut">Excluir um usuário remove só o acesso; os cadastros dele continuam na planilha.</p></div>
 <div class="card"><h2>Lançar sorteio manualmente</h2><p class="mut">Use se o resultado automático falhar. Se já existir, será substituído.</p>
 <input id="md" type="date" aria-label="Data do sorteio"> <select id="mh"><option>14h</option><option>16h</option><option>18h</option><option>21h</option></select>
@@ -176,8 +185,7 @@ async function tgTeste(){const x=await call('telegramTeste');toast(x.erro||'Mens
 async function tgImagemTeste(){toast('Gerando imagem…');const x=await call('telegramImagemTeste');toast(x.erro||'Imagem de teste enviada')}
 async function tgReenviar(){if(!confirm('Reenviar o resumo do último sorteio ao Telegram?'))return;toast('Enviando…');const x=await call('telegramReenviar');toast(x.erro||x.msg||'Resumo reenviado')}
 </script>
-<div class="card"><h2>🔎 Conferir comprovante</h2><p class="mut">Digite a cartela e o código de conferência impresso no comprovante.</p>
-<input id="vc" placeholder="Cartela" inputmode="numeric" style="width:130px"> <input id="vk" placeholder="Código (ex.: K7Q-29F)" autocapitalize="characters" autocomplete="off" style="width:200px" onkeydown="if(event.key=='Enter')conferir()"> <button class="b p" onclick="conferir()">Conferir</button><div id="vr"></div></div>
+
 <div class="card"><h2>Ciclo semanal</h2><p class="mut">Toda segunda, entre 05:00 e 06:00, o sistema arquiva os dados da semana anterior (eles ficam na aba Histórico) e começa um novo ciclo. O cadastro de cartelas abre na segunda às 06:00 e fecha na quinta às 13:00. Use o botão só se precisar virar o ciclo antes disso.</p>
 <button class="b x" onclick="encerrar()">🔄 Encerrar ciclo agora</button></div>
 <p class="mut">Cada correção é registrada na aba <b>Log</b> da planilha.</p></section>
@@ -195,10 +203,10 @@ function toast(m){const t=$('toast');t.textContent=m;t.classList.remove('hide');
 async function entrar(){const x=await call('login',{u:$('lu').value,p:$('lp').value});if(x.erro){$('le').textContent=x.erro;return}
 T=x.token;ME=x;salvarSessao();iniciar(x)}
 function iniciar(x){$('login').classList.add('hide');$('app').classList.remove('hide');$('who').textContent=(x.n||x.u);$('mwho').textContent='👤 '+(x.n||x.u)+(x.adm?' · admin':'');if(!x.adm){$('tjog').innerHTML='<i>📋</i>Minhas cartelas';$('jtit').textContent='Minhas cartelas'}
-if(x.adm){['tadm','tdash','tsor','thist','tmais','at','ju','hu','jps','timp','jimp','jcsv'].forEach(i=>$(i).classList.remove('hide'));loadNomes()}if(!restaurarRasc())addRow();jogos();call('cadStatus').then(r=>{QUIET=false;if(r&&r.aberto===false)$('cadmsg').classList.remove('hide')})}
+if(x.adm){['tadm','tdash','tsor','thist','tmais','at','ju','hu','jps','timp','tconf','jimp','jcsv'].forEach(i=>$(i).classList.remove('hide'));loadNomes()}if(!restaurarRasc())addRow();jogos();call('cadStatus').then(r=>{QUIET=false;if(r&&r.aberto===false)$('cadmsg').classList.remove('hide')})}
 $('lp').onkeydown=e=>{if(e.key=='Enter')entrar()};
-const TABS=['cad','dash','sor','jog','hist','imp','adm'];
-document.querySelectorAll('nav button[data-t]').forEach(b=>b.onclick=()=>{ABA=b.dataset.t;salvarSessao();document.querySelectorAll('nav button[data-t]').forEach(x=>x.classList.toggle('on',x==b));$('tmais').classList.toggle('on',ABA=='hist'||ABA=='adm'||ABA=='imp');window.scrollTo(0,0);
+const TABS=['cad','dash','sor','jog','hist','imp','conf','adm'];
+document.querySelectorAll('nav button[data-t]').forEach(b=>b.onclick=()=>{ABA=b.dataset.t;salvarSessao();document.querySelectorAll('nav button[data-t]').forEach(x=>x.classList.toggle('on',x==b));$('tmais').classList.toggle('on',ABA=='hist'||ABA=='adm'||ABA=='imp'||ABA=='conf');window.scrollTo(0,0);
 TABS.forEach(s=>$(s).classList.toggle('hide',s!=b.dataset.t));const t=b.dataset.t;({jog:jogos,dash:dash,sor:sorteios,hist:histTab,imp:impTab,adm:admin}[t]||(()=>0))()});
 // ===== Cadastro rápido (celular) =====
 const rows=$('rows'),okC=c=>/^\w{1,15}$/.test(c);
@@ -413,7 +421,7 @@ function cardCartela(x,i){
   '</div><div class="gg5">'+g.d.map(n=>'<i>'+p2(n)+'</i>').join('')+'</div></div>').join('');
  return '<div class="cc"><div class="cct"><b>Cartela '+esc(x.c)+'</b><span>'+x.js.length+(x.js.length==1?' jogo':' jogos')+' · '+esc(fmtDt(x.ult))+'</span></div>'+
   (ME.adm?'<div class="ccn">👤 '+esc(x.n)+'</div>':'')+
-  '<details'+(i<3?' open':'')+'><summary><span class="t1">Ver jogos ▾</span><span class="t2">Esconder jogos ▴</span></summary>'+jh+
+  '<details><summary><span class="t1">Ver jogos ▾</span><span class="t2">Esconder jogos ▴</span></summary>'+jh+
   (ME.adm?'<button class="b x s" data-a="c" data-u="'+esc(x.u)+'" data-n="'+esc(x.n)+'" data-c="'+esc(x.c)+'">🗑 Excluir a cartela inteira</button>':'')+'</details>'+
   '<div class="ccacts">'+btns+'</div></div>'}
 function drawJ(){const l=jvis(),G=[],M={};
@@ -435,11 +443,10 @@ const x=await call('excluirJogo',{u:b.dataset.u,c:b.dataset.c,j:j?b.dataset.j:''
 function imprJ(){const l=jvis();if(!l.length)return toast('Nada para imprimir');imprLista(l)}
 function csv(){const t='nome;usuario;cartela;jogo;dezenas\n'+JL.map(g=>[nm(g),g.u,g.c,g.j,g.d.map(p2).join(' ')].join(';')).join('\n');
 const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+t],{type:'text/csv'}));a.download='jogos.csv';a.click()}
-async function dash(){const x=await call('dash',{acertos:$('fa').value,usuario:$('fu').value,cartela:$('fc').value});if(x.erro)return toast(x.erro);
+async function dash(sel){const c=$('fc').value.trim();const x=await call('dash',{usuario:$('fu').value,cartela:c});if(x.erro)return toast(x.erro);
 const s=new Set(x.sorteadas);DASH=x.lista;SET=s;WIN=x.venc||[];VIT=x.vit;
-$('kp').innerHTML='<div>JOGOS<b>'+x.total+'</b></div><div>7/10<b>'+x.cont[7]+'</b></div><div>8/10<b>'+x.cont[8]+'</b></div><div>9/10<b>'+x.cont[9]+'</b></div>';
 const w=WIN;$('dest').innerHTML=x.cont[10]?'<div class="card win"><h2>🏆 CARTELA VENCEDORA — 10/10 ('+x.cont[10]+')</h2>'+(x.vit?'<p class="mut">Vitória no sorteio de '+x.vit.data+' • '+x.vit.nome+'</p>':'')+w.map(g=>'<p>Cartela <b>'+esc(g.c)+'</b> (jogo '+g.j+') — '+esc(nm(g))+'<br>'+g.d.map(n=>'<span class="n h">'+p2(n)+'</span>').join('')+'</p>').join('')+'<button class="b p" onclick="shareWin()">📤 Compartilhar PNG</button><button class="b p" onclick="printWin()">🖨 Imprimir</button></div>':'';
-$('dl').innerHTML='<table><tr><th>Cartela</th><th>Jogo</th><th>Nome</th><th>Dezenas</th><th>Acertos</th><th></th></tr>'+x.lista.map((g,i)=>'<tr><td><b>'+esc(g.c)+'</b></td><td>'+g.j+'</td><td>'+esc(nm(g))+'</td><td>'+g.d.map(n=>'<span class="n '+(s.has(n)?'h':'')+'">'+p2(n)+'</span>').join('')+'</td><td><b>'+g.ac+'/10</b></td><td style="white-space:nowrap"><button class="b s" data-a="p" data-i="'+i+'" title="Imprimir este jogo">🖨</button><button class="b s" data-a="s" data-i="'+i+'" title="Compartilhar este jogo">📤</button></td></tr>').join('')+'</table>'}
+DTOT=x.total;DKC=(!c&&$('fu').value)?contar(DASH):x.cont;DSEL=c?'busca':(sel||melhorAc(DKC));DLIM=50;$('fcx').classList.toggle('hide',!c);drawDash()}
 $('dl').onclick=e=>{const b=e.target.closest('button[data-i]');if(!b)return;const g=DASH[b.dataset.i];if(!g)return;
 if(b.dataset.a=='p')imprimir(ticket(g.c,nm(g),[{j:g.j,d:g.d}],false,g.dt||agora(),g.k));else shareJogo(g)};
 function shareJogo(g){if(g.ac>=10)return enviar([imgVenc(g)],'vencedor-'+g.c);
@@ -497,14 +504,13 @@ async function histTab(){const x=await call('histCiclos');if(x.erro)return toast
 $('hinfo').textContent='Ficam guardados os últimos '+x.guardar+' ciclos (cerca de 6 meses).';
 s.innerHTML=x.ciclos.length?x.ciclos.map(c=>'<option value="'+c.c+'">'+c.c+' • '+c.nj+' jogo(s)</option>').join(''):'<option value="">Nenhum ciclo encerrado ainda</option>';
 if(v&&x.ciclos.some(c=>c.c==v))s.value=v;hist()}
-async function hist(){const c=$('hc').value;
+async function hist(sel){const c=$('hc').value;
 if(!c){['hk','hdest','hl','hs','hac'].forEach(i=>$(i).innerHTML='');return}
-const x=await call('histDash',{ciclo:c,acertos:$('ha').value,usuario:$('hu').value,cartela:$('hq').value.trim()});if(x.erro)return toast(x.erro);
+const q=$('hq').value.trim();const x=await call('histDash',{ciclo:c,usuario:$('hu').value,cartela:q});if(x.erro)return toast(x.erro);
 HD=x.lista;HSET=new Set(x.sorteadas);HWIN=x.venc||[];HVIT=x.vit;const s=HSET;
-$('hk').innerHTML='<div>JOGOS<b>'+x.total+'</b></div><div>7/10<b>'+x.cont[7]+'</b></div><div>8/10<b>'+x.cont[8]+'</b></div><div>9/10<b>'+x.cont[9]+'</b></div>';
 $('hdest').innerHTML=x.cont[10]?'<div class="card win"><h2>🏆 CARTELA VENCEDORA — 10/10 ('+x.cont[10]+')</h2>'+(x.vit?'<p class="mut">Vitória no sorteio de '+x.vit.data+' • '+x.vit.nome+'</p>':'')+HWIN.map(g=>'<p>Cartela <b>'+esc(g.c)+'</b> (jogo '+g.j+') — '+esc(nm(g))+'<br>'+g.d.map(n=>'<span class="n h">'+p2(n)+'</span>').join('')+'</p>').join('')+'<button class="b p" onclick="hshareWin()">📤 Compartilhar PNG</button><button class="b p" onclick="hprintWin()">🖨 Imprimir</button></div>'
 :(x.vit?'<div class="card"><p class="mut">🏆 Houve ganhador neste ciclo, no sorteio de '+x.vit.data+' • '+x.vit.nome+'.</p></div>':'');
-$('hl').innerHTML=x.lista.length?'<table><tr><th>Cartela</th><th>Jogo</th><th>Nome</th><th>Dezenas</th><th>Acertos</th><th></th></tr>'+x.lista.map((g,i)=>'<tr><td><b>'+esc(g.c)+'</b></td><td>'+g.j+'</td><td>'+esc(nm(g))+'</td><td>'+g.d.map(n=>'<span class="n '+(s.has(n)?'h':'')+'">'+p2(n)+'</span>').join('')+'</td><td><b>'+g.ac+'/10</b></td><td style="white-space:nowrap"><button class="b s" data-a="p" data-i="'+i+'" title="Imprimir este jogo">🖨</button><button class="b s" data-a="s" data-i="'+i+'" title="Compartilhar este jogo">📤</button>'+(ME.adm?'<button class="b x s" data-a="x" data-i="'+i+'" title="Excluir do histórico">🗑</button>':'')+'</td></tr>').join('')+'</table>':'<p class="mut">Nenhuma cartela encontrada.</p>';
+HTOT=x.total;HKC=x.cont;HSEL=q?'busca':(sel||melhorAc(HKC));HLIM=50;$('hqx').classList.toggle('hide',!q);drawHist();
 $('hs').innerHTML='<table><tr><th>Data</th><th>Horário</th><th>Dezenas</th>'+(ME.adm?'<th></th>':'')+'</tr>'+x.sorteios.map(r=>'<tr><td>'+r.data+'</td><td>'+r.horario+'</td><td>'+r.dezenas.map(n=>'<span class="n h">'+n+'</span>').join('')+'</td>'+(ME.adm?'<td style="white-space:nowrap"><button class="b s" data-a="e" data-d="'+r.data+'" data-h="'+r.horario+'" title="Corrigir dezenas">✏</button><button class="b x s" data-a="x" data-d="'+r.data+'" data-h="'+r.horario+'" title="Excluir">🗑</button></td>':'')+'</tr>').join('')+'</table>';
 const ac=new Set(x.acumulado);$('hac').innerHTML=Array.from({length:100},(_,i)=>'<span class="'+(ac.has(i)?'h':'')+'" title="'+bicho(i)[0]+'">'+p2(i)+'<i>'+bicho(i)[1]+'</i></span>').join('')}
 function histCtx(){SET=HSET;VIT=HVIT}   // imgLista e ticketVenc leem estas variáveis
@@ -517,8 +523,7 @@ if(b.dataset.a=='e'){const atual=[...b.closest('tr').querySelectorAll('.n')].map
  return abrirForm({titulo:'✏ Corrigir sorteio '+r.data+' '+r.horario,texto:'A apuração deste ciclo é refeita com as dezenas novas.',campos:[{id:'z',tipo:'dez5',rotulo:'As 5 dezenas',valor:atual}],
   enviar:async v=>{if(v.z.some(x=>!x))return 'Preencha as 5 dezenas';const x=await call('histSorteioSalvar',Object.assign({},r,{dezenas:v.z.map(Number)}));if(x.erro)return x.erro;toast('✅ Histórico corrigido');hist()}})}
 if(!confirm('Excluir o sorteio '+r.data+' '+r.horario+' deste ciclo?'))return;const x=await call('histSorteioExcluir',r);toast(x.erro||'Sorteio excluído');hist()};
-function hshareList(){if(!HD.some(g=>g.ac<10))return toast('Nada para compartilhar (10/10 usa o botão do destaque)');
-const o=DASH;DASH=HD;histCtx();try{enviar(pagsDash(),'historico')}finally{DASH=o}}
+function hshareList(){const l=listaSel(HD,HSEL).map(x=>x[0]).filter(g=>g.ac<10);if(!l.length)return toast('Nada para compartilhar nesta lista (10/10 usa o botão do destaque)');histCtx();enviar(pagsDash(l),'historico')}
 function hshareWin(){histCtx();enviar(HWIN.map(imgVenc),'vencedor')}
 function hprintWin(){histCtx();imprimir(HWIN.map(ticketVenc).join(''))}
 // ===== Tema jogo do bicho: os 25 grupos (4 dezenas por animal; 97, 98, 99 e 00 são a vaca) =====
@@ -535,11 +540,11 @@ function senhaAbrir(){['pa','pn','pc'].forEach(i=>$(i).value='');$('pw').classLi
 async function senhaSalvar(){const a=$('pa').value,n=$('pn').value,c=$('pc').value;if(!a||!n)return toast('Preencha a senha atual e a nova');
 if(n!==c)return toast('A confirmação não confere');if(n.trim().length<6)return toast('Senha nova muito curta (mínimo 6)');
 const x=await call('trocarSenha',{atual:a,nova:n});if(x.erro)return toast(x.erro);$('pw').classList.add('hide');toast('✅ Senha alterada!')}
-function pagsDash(){const l=DASH.filter(g=>g.ac<10);
+function pagsDash(l){l=l.filter(g=>g.ac<10);
 const grp={};l.forEach(g=>(grp[g.ac]=grp[g.ac]||[]).push(g));const pg=[];
 Object.keys(grp).sort((a,b)=>b-a).forEach(k=>{for(let i=0;i<grp[k].length;i+=10)pg.push([k,grp[k].slice(i,i+10)])});
 return pg.map((p,i)=>imgLista('RESULTADO — '+p[0]+' ACERTOS','Página '+(i+1)+'/'+pg.length+' • '+p[1].length+' cartela(s)',p[1]))}
-function shareDash(){if(!DASH.some(g=>g.ac<10))return toast('Nada para compartilhar (10/10 usa o botão do destaque)');enviar(pagsDash(),'cartelas')}
+function shareDash(){const l=listaSel(DASH,DSEL).map(x=>x[0]).filter(g=>g.ac<10);if(!l.length)return toast('Nada para compartilhar nesta lista (10/10 usa o botão do destaque)');enviar(pagsDash(l),'cartelas')}
 function shareWin(){enviar(WIN.map(imgVenc),'vencedor')}
 function ticketVenc(g){return '<div class="pg"><div class="box t"><div class="h1">★ VENCEDOR ★</div><div class="sub">10 / 10 ACERTOS</div></div><div class="t lb">CARTELA</div><div class="t num">'+esc(g.c)+'</div>'+
 '<div class="inf"><span>Nome: <b>'+esc(nm(g))+'</b></span><span>Jogo <b>'+g.j+'</b></span></div>'+(g.dt?'<div class="inf"><span>Registrada em</span><b>'+g.dt+'</b></div>':'')+(VIT?'<div class="inf"><span>Sorteio: '+VIT.data+' • '+VIT.nome+'</span></div>':'')+
@@ -631,6 +636,29 @@ function novoU(){abrirForm({titulo:'➕ Novo usuário',botao:'Criar usuário',ca
   if(!/^[a-z0-9_]{3,20}$/.test(u))return 'Usuário inválido: use 3 a 20 letras minúsculas, números ou _';
   if(v.p.length<6)return 'A senha precisa ter pelo menos 6 caracteres';
   const x=await call('novoUsuario',{u:u,p:v.p,nome:v.nome});if(x.erro)return x.erro;toast('✅ Usuário '+u+' criado');admin()}})}
+// ===== Dashboard e Histórico: botões 7/8/9 e cartões =====
+let DSEL=9,DLIM=50,DTOT=0,DKC={},HSEL=9,HLIM=50,HTOT=0,HKC={};
+const melhorAc=kc=>[9,8,7].find(k=>kc[k]>0)||9;   // abre na lista mais perto de ganhar
+const contar=l=>{const c={7:0,8:0,9:0,10:0};l.forEach(g=>{if(c[g.ac]!=null)c[g.ac]++});return c};
+function tiles(tot,kc,sel,fn){return '<div class="kinfo">JOGOS<b>'+tot+'</b><small>cadastrados</small></div>'+
+ [7,8,9].map(k=>'<button type="button" class="kb'+(sel===k?' on':'')+'" aria-pressed="'+(sel===k)+'" onclick="'+fn+'('+k+')">'+k+'/10<b>'+(kc[k]||0)+'</b></button>').join('')}
+function cardAc(g,i,s,del){const falta=g.d.filter(n=>!s.has(n));
+ return '<div class="cc"><div class="cct"><b>Cartela '+esc(g.c)+' · Jogo '+esc(g.j)+'</b><span class="acb'+(g.ac>=10?' w':'')+'">'+g.ac+'/10</span></div><div class="ccn">👤 '+esc(nm(g))+'</div>'+
+  '<div class="gg5 mt">'+g.d.map(n=>'<i class="'+(s.has(n)?'h':'')+'">'+p2(n)+'</i>').join('')+'</div>'+
+  (g.ac<10&&falta.length?'<div class="falta">'+(falta.length==1?'Falta':'Faltam')+': <b>'+falta.map(p2).join(' ')+'</b></div>':'')+
+  '<div class="ccacts"><button class="b s" type="button" data-a="p" data-i="'+i+'">🖨 Imprimir</button><button class="b s" type="button" data-a="s" data-i="'+i+'">📤 Compartilhar</button>'+
+  (del?'<button class="b x s" type="button" data-a="x" data-i="'+i+'" title="Excluir do histórico" style="flex:0 0 auto">🗑</button>':'')+'</div></div>'}
+const listaSel=(l,sel)=>l.map((g,i)=>[g,i]).filter(([g])=>sel==='busca'||g.ac===sel);
+function listaHtml(l,lim,s,del,mais,vazio){return l.length?l.slice(0,lim).map(([g,i])=>cardAc(g,i,s,del)).join('')+
+ (l.length>lim?'<button class="b big" type="button" onclick="'+mais+'">Mostrar mais ('+(l.length-lim)+')</button>':''):'<p class="mut">'+vazio+'</p>'}
+function drawDash(){$('kp').innerHTML=tiles(DTOT,DKC,DSEL,'dashSel');const l=listaSel(DASH,DSEL);
+ $('dtit').textContent=DSEL==='busca'?'Cartela '+$('fc').value.trim()+' · '+l.length+(l.length==1?' jogo':' jogos'):DSEL+' acertos · '+l.length+(l.length==1?' jogo':' jogos');
+ $('dl').innerHTML=listaHtml(l,DLIM,SET,false,'DLIM+=50;drawDash()',DSEL==='busca'?'Nenhum jogo encontrado para essa cartela.':'Nenhum jogo com '+DSEL+' acertos.')}
+function dashSel(k){DLIM=50;if(DSEL==='busca'){$('fc').value='';return dash(k)}DSEL=k;drawDash()}
+function drawHist(){$('hk').innerHTML=tiles(HTOT,HKC,HSEL,'histSel');const l=listaSel(HD,HSEL);
+ $('htit').textContent=HSEL==='busca'?'Cartela '+$('hq').value.trim()+' · '+l.length+(l.length==1?' jogo':' jogos'):HSEL+' acertos · '+l.length+(l.length==1?' jogo':' jogos');
+ $('hl').innerHTML=listaHtml(l,HLIM,HSET,ME.adm,'HLIM+=50;drawHist()',HSEL==='busca'?'Nenhum jogo encontrado para essa cartela.':'Nenhum jogo com '+HSEL+' acertos.')}
+function histSel(k){HLIM=50;if(HSEL==='busca'){$('hq').value='';return hist(k)}HSEL=k;drawHist()}
 restaurar();
 
 // ===== App instalável (PWA) =====
