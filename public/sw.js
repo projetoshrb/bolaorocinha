@@ -1,5 +1,5 @@
 // Service worker do BOLAO ROCINHA: guarda a "casca" do app para abrir mesmo sem internet.
-// Nunca guarda dados: as chamadas ao Apps Script (outro domínio, método POST) e à função de imagens passam direto.
+// Nunca guarda dados: as chamadas ao Supabase (outro domínio, método POST) passam direto.
 const V = 'bolao-v1';
 const CASCA = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'icon-180.png'];
 self.addEventListener('install', e => {

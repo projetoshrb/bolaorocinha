@@ -179,8 +179,16 @@ nav button i{font-style:normal;margin-right:4px}#tmais{display:none}
 <div id="mz" class="g5" style="margin:8px 0;max-width:320px"></div><button class="b p" onclick="manual()">Lançar</button></div>
 <div class="card"><h2>Telegram</h2>
 <p class="mut">O bot envia o resumo sozinho a cada sorteio novo, com as cartelas em imagem. Use os botões para testar.</p>
+<p id="tgst" class="mut"></p>
+<details id="tgcfgd"><summary style="cursor:pointer;color:var(--vm);font-weight:700;padding:6px 0">⚙️ Configurar o bot (token e canal)</summary>
+<p class="mut">O token vem do @BotFather. O chat id do canal começa com -100. Deixe em branco o que não quiser trocar. O token nunca aparece de volta na tela.</p>
+<input id="tgtk" type="password" placeholder="Token do bot (números:letras)" autocomplete="off" style="width:100%;margin-bottom:6px">
+<input id="tgch" placeholder="Chat id do canal (ex.: -1001234567890)" autocomplete="off" inputmode="numeric" style="width:100%;margin-bottom:6px">
+<button class="b p" type="button" onclick="tgSalvar()">Salvar configuração</button></details>
 <button class="b" onclick="tgTeste()">✈️ Mensagem de teste</button><button class="b" onclick="tgImagemTeste()">🖼 Imagem de teste</button><button class="b" onclick="tgReenviar()">🔁 Reenviar último sorteio</button></div>
 <script>
+async function tgStatus(){const x=await call('tgStatus');if(x.erro)return;$('tgst').innerHTML=x.token&&x.chat?'✅ Bot configurado · canal <b>'+esc(x.chat)+'</b>':'⚠️ Bot ainda não configurado: abra "Configurar o bot" abaixo.';if(!(x.token&&x.chat))$('tgcfgd').open=true}
+async function tgSalvar(){const tk=$('tgtk').value.trim(),ch=$('tgch').value.trim();if(!tk&&!ch)return toast('Preencha o token e/ou o chat id');const x=await call('tgConfig',{token:tk,chat:ch});if(x.erro)return toast(x.erro);$('tgtk').value='';$('tgch').value='';toast('✅ Telegram configurado');tgStatus()}
 async function tgTeste(){const x=await call('telegramTeste');toast(x.erro||'Mensagem de teste enviada')}
 async function tgImagemTeste(){toast('Gerando imagem…');const x=await call('telegramImagemTeste');toast(x.erro||'Imagem de teste enviada')}
 async function tgReenviar(){if(!confirm('Reenviar o resumo do último sorteio ao Telegram?'))return;toast('Enviando…');const x=await call('telegramReenviar');toast(x.erro||x.msg||'Resumo reenviado')}
@@ -195,9 +203,12 @@ let CARGA=0,T='',ME={},DASH=[],SOR={},SET=new Set(),JL=[],WIN=[],VIT=null;const 
 let QUIET=false,ABA='cad';const SS=window.__ST||null;   // navegador: guarda só nesta aba; app instalado: guarda no aparelho (o servidor ainda vence a sessão em 6 h)
 const salvarSessao=()=>{try{SS&&SS.setItem('bolao_s',JSON.stringify({t:T,me:ME,tab:ABA}))}catch(e){}},semSessao=()=>{try{SS&&SS.removeItem('bolao_s')}catch(e){}};
 // Endereço do app da Web do Apps Script (termina em /exec). É o único valor que precisa ser trocado neste arquivo.
-const API_URL='https://script.google.com/macros/s/AKfycbwG9KV6jFjAQESyzAVpB1iPSoJ5e57tnuDygUS3YiXTMfZ7AVf-6AydifiXCr7CTjoT/exec';
-const call=async(a,d)=>{if(API_URL.indexOf('COLE_')===0)return{erro:'Falta colocar a URL do Apps Script no arquivo index.html (API_URL).'};
-CARGA++;document.body.classList.add('busy');try{const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({t:T,a:a,d:d||{}})});
+// Servidor: Supabase (banco + funções). A chave "publishable" é pública por natureza: o banco só aceita a função api,
+// que confere a sessão de cada chamada. Ações que precisam de internet (resultados, Telegram) vão para a função "bolao".
+const SUPA='https://cborhjhmaznboxwtckgj.supabase.co',SUPA_KEY='sb_publishable_dFOxtIbFaC5BUiLmEO0w_w_klQyynxU';
+const FN_ACOES=['atualizar','telegramTeste','telegramImagemTeste','telegramReenviar'];
+const call=async(a,d)=>{
+CARGA++;document.body.classList.add('busy');try{const fn=FN_ACOES.indexOf(a)>=0;const r=await fetch(SUPA+(fn?'/functions/v1/bolao':'/rest/v1/rpc/api'),{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPA_KEY},body:JSON.stringify(fn?Object.assign({},d||{},{t:T,a:a}):{t:T,a:a,d:d||{}})});
 const x=await r.json();if(x&&x.sessao){semSessao();if(!QUIET)alert(x.erro);location.reload()}return x||{}}catch(e){return{erro:'Sem conexão com o servidor. Tente de novo.'}}finally{if(--CARGA<=0){CARGA=0;document.body.classList.remove('busy')}}};
 function toast(m){const t=$('toast');t.textContent=m;t.classList.remove('hide');setTimeout(()=>t.classList.add('hide'),2600)}
 async function entrar(){const x=await call('login',{u:$('lu').value,p:$('lp').value});if(x.erro){$('le').textContent=x.erro;return}
@@ -457,7 +468,7 @@ const set=new Set(x.acumulado);$('ac').innerHTML=Array.from({length:100},(_,i)=>
 $('sl').onclick=async e=>{const b=e.target.closest('button[data-d]');if(!b||!confirm('Excluir o sorteio '+b.dataset.d+' '+b.dataset.h+'?'))return;
 const x=await call('excluirSorteio',{data:b.dataset.d,horario:b.dataset.h});toast(x.erro||'Sorteio excluído');sorteios()};
 async function atual(){const x=await call('atualizar');toast(x.erro||x.msg||'Gravados: '+(x.gravados.join(', ')||'nenhum novo'));sorteios()}
-async function admin(){{const a=agora();$('md').value=a.slice(6,10)+'-'+a.slice(3,5)+'-'+a.slice(0,2)}if(!$('mz').firstChild)$('mz').innerHTML='<input class="d" maxlength="2" inputmode="numeric">'.repeat(5);
+async function admin(){tgStatus();{const a=agora();$('md').value=a.slice(6,10)+'-'+a.slice(3,5)+'-'+a.slice(0,2)}if(!$('mz').firstChild)$('mz').innerHTML='<input class="d" maxlength="2" inputmode="numeric">'.repeat(5);
 $('mz').querySelectorAll('.d').forEach((e,i,a)=>e.oninput=()=>{e.value=e.value.replace(/\D/g,'');if(e.value.length==2&&a[i+1])a[i+1].focus()});
 const x=await call('usuarios');if(x.erro)return toast(x.erro);loadNomes();
 $('ul').innerHTML='<table>'+x.usuarios.map(u=>'<tr><td><b>'+esc(u.n||u.u)+'</b>'+(u.adm?' <span class="n h">admin</span>':'')+'<br><small class="mut">login: '+u.u+'</small></td><td><button class="b s" data-a="n" data-u="'+u.u+'" data-n="'+esc(u.n||'')+'">✏ Nome</button><button class="b s" data-a="s" data-u="'+u.u+'">🔑 Senha</button>'+(u.u!=ME.u?'<button class="b x s" data-a="e" data-u="'+u.u+'">🗑 Excluir</button>':'')+'</td></tr>').join('')+'</table>'}
