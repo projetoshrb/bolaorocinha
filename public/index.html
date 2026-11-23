@@ -456,7 +456,7 @@ function csv(){const t='nome;usuario;cartela;jogo;dezenas\n'+JL.map(g=>[nm(g),g.
 const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+t],{type:'text/csv'}));a.download='jogos.csv';a.click()}
 async function dash(sel){const c=$('fc').value.trim();const x=await call('dash',{usuario:$('fu').value,cartela:c});if(x.erro)return toast(x.erro);
 const s=new Set(x.sorteadas);DASH=x.lista;SET=s;WIN=x.venc||[];VIT=x.vit;
-const w=WIN;$('dest').innerHTML=x.cont[10]?'<div class="card win"><h2>🏆 CARTELA VENCEDORA — 10/10 ('+x.cont[10]+')</h2>'+(x.vit?'<p class="mut">Vitória no sorteio de '+x.vit.data+' • '+x.vit.nome+'</p>':'')+w.map(g=>'<p>Cartela <b>'+esc(g.c)+'</b> (jogo '+g.j+') — '+esc(nm(g))+'<br>'+g.d.map(n=>'<span class="n h">'+p2(n)+'</span>').join('')+'</p>').join('')+'<button class="b p" onclick="shareWin()">📤 Compartilhar PNG</button><button class="b p" onclick="printWin()">🖨 Imprimir</button></div>':'';
+const w=WIN;$('dest').innerHTML=x.cont[10]?'<div class="card win"><h2>🏆 VENCEDOR — 10/10 ('+x.cont[10]+')</h2>'+(x.vit?'<p class="mut">Vitória no sorteio de '+x.vit.data+' • '+x.vit.nome+'</p>':'')+w.map(g=>'<p>Cartela <b>'+esc(g.c)+'</b> (jogo '+g.j+') — '+esc(nm(g))+'<br>'+g.d.map(n=>'<span class="n h">'+p2(n)+'</span>').join('')+'</p>').join('')+'<button class="b p" onclick="shareWin()">📤 Compartilhar PNG</button><button class="b p" onclick="printWin()">🖨 Imprimir</button></div>':'';
 DTOT=x.total;DKC=(!c&&$('fu').value)?contar(DASH):x.cont;DSEL=c?'busca':(sel||melhorAc(DKC));DLIM=50;$('fcx').classList.toggle('hide',!c);drawDash()}
 $('dl').onclick=e=>{const b=e.target.closest('button[data-i]');if(!b)return;const g=DASH[b.dataset.i];if(!g)return;
 if(b.dataset.a=='p')imprimir(ticket(g.c,nm(g),[{j:g.j,d:g.d}],false,g.dt||agora(),g.k));else shareJogo(g)};
@@ -500,13 +500,18 @@ tx(g,r.ac+'/10',831,y+41,'bold 24px',C.gr,'right')});
 tx(g,'Resultado das Cartelas',443,H-13,'15px','#fff','center');return c}
 function imgVenc(r){const[c,g]=mk(1024,1280);g.fillStyle=C.dk;g.fillRect(26,26,972,186);g.fillStyle=C.gr;g.fillRect(32,1205,960,43);
 g.strokeStyle=C.dk;g.lineWidth=26;g.strokeRect(13,13,998,1254);
-tx(g,'🏆 CARTELA VENCEDORA',512,107,'bold 54px','#fff','center');tx(g,'10 / 10 ACERTOS',512,165,'bold 34px','#fff','center');
+g.font='bold 54px '+FT;const lv=90+g.measureText('VENCEDOR').width,x0=512-lv/2;trofeuC(g,x0+35,87,72);tx(g,'VENCEDOR',x0+90,107,'bold 54px','#fff');tx(g,'10 / 10 ACERTOS',512,165,'bold 34px','#fff','center');
 tx(g,'CARTELA',512,288,'bold 28px',C.tx,'center');tx(g,r.c,512,370,'bold 76px',C.gr,'center');
 g.strokeStyle='#c4bfb0';g.lineWidth=3;g.setLineDash([14,12]);[427,891].forEach(y=>{g.beginPath();g.moveTo(77,y);g.lineTo(947,y);g.stroke()});g.setLineDash([]);
 tx(g,'10 DEZENAS DA CARTELA',512,492,'bold 28px',C.tx,'center');
 [...r.d].sort((a,b)=>a-b).forEach((n,i)=>{const x=161+(i%5)*175.25,y=597+(i>4?180:0);g.fillStyle=C.gr;g.beginPath();g.arc(x,y,61,0,7);g.fill();tx(g,p2(n),x,y+15,'bold 42px','#fff','center')});
 tx(g,'PARABÉNS! CARTELA COMPLETA',512,972,'bold 36px',C.tx,'center');tx(g,'Todas as 10 dezenas foram acertadas.',512,1028,'26px',C.gy,'center');
-tx(g,'Gerado pelo Dashboard de Cartelas',512,1146,'20px',C.gy,'center');return c}
+return c}
+// Troféu desenhado (igual ao da imagem do Telegram), no lugar do emoji, para ficar igual em todo celular.
+function trofeuC(g,cx,cy,s){const o='#f5b301';g.save();g.fillStyle=o;g.strokeStyle=o;g.lineCap='round';g.beginPath();
+g.moveTo(cx-.3*s,cy-.5*s);g.lineTo(cx+.3*s,cy-.5*s);g.lineTo(cx+.3*s,cy-.1*s);g.quadraticCurveTo(cx+.3*s,cy+.22*s,cx,cy+.22*s);g.quadraticCurveTo(cx-.3*s,cy+.22*s,cx-.3*s,cy-.1*s);g.closePath();g.fill();
+g.lineWidth=.07*s;g.beginPath();g.arc(cx-.3*s,cy-.27*s,.14*s,Math.PI*.5,Math.PI*1.5);g.stroke();g.beginPath();g.arc(cx+.3*s,cy-.27*s,.14*s,-Math.PI*.5,Math.PI*.5);g.stroke();
+g.fillRect(cx-.05*s,cy+.2*s,.1*s,.17*s);g.fillRect(cx-.2*s,cy+.37*s,.4*s,.1*s);g.restore()}
 async function enviar(cs,nome){const fs=await Promise.all(cs.map((c,i)=>new Promise(r=>c.toBlob(b=>r(new File([b],nome+'-'+(i+1)+'.png',{type:'image/png'}))))));
 if(navigator.canShare&&navigator.canShare({files:fs}))try{return await navigator.share({files:fs})}catch(e){return}
 fs.forEach(f=>{const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;a.click()})}
@@ -521,7 +526,7 @@ async function hist(sel){const c=$('hc').value;
 if(!c){['hk','hdest','hl','hs','hac'].forEach(i=>$(i).innerHTML='');return}
 const q=$('hq').value.trim();const x=await call('histDash',{ciclo:c,usuario:$('hu').value,cartela:q});if(x.erro)return toast(x.erro);
 HD=x.lista;HSET=new Set(x.sorteadas);HWIN=x.venc||[];HVIT=x.vit;const s=HSET;
-$('hdest').innerHTML=x.cont[10]?'<div class="card win"><h2>🏆 CARTELA VENCEDORA — 10/10 ('+x.cont[10]+')</h2>'+(x.vit?'<p class="mut">Vitória no sorteio de '+x.vit.data+' • '+x.vit.nome+'</p>':'')+HWIN.map(g=>'<p>Cartela <b>'+esc(g.c)+'</b> (jogo '+g.j+') — '+esc(nm(g))+'<br>'+g.d.map(n=>'<span class="n h">'+p2(n)+'</span>').join('')+'</p>').join('')+'<button class="b p" onclick="hshareWin()">📤 Compartilhar PNG</button><button class="b p" onclick="hprintWin()">🖨 Imprimir</button></div>'
+$('hdest').innerHTML=x.cont[10]?'<div class="card win"><h2>🏆 VENCEDOR — 10/10 ('+x.cont[10]+')</h2>'+(x.vit?'<p class="mut">Vitória no sorteio de '+x.vit.data+' • '+x.vit.nome+'</p>':'')+HWIN.map(g=>'<p>Cartela <b>'+esc(g.c)+'</b> (jogo '+g.j+') — '+esc(nm(g))+'<br>'+g.d.map(n=>'<span class="n h">'+p2(n)+'</span>').join('')+'</p>').join('')+'<button class="b p" onclick="hshareWin()">📤 Compartilhar PNG</button><button class="b p" onclick="hprintWin()">🖨 Imprimir</button></div>'
 :(x.vit?'<div class="card"><p class="mut">🏆 Houve ganhador neste ciclo, no sorteio de '+x.vit.data+' • '+x.vit.nome+'.</p></div>':'');
 HTOT=x.total;HKC=x.cont;HSEL=q?'busca':(sel||melhorAc(HKC));HLIM=50;$('hqx').classList.toggle('hide',!q);drawHist();
 $('hs').innerHTML='<table><tr><th>Data</th><th>Horário</th><th>Dezenas</th>'+(ME.adm?'<th></th>':'')+'</tr>'+x.sorteios.map(r=>'<tr><td>'+r.data+'</td><td>'+r.horario+'</td><td>'+r.dezenas.map(n=>'<span class="n h">'+n+'</span>').join('')+'</td>'+(ME.adm?'<td style="white-space:nowrap"><button class="b s" data-a="e" data-d="'+r.data+'" data-h="'+r.horario+'" title="Corrigir dezenas">✏</button><button class="b x s" data-a="x" data-d="'+r.data+'" data-h="'+r.horario+'" title="Excluir">🗑</button></td>':'')+'</tr>').join('')+'</table>';

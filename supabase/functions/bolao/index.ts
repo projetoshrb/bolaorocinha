@@ -125,10 +125,10 @@ function trofeu(cx: number, cy: number, k: number) {
     `<rect x="${cx - .05 * k}" y="${cy + .2 * k}" width="${.1 * k}" height="${.17 * k}" fill="${o}"/><rect x="${cx - .2 * k}" y="${cy + .37 * k}" width="${.4 * k}" height="${.1 * k}" fill="${o}"/>`;
 }
 function svgVenc(d: Img) {
-  const W = 1024, H = 1280, larg = 70 + 20 + 618, x0 = 512 - larg / 2;   // 618 = largura de "CARTELA VENCEDORA" em 54px
+  const W = 1024, H = 1280, larg = 70 + 20 + 306, x0 = 512 - larg / 2;   // 306 = largura de "VENCEDOR" em 54px
   let s = `<rect width="${W}" height="${H}" fill="${C.cr}"/><rect x="26" y="26" width="972" height="186" fill="${C.dk}"/><rect x="32" y="1205" width="960" height="43" fill="${C.gr}"/>`;
   s += `<rect x="13" y="13" width="998" height="1254" fill="none" stroke="${C.dk}" stroke-width="26"/>`;
-  s += trofeu(x0 + 35, 87, 72) + tx('CARTELA VENCEDORA', x0 + 90, 107, 54, true, '#fff') + tx('10 / 10 ACERTOS', 512, 165, 34, true, '#fff', 'middle');
+  s += trofeu(x0 + 35, 87, 72) + tx('VENCEDOR', x0 + 90, 107, 54, true, '#fff') + tx('10 / 10 ACERTOS', 512, 165, 34, true, '#fff', 'middle');
   s += tx('CARTELA', 512, 288, 28, true, C.tx, 'middle') + tx(String(d.c || '').slice(0, 15), 512, 370, 76, true, C.gr, 'middle');
   [427, 891].forEach((y) => (s += `<line x1="77" y1="${y}" x2="947" y2="${y}" stroke="#c4bfb0" stroke-width="3" stroke-dasharray="14 12"/>`));
   s += tx('10 DEZENAS DA CARTELA', 512, 492, 28, true, C.tx, 'middle');
@@ -137,7 +137,6 @@ function svgVenc(d: Img) {
     s += `<circle cx="${x}" cy="${y}" r="61" fill="${C.gr}"/>` + tx(n, x, y + 15, 42, true, '#fff', 'middle');
   });
   s += tx('PARABÉNS! CARTELA COMPLETA', 512, 972, 36, true, C.tx, 'middle') + tx('Todas as 10 dezenas foram acertadas.', 512, 1028, 26, false, C.gy, 'middle');
-  s += tx('Gerado pelo sistema do BOLAO ROCINHA', 512, 1146, 20, false, C.gy, 'middle');
   return { W, H, s };
 }
 async function png(d: Img): Promise<Uint8Array> {
