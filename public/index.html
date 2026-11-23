@@ -490,7 +490,7 @@ const x=await call('encerrarCiclo');toast(x.erro||'Ciclo encerrado: '+x.sorteios
 const C={dk:'#173d2b',gr:'#0b6b43',cr:'#f4efdd',al:'#efe8d6',br:'#8a5a2b',tx:'#1d2330',gy:'#555'},FT='Arial,"Apple Color Emoji","Segoe UI Emoji",sans-serif';
 function mk(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');g.fillStyle=C.cr;g.fillRect(0,0,w,h);return[c,g]}
 function tx(g,s,x,y,f,col,al){g.font=f+' '+FT;g.fillStyle=col;g.textAlign=al||'left';g.fillText(s,x,y)}
-function imgLista(tit,sub,rows,uni){const H=uni?210+rows.length*107:1280,[c,g]=mk(887,H);g.fillStyle=C.dk;g.fillRect(0,0,887,126);g.fillRect(0,H-37,887,37);
+function imgLista(tit,sub,rows,uni){const H=210+rows.length*107,[c,g]=mk(887,H);g.fillStyle=C.dk;g.fillRect(0,0,887,126);g.fillRect(0,H-37,887,37);
 tx(g,tit,443,52,'bold 40px','#fff','center');tx(g,sub,443,96,'22px','#fff','center');
 rows.forEach((r,i)=>{const y=137+i*107;g.fillStyle=i%2?C.al:'#fff';g.fillRect(33,y,821,100);
 tx(g,'CARTELA',56,y+27,'bold 17px',C.tx);tx(g,r.c,56,y+60,'bold 30px',C.gr);
@@ -498,14 +498,19 @@ tx(g,'Dezenas: '+r.d.map(p2).join(' • '),237,y+23,'17px','#333');
 tx(g,'Faltam: '+r.d.filter(n=>!SET.has(n)).map(p2).join(' • '),237,y+54,'17px',C.br);
 tx(g,r.ac+'/10',831,y+41,'bold 24px',C.gr,'right')});
 tx(g,'Resultado das Cartelas',443,H-13,'15px','#fff','center');return c}
-function imgVenc(r){const[c,g]=mk(1024,1280);g.fillStyle=C.dk;g.fillRect(26,26,972,186);g.fillStyle=C.gr;g.fillRect(32,1205,960,43);
-g.strokeStyle=C.dk;g.lineWidth=26;g.strokeRect(13,13,998,1254);
-g.font='bold 54px '+FT;const lv=90+g.measureText('VENCEDOR').width,x0=512-lv/2;trofeuC(g,x0+35,87,72);tx(g,'VENCEDOR',x0+90,107,'bold 54px','#fff');tx(g,'10 / 10 ACERTOS',512,165,'bold 34px','#fff','center');
-tx(g,'CARTELA',512,288,'bold 28px',C.tx,'center');tx(g,r.c,512,370,'bold 76px',C.gr,'center');
-g.strokeStyle='#c4bfb0';g.lineWidth=3;g.setLineDash([14,12]);[427,891].forEach(y=>{g.beginPath();g.moveTo(77,y);g.lineTo(947,y);g.stroke()});g.setLineDash([]);
-tx(g,'10 DEZENAS DA CARTELA',512,492,'bold 28px',C.tx,'center');
-[...r.d].sort((a,b)=>a-b).forEach((n,i)=>{const x=161+(i%5)*175.25,y=597+(i>4?180:0);g.fillStyle=C.gr;g.beginPath();g.arc(x,y,61,0,7);g.fill();tx(g,p2(n),x,y+15,'bold 42px','#fff','center')});
-tx(g,'PARABÉNS! CARTELA COMPLETA',512,972,'bold 36px',C.tx,'center');tx(g,'Todas as 10 dezenas foram acertadas.',512,1028,'26px',C.gy,'center');
+// Imagem do VENCEDOR: moldura dourada, dois troféus, número da cartela e dezenas em dourado (igual à imagem do Telegram).
+function imgVenc(r){const[c,g]=mk(1024,1280),OU='#e6a700',OU2='#ffd54a',OUE='#b8860b';
+g.fillStyle=OU;g.fillRect(0,0,1024,1280);g.fillStyle=C.cr;g.fillRect(26,26,972,1228);g.strokeStyle=OUE;g.lineWidth=4;g.strokeRect(38,38,948,1204);
+g.fillStyle=C.dk;g.fillRect(44,44,936,180);g.fillStyle=OU;g.fillRect(44,220,936,6);
+g.font='bold 58px '+FT;const w=g.measureText('VENCEDOR').width;tx(g,'VENCEDOR',512,118,'bold 58px',OU2,'center');trofeuC(g,512-w/2-60,100,78);trofeuC(g,512+w/2+60,100,78);
+tx(g,'10 / 10 ACERTOS',512,180,'bold 34px','#fff','center');tx(g,'CARTELA',512,300,'bold 28px',C.tx,'center');
+g.save();g.lineWidth=3;g.strokeStyle='#7a5a00';g.font='bold 84px '+FT;g.textAlign='center';g.strokeText(r.c,512,388);g.fillStyle=OU;g.fillText(r.c,512,388);g.restore();
+g.strokeStyle='#d8c790';g.lineWidth=3;g.setLineDash([14,12]);[432,896].forEach(y=>{g.beginPath();g.moveTo(77,y);g.lineTo(947,y);g.stroke()});g.setLineDash([]);
+tx(g,'10 DEZENAS DA CARTELA',512,496,'bold 28px',C.tx,'center');
+[...r.d].sort((a,b)=>a-b).forEach((n,i)=>{const x=161+(i%5)*175.25,y=600+(i>4?180:0);g.fillStyle=C.gr;g.beginPath();g.arc(x,y,61,0,7);g.fill();
+g.lineWidth=7;g.strokeStyle=OU;g.beginPath();g.arc(x,y,63,0,7);g.stroke();tx(g,p2(n),x,y+15,'bold 42px',OU2,'center')});
+tx(g,'PARABÉNS! CARTELA COMPLETA',512,980,'bold 36px',C.tx,'center');tx(g,'Todas as 10 dezenas foram acertadas.',512,1036,'26px',C.gy,'center');
+g.fillStyle=C.gr;g.fillRect(44,1196,936,40);g.fillStyle=OU;g.fillRect(44,1192,936,4);
 return c}
 // Troféu desenhado (igual ao da imagem do Telegram), no lugar do emoji, para ficar igual em todo celular.
 function trofeuC(g,cx,cy,s){const o='#f5b301';g.save();g.fillStyle=o;g.strokeStyle=o;g.lineCap='round';g.beginPath();
